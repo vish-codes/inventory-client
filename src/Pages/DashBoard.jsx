@@ -5,18 +5,41 @@ import NewEntry from "./NewEntry";
 import ReAssignForm from "../Components/ReAssignForm";
 import ShowNumberCount from "../Components/ShowNumberCount";
 import { AppContext } from "../App";
+import DeleteWarning from "../Components/DeleteWarning";
 
 export default function DashBoard() {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenReassign, setIsOpenReassign] = useState(false);
-  const {listData} = useContext(AppContext)
+  const { listData } = useContext(AppContext);
+  const [deleteWarn, setDeleteWarn] = useState(false);
+  const [getLaptopId, setGetLaptopId] = useState(null);
 
+  const { handleDelete } = useContext(AppContext);
+  //------------------------------------
+
+  function resetGetLaptopId(){
+    setGetLaptopId(null)
+  }
+
+  function getIdForDeletion(id) {
+    toggleWarningOn();
+    console.log(id);
+    setGetLaptopId(id);
+  }
+
+  function toggleWarningOn() {
+    setDeleteWarn(true);
+  }
+  function toggleWarningOff() {
+    setDeleteWarn(false);
+  }
+  //------------------------------------
   function toggleOpen() {
     console.log("Toggled open state");
     setIsOpen(true);
   }
   function toggleClose() {
-    console.log("toggled close state");
+    console.log("toggled close state"); 
     setIsOpen(false);
   }
   function toggleOpenReassign() {
@@ -34,17 +57,24 @@ export default function DashBoard() {
     >
       <DashboardNavBar />
       <ShowNumberCount listData={listData} />
-      <LaptopTable toggleOpenReassign={toggleOpenReassign} />
-      {isOpen ? <NewEntry toggleClose={toggleClose} /> : null}
-      {isOpenReassign ? (
-        <ReAssignForm toggleCloseReassign={toggleCloseReassign} />
-      ) : null}
       <button
-        className="px-4 py-1 bg-indigo-500 w-32 text-sm font-medium m-1 text-white rounded-md shadow-md  hover:bg-indigo-600 ml-12"
+        className="flex font-sans items-center ml-10 justify-center rounded-3xl text-white border-2 border-pano-blue text-l bg-pano-blue shoadow-inner w-40 hover:bg-white hover:text-pano-blue hover:border-pano-blue"
         onClick={toggleOpen}
       >
         Add Entry +
       </button>
+      {deleteWarn ? (
+        <DeleteWarning resetGetLaptopId={resetGetLaptopId} getLaptopId={getLaptopId} toggleWarningOff={toggleWarningOff} />
+      ) : null}
+      <LaptopTable
+        toggleWarningOn={toggleWarningOn}
+        toggleOpenReassign={toggleOpenReassign}
+        getIdForDeletion={getIdForDeletion}
+      />
+      {isOpen ? <NewEntry toggleClose={toggleClose} /> : null}
+      {isOpenReassign ? (
+        <ReAssignForm toggleCloseReassign={toggleCloseReassign} />
+      ) : null}
     </div>
   );
 }

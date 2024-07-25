@@ -5,7 +5,7 @@ export default function Button() {
     <div className="flex items-center justify-center my-8">
       <Link to="/dashboard">
         {" "}
-        <button className="flex font-sans items-center justify-center rounded-3xl border-2 border-slate-400 font-bold text-xl bg-slate-300 shoadow-inner p-1 w-48 hover:bg-slate-400 hover:border-slate-300">
+        <button className="flex font-sans items-center justify-center rounded-3xl text-pano-blue border-2 border-pano-blue font-bold text-xl bg-white shoadow-inner p-1 w-48 hover:bg-blue-800 hover:text-white ">
           Explore
         </button>
       </Link>

@@ -12,7 +12,7 @@ export default function LandingText({ headline, followUp, headCol }) {
       >
         {headline}
       </h1>
-      <p className=" mx-28 font-kalam font-sm text-center text-xl text-gray-800 ">
+      <p className=" mx-28 font-sans font-sm text-center text-xl text-slate-600 ">
         {followUp}
       </p>
     </motion.div>

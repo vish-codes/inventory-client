@@ -1,19 +1,23 @@
 import { useContext } from "react";
 import { AppContext } from "../App";
+import DeleteWarning from "./DeleteWarning";
 
-const LaptopTable = ({ toggleOpenReassign }) => {
+const LaptopTable = ({ toggleOpenReassign, getIdForDeletion,toggleWarningOn }) => {
   const { listData, handleDelete, getLaptopIds } = useContext(AppContext);
-  console.log("this is list main data", listData);
+  // console.log("this is list main data", listData);
   const tableData = listData?.data;
-  console.log("this is cutout data" , tableData);
+  // console.log("this is cutout data" , tableData);
 
   return (
-    <div className="overflow-y-auto mx-10 my-3 shadow-lg rounded">
+    <div className="overflow-x-auto mx-10 my-3 shadow-lg rounded">
       <table className="min-w-full bg-white border-2 border-gray-500 shadow-md rounded-md">
         <thead className="bg-indigo-200">
           <tr>
             <th className="px-8 py-2 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
               S.No.
+            </th>
+            <th className="px-8 py-2 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+              Date
             </th>
             <th className="px-8 py-2 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
               Sys ID
@@ -47,6 +51,8 @@ const LaptopTable = ({ toggleOpenReassign }) => {
               key={index}
               handleDelete={handleDelete}
               getLaptopIds={getLaptopIds}
+              toggleWarningOn={toggleWarningOn}
+              getIdForDeletion={getIdForDeletion}
             />
           ))}
         </tbody>
@@ -59,17 +65,25 @@ function TableRows({
   laptop,
   ind,
   toggleOpenReassign,
-  handleDelete,
   getLaptopIds,
+  getIdForDeletion,
+  toggleWarningOn
 }) {
   // console.log(laptop);
   function handleUpdate() {
     getLaptopIds(laptop._id);
     toggleOpenReassign();
   }
+
+  function handleDeleteRequest(id) {
+    getIdForDeletion(id);
+    // console.log('dsf');
+    toggleWarningOn();
+  }
   return (
     <tr>
       <td className="px-8 py-1 whitespace-nowrap">{ind + 1}</td>
+      <td className="px-8 py-1 whitespace-nowrap">09/11/2009</td>
       <td className="px-8 py-1 whitespace-nowrap">{laptop.systemId}</td>
       <td className="px-8 py-1 whitespace-nowrap">{laptop.laptopName}</td>
       <td className="px-8 py-1 whitespace-nowrap">{laptop.ownerName}</td>
@@ -78,13 +92,13 @@ function TableRows({
       <td className="px-8 py-1 whitespace-nowrap">{laptop.remark}</td>
       <td className="px-8 py-1 whitespace-nowrap">
         <button
-          className="px-4 py-1 bg-indigo-400 text-sm font-medium m-1 text-white rounded-md shadow-md mr-2 hover:bg-indigo-500"
+          className="px-4 py-1 bg-pano-blue text-sm font-medium m-1 text-white rounded-md shadow-md mr-2 hover:bg-blue-800"
           onClick={handleUpdate}
         >
           Re-Assign
         </button>
         <button
-          onClick={() => handleDelete(laptop._id)}
+          onClick={() => handleDeleteRequest(laptop._id)}
           className="px-4 m-1 text-sm font-medium  py-1 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600"
         >
           Delete
