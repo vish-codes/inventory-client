@@ -2,7 +2,11 @@ import { useContext } from "react";
 import { AppContext } from "../App";
 import DeleteWarning from "./DeleteWarning";
 
-const LaptopTable = ({ toggleOpenReassign, getIdForDeletion,toggleWarningOn }) => {
+const LaptopTable = ({
+  toggleOpenReassign,
+  getIdForDeletion,
+  toggleWarningOn,
+}) => {
   const { listData, handleDelete, getLaptopIds } = useContext(AppContext);
   // console.log("this is list main data", listData);
   const tableData = listData?.data;
@@ -30,6 +34,9 @@ const LaptopTable = ({ toggleOpenReassign, getIdForDeletion,toggleWarningOn }) =
             </th>
             <th className="px-8 py-2 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
               Assigned To
+            </th>
+            <th className="px-8 py-2 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+              Emp Id
             </th>
             <th className="px-8 py-2 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
               Accessories
@@ -67,7 +74,7 @@ function TableRows({
   toggleOpenReassign,
   getLaptopIds,
   getIdForDeletion,
-  toggleWarningOn
+  toggleWarningOn,
 }) {
   // console.log(laptop);
   function handleUpdate() {
@@ -83,12 +90,13 @@ function TableRows({
   return (
     <tr>
       <td className="px-8 py-1 whitespace-nowrap">{ind + 1}</td>
-      <td className="px-8 py-1 whitespace-nowrap">09/11/2009</td>
+      <td className="px-8 py-1 whitespace-nowrap">{laptop.date}</td>
       <td className="px-8 py-1 whitespace-nowrap">{laptop.systemId}</td>
       <td className="px-8 py-1 whitespace-nowrap">{laptop.laptopName}</td>
       <td className="px-8 py-1 whitespace-nowrap">{laptop.ownerName}</td>
       <td className="px-8 py-1 whitespace-nowrap">{laptop.assignedTo}</td>
-      <td className="px-8 py-1 whitespace-nowrap">{laptop.accessories}</td>
+      <td className="px-8 py-1 whitespace-nowrap">{laptop.empId}</td>
+      <td className="px-8 py-1 whitespace-nowrap">{laptop.accessories.map((el)=> el +' ')}</td>
       <td className="px-8 py-1 whitespace-nowrap">{laptop.remark}</td>
       <td className="px-8 py-1 whitespace-nowrap">
         <button

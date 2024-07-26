@@ -6,6 +6,7 @@ import ReAssignForm from "../Components/ReAssignForm";
 import ShowNumberCount from "../Components/ShowNumberCount";
 import { AppContext } from "../App";
 import DeleteWarning from "../Components/DeleteWarning";
+import AgGridTable from "../Components/AgGridTable";
 
 export default function DashBoard() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,8 +18,8 @@ export default function DashBoard() {
   const { handleDelete } = useContext(AppContext);
   //------------------------------------
 
-  function resetGetLaptopId(){
-    setGetLaptopId(null)
+  function resetGetLaptopId() {
+    setGetLaptopId(null);
   }
 
   function getIdForDeletion(id) {
@@ -39,7 +40,7 @@ export default function DashBoard() {
     setIsOpen(true);
   }
   function toggleClose() {
-    console.log("toggled close state"); 
+    console.log("toggled close state");
     setIsOpen(false);
   }
   function toggleOpenReassign() {
@@ -64,7 +65,11 @@ export default function DashBoard() {
         Add Entry +
       </button>
       {deleteWarn ? (
-        <DeleteWarning resetGetLaptopId={resetGetLaptopId} getLaptopId={getLaptopId} toggleWarningOff={toggleWarningOff} />
+        <DeleteWarning
+          resetGetLaptopId={resetGetLaptopId}
+          getLaptopId={getLaptopId}
+          toggleWarningOff={toggleWarningOff}
+        />
       ) : null}
       <LaptopTable
         toggleWarningOn={toggleWarningOn}
@@ -75,6 +80,11 @@ export default function DashBoard() {
       {isOpenReassign ? (
         <ReAssignForm toggleCloseReassign={toggleCloseReassign} />
       ) : null}
+      <AgGridTable
+        toggleWarningOn={toggleWarningOn}
+        toggleOpenReassign={toggleOpenReassign}
+        getIdForDeletion={getIdForDeletion}
+      />
     </div>
   );
 }

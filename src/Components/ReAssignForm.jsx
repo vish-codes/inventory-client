@@ -111,17 +111,17 @@ export default function ReAssignForm({ toggleCloseReassign }) {
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-pano-blue  border-black rounded-md shadow-sm hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
-                  onClick={handleReassignFormSubmit}
-                >
-                  Confirm
-                </button>
-                <button
-                  type="submit"
-                  className="inline-flex justify-center ml-1 px-4 py-2 text-sm font-medium text-white bg-red-500  border-black rounded-md shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                   onClick={() => toggleCloseReassign()}
                 >
                   Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="inline-flex justify-center px-4 py-2 ml-1 text-sm font-medium text-white bg-pano-blue  border-black rounded-md shadow-sm hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+                  onClick={handleReassignFormSubmit}
+                >
+                  Confirm
                 </button>
               </div>
             </form>

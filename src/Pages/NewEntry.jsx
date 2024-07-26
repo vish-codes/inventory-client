@@ -7,11 +7,14 @@ export default function ReAssign({ toggleClose }) {
   const [id, setId] = useState("");
   const [laptop, setLaptop] = useState("");
   const [isOwnedByClient, setIsOwnedByClient] = useState(false);
-  const [ownedBy, setOwnedBy] = useState("company");
+  const [ownedBy, setOwnedBy] = useState("Company");
   const [laptopClientName, setLaptopClientName] = useState("");
   const [selectedOption, setSelectedOption] = useState([]);
   const [employeeName, setEmployeeName] = useState("");
   const [remarks, setRemarks] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
+  const [finalDate, setFinalDate] = useState(null);
+  const [empId, setEmpId] = useState("");
   const { addNewEntry } = useContext(AppContext);
 
   function handleOwnedBy(e) {
@@ -22,20 +25,41 @@ export default function ReAssign({ toggleClose }) {
       setIsOwnedByClient(false);
     }
   }
+  console.log(startDate);
+  // date formatting fuction :)
+  const formatDate = (date) =>
+    new Intl.DateTimeFormat("en", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      // weekday: "long",
+    }).format(new Date(date));
+
+  // getting date formatted here :)
+  useEffect(() => {
+    if (startDate) {
+      const date = formatDate(startDate);
+      setFinalDate(date);
+      console.log(date);
+    }
+  }, [startDate]);
+
+  // console.log('Date:', startDate, 'Type of :', typeof startDate);
   const handleOptionChange = (event) => {
     setSelectedOption((prev) => [...prev, event.target.value]);
   };
-  console.log(selectedOption);
   // console.log(selectedOption);
 
   function handleFormSubmit(e) {
     e.preventDefault();
     let tempObj = {
       systemId: id,
+      date: finalDate,
       laptopName: laptop,
       assignedTo: employeeName,
+      empId,
       ownedBy,
-      ownerName: setLaptopClientName,
+      ownerName: laptopClientName,
       accessories: selectedOption,
       remark: remarks,
     };
@@ -60,11 +84,11 @@ export default function ReAssign({ toggleClose }) {
             <form onSubmit={handleFormSubmit}>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Laptop ID:
+                  Laptop Id:
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-ingigo-500 font-mono shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   value={id}
                   onChange={(e) => setId(e.target.value)}
                 />
@@ -75,16 +99,20 @@ export default function ReAssign({ toggleClose }) {
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-ingigo-500 font-mono shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   value={laptop}
                   onChange={(e) => setLaptop(e.target.value)}
                 />
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Laptop Name:
+                  Date:
                 </label>
-                {/* <Datepicker selected={startDate} onChange={(date) => setStartDate(date)} /> */}
+                <Datepicker
+                  className="border-2 border-ingigo-500 rounded-md text-sm w-full"
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                />
               </div>
               <div className="mb-4">
                 <span className="block text-sm font-medium text-gray-700">
@@ -96,7 +124,7 @@ export default function ReAssign({ toggleClose }) {
                       type="radio"
                       className="form-radio"
                       value="company"
-                      checked={ownedBy === "company"}
+                      checked={ownedBy === "Company"}
                       onChange={handleOwnedBy}
                     />
                     <span className="ml-2">Company</span>
@@ -106,7 +134,7 @@ export default function ReAssign({ toggleClose }) {
                       type="radio"
                       className="form-radio"
                       value="client"
-                      checked={ownedBy === "client"}
+                      checked={ownedBy === "Client"}
                       onChange={handleOwnedBy}
                     />
                     <span className="ml-2">Client</span>
@@ -119,8 +147,9 @@ export default function ReAssign({ toggleClose }) {
                     </label>
                     <input
                       type="text"
-                      className="mt-1 block border-2 border-ingigo-500 font-mono shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                      className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                       value={laptopClientName}
+                      defaultValue="Panorama"
                       onChange={(e) => setLaptopClientName(e.target.value)}
                     />
                   </div>
@@ -166,36 +195,60 @@ export default function ReAssign({ toggleClose }) {
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-ingigo-500 font-mono shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   value={employeeName}
                   onChange={(e) => setEmployeeName(e.target.value)}
                 />
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
+                  Employee Id:
+                </label>
+                <input
+                  type="text"
+                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  value={empId}
+                  onChange={(e) => setEmpId(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="message"
+                  className="block mb-2 text-sm font-medium text-gray-700"
+                >
+                  Remarks:
+                </label>
+                <textarea
+                  rows="2"
+                  className="mt-1 text-sm block border-2 border-ingigo-500 font-sans shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  placeholder="Leave a comment..."
+                  value={remarks}
+                  onChange={(e) => setRemarks(e.target.value)}
+                ></textarea>
+                {/* <label className="block text-sm font-medium text-gray-700">
                   Remarks:
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-ingigo-500 font-mono shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className="mt-1 block border-2 border-ingigo-500 font-sans shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   value={remarks}
                   onChange={(e) => setRemarks(e.target.value)}
-                />
+                /> */}
               </div>
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-pano-blue  border-black rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  onClick={() => handleFormSubmit}
-                >
-                  Confirm
-                </button>
-                <button
-                  type="submit"
-                  className="inline-flex justify-center ml-1 px-4 py-2 text-sm font-medium text-white bg-red-500  border-black rounded-md shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                   onClick={() => toggleClose()}
                 >
                   Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="inline-flex justify-center ml-1 px-4 py-2 text-sm font-medium text-white bg-pano-blue  border-black rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  onClick={() => handleFormSubmit}
+                >
+                  Confirm
                 </button>
               </div>
             </form>
