@@ -81,9 +81,9 @@ export default function DashBoard() {
         <ReAssignForm toggleCloseReassign={toggleCloseReassign} />
       ) : null}
       <AgGridTable
-        toggleWarningOn={toggleWarningOn}
-        toggleOpenReassign={toggleOpenReassign}
-        getIdForDeletion={getIdForDeletion}
+        toggleWarningOn={toggleWarningOn} 
+        // toggleOpenReassign={toggleOpenReassign}
+        // getIdForDeletion={getIdForDeletion}
       />
     </div>
   );

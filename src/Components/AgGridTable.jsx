@@ -2,13 +2,16 @@ import { AgGridReact } from "ag-grid-react"; // React Data Grid Component
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useContext, useEffect, useState } from "react";
-import Button from "./Button";
-import DownArrow from "./DownArrow";
 import { AppContext } from "../App";
-export default function AgGridTable({toggleWarningOn}) {
+
+export default function AgGridTable({ toggleWarningOn }) {
   const { listData } = useContext(AppContext);
+  const [rowData, setRowData] = useState([{}]);
+  function sayHello() {
+    console.log("this is my last try, Im done with this shit");
+  }
+
   useEffect(() => {
-    console.log(listData);
     let data = listData?.data?.map((data) => ({
       ...data,
       Date: data.date,
@@ -24,9 +27,7 @@ export default function AgGridTable({toggleWarningOn}) {
     setRowData(data);
   }, [listData]);
 
-  const [rowData, setRowData] = useState([{}]);
-
-  const [colDefs, setColDefs] = useState([
+  const columnDefs = [
     {
       field: "SNo",
       maxWidth: 100,
@@ -55,7 +56,6 @@ export default function AgGridTable({toggleWarningOn}) {
       filter: true,
       floatingFilter: true,
     },
-    // { field: "EmpId", maxWidth:100 },
     {
       field: "AssignedTo",
       valueGetter: (el) => el.data.AssignedTo + " (" + el.data.EmpId + ")",
@@ -79,42 +79,62 @@ export default function AgGridTable({toggleWarningOn}) {
     {
       field: "Action",
       maxWidth: 350,
-      // valueGetter: (el)=>console.log(el.data.laptopId),
-      cellRenderer: ButtonForTest,
+      cellRenderer: "buttonForTest",
+      cellRendererParams: {
+        toggleWarningOn,
+        sayHello,
+        // params
+      },
       flex: 1,
       cellClass: "no-divider",
     },
-  ]);
+  ];
+
   const pagination = true;
   const paginationPageSize = 10;
   const paginationPageSizeSelector = [10, 22];
+
   return (
-    <div
-      className="ag-theme-quartz"
-      // applying the Data Grid theme
-      style={{ height: 500 }} // the Data Grid will fill the size of the parent container
-    >
+    <div className="ag-theme-quartz" style={{ height: 500 }}>
       <AgGridReact
         rowData={rowData}
         pagination={pagination}
         paginationPageSize={paginationPageSize}
         paginationPageSizeSelector={paginationPageSizeSelector}
-        columnDefs={colDefs}
-        filter={true}
-        // domLayout="autoHeight"
+        columnDefs={columnDefs}
+        components={{
+          buttonForTest: ButtonForTest,
+        }}
       />
     </div>
   );
 }
 
-function ButtonForTest() {
+function ButtonForTest(params) {
+  const { data, sayHello, toggleWarningOn } = params;
+  const handleReAssignClick = () => {
+    sayHello();
+    console.log(typeof toggleWarningOn);
+    // console.log(data);
+    toggleWarningOn();
+  };
+
+  const handleDeleteClick = () => {
+    alert(`Delete button clicked for ID: ${data._id}`);
+  };
   return (
     <>
       {" "}
-      <button onClick={()=>alert('sdfdsf')} className="px-4 py-1 bg-pano-blue text-sm font-medium m-1 text-white rounded-md shadow-md mr-2 hover:bg-blue-800">
+      <button
+        onClick={handleReAssignClick}
+        className="px-4 py-1 bg-pano-blue text-sm font-medium m-1 text-white rounded-md shadow-md mr-2 hover:bg-blue-800"
+      >
         Re-Assign
       </button>
-      <button className="px-4 m-1 text-sm font-medium  py-1 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600">
+      <button
+        onClick={handleDeleteClick}
+        className="px-4 m-1 text-sm font-medium  py-1 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600"
+      >
         Delete
       </button>
     </>
