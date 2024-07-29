@@ -4,12 +4,13 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
 
-export default function AgGridTable({ toggleWarningOn }) {
+export default function AgGridTable({
+  toggleWarningOn,
+  toggleOpenReassign,
+  getIdForDeletion,
+}) {
   const { listData } = useContext(AppContext);
   const [rowData, setRowData] = useState([{}]);
-  function sayHello() {
-    console.log("this is my last try, Im done with this shit");
-  }
 
   useEffect(() => {
     let data = listData?.data?.map((data) => ({
@@ -82,7 +83,8 @@ export default function AgGridTable({ toggleWarningOn }) {
       cellRenderer: "buttonForTest",
       cellRendererParams: {
         toggleWarningOn,
-        sayHello,
+        toggleOpenReassign,
+        getIdForDeletion,
         // params
       },
       flex: 1,
@@ -95,7 +97,7 @@ export default function AgGridTable({ toggleWarningOn }) {
   const paginationPageSizeSelector = [10, 22];
 
   return (
-    <div className="ag-theme-quartz" style={{ height: 500 }}>
+    <div className="ag-theme-quartz m-5" style={{ height: 567 }}>
       <AgGridReact
         rowData={rowData}
         pagination={pagination}
@@ -111,16 +113,18 @@ export default function AgGridTable({ toggleWarningOn }) {
 }
 
 function ButtonForTest(params) {
-  const { data, sayHello, toggleWarningOn } = params;
+  const { data, toggleWarningOn, toggleOpenReassign, getIdForDeletion } =
+    params;
+  const { getLaptopIds } = useContext(AppContext);
+
   const handleReAssignClick = () => {
-    sayHello();
-    console.log(typeof toggleWarningOn);
-    // console.log(data);
-    toggleWarningOn();
+    getLaptopIds(data._id);
+    toggleOpenReassign();
   };
 
   const handleDeleteClick = () => {
-    alert(`Delete button clicked for ID: ${data._id}`);
+    getIdForDeletion(data._id);
+    toggleWarningOn();
   };
   return (
     <>

@@ -19,7 +19,7 @@ export default function Landing() {
         />
         <DownArrow />
         <Button />
-        <AgGridTable />
+        {/* <AgGridTable /> */}
       </div>
     </div>
   );
