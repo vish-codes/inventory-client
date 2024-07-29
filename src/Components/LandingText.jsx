@@ -5,7 +5,7 @@ export default function LandingText({ headline, followUp, headCol }) {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 1 }}
-      className="my-5 mx-14"
+      className="my-5 mx-14 mt-24"
     >
       <h1
         className={`font-sans font-bold text-slate-800 text-7xl  text-center py-12`}

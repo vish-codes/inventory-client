@@ -20,7 +20,7 @@ const DashboardNavBar = () => {
       </Link>
       <div className="flex items-center space-x-4">
         {/* <p className="font-mono text-xl">Hello,</p> */}
-        <div className="bg-gradient-to-t from-pano-dark-blue to-pano-blue text-2xl font-bold font-sans text-white cursor-pointer border-white rounded-full w-14 h-14 flex items-center justify-center">
+        <div className="bg-gradient-to-t from-pano-dark-blue to-pano-blue text-2xl font-bold font-sans text-white cursor-pointer border-white border-2 rounded-full w-14 h-14 flex items-center justify-center">
           U
         </div>
       </div>

@@ -23,9 +23,7 @@ function App() {
           throw new Error("not ok");
         }
         const data = await response.json();
-        console.log(data);
         setListData(data);
-        // localStorage.setItem("laptops", JSON.stringify(data.data));
       } catch (error) {
         console.error('ERROR: ',error);
       }

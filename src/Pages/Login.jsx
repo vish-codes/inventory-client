@@ -1,78 +1,106 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BrandLogo from "../Components/BrandLogo";
 import Heading from "../Components/Heading";
+import { useEffect, useState } from "react";
 
 export default function Login() {
+  const [error, setError] = useState(false);
+  const [details, setDetails] = useState({ email: "", password: "" });
+
+  const navigate = useNavigate();
+
+  function handleChange(e) {
+    const { value, name } = e.target;
+    setDetails({ ...details, [name]: value });
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if(details.email === "" && details.password === "") return;
+
+    try {
+      const res = await fetch(
+        "https://inventory-85i2.onrender.com/api/v1/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(details),
+        }
+      );
+      if (!res.ok) {
+        setError(true);
+        throw new Error("Invalid credentials");
+      }
+      const data = await res.json();
+      console.log(data.token);
+      localStorage.setItem("token", data.token);
+      setError(false);
+      navigate("/dashboard");
+    } catch (err) {
+      console.error(err);
+      setError(true);
+    }
+  }
+
   return (
     <div className="bg-gray-50 flex flex-col justify-center items-center min-h-screen md:flex-row">
-      {/* <div className="bg-indigo-50 shadow-lg flex flex-col border-2 border-gray-700 rounded-2xl px-8 py-4 sm:px-12 md:px-24">
-        <BrandLogo>Inventory</BrandLogo>
-        <form className="bg-indigo-50 flex flex-col">
-        <h2 className="mt-4 font-mono">Email</h2>
-        <input
-            className="border-2 font-mono shadow-inner"
-            placeholder="Email"
-            value="testing@example.com"
-            type="text"
-            />
-            <h2 className="mt-4 font-mono">Password</h2>
-            <input
-            className="border-2 font-mono shadow-inner"
-            placeholder="Password"
-            type="password"
-            value="password"
-            />
-            <button className="font-mono bg-indigo-400 border-2 text-white border-black rounded px-1 mt-6 mb-3">
-            Login
-            </button>
-            </form>
-          </div> */}
-      <div class="w-full max-w-xs">
-        <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <div className="w-full max-w-xs">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+        >
           <BrandLogo>Inventory</BrandLogo>
-          <p className="text-center my-4 font-sans font-bold font-3xl">Login</p>
-          <div class="mb-4">
+          <p className="text-center my-4 font-sans font-bold text-2xl">Login</p>
+          {error ? (
+            <p className="text-sm text-center text-red-400">Invalid Email or Password!</p>
+          ) : null}
+          <div className="mb-4">
             <label
-              class="block text-gray-700 text-sm font-bold mb-2"
-              for="username"
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="email"
             >
-              Username
+              Email
             </label>
             <input
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="username"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="email"
+              name="email"
               type="text"
-              placeholder="Username"
+              placeholder="Email"
+              value={details.email}
+              onChange={handleChange}
             />
           </div>
-          <div class="mb-6">
+          <div className="mb-6">
             <label
-              class="block text-gray-700 text-sm font-bold mb-2"
-              for="password"
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="password"
             >
               Password
             </label>
             <input
-              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="password"
+              name="password"
               type="password"
               placeholder="**********"
+              value={details.password}
+              onChange={handleChange}
             />
-            {/* <p class="text-red-500 text-xs italic">Please choose a password.</p> */}
           </div>
-          <div class="flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <button
-              class="bg-blue-700 hover:bg-pano-blue text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="button"
+              className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="submit"
             >
-              Sign In
+              Login
             </button>
-            <a
-              class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-              href="#"
+            <Link
+              to="/login"
+              className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
             >
               Forgot Password?
-            </a>
+            </Link>
           </div>
         </form>
       </div>
