@@ -71,7 +71,12 @@ export default function DashBoard() {
           toggleWarningOff={toggleWarningOff}
         />
       ) : null}
-      <LaptopTable
+      {/* <LaptopTable
+        toggleWarningOn={toggleWarningOn}
+        toggleOpenReassign={toggleOpenReassign}
+        getIdForDeletion={getIdForDeletion}
+      /> */}
+      <AgGridTable
         toggleWarningOn={toggleWarningOn}
         toggleOpenReassign={toggleOpenReassign}
         getIdForDeletion={getIdForDeletion}
@@ -80,11 +85,6 @@ export default function DashBoard() {
       {isOpenReassign ? (
         <ReAssignForm toggleCloseReassign={toggleCloseReassign} />
       ) : null}
-      <AgGridTable
-        toggleWarningOn={toggleWarningOn} 
-        // toggleOpenReassign={toggleOpenReassign}
-        // getIdForDeletion={getIdForDeletion}
-      />
     </div>
   );
 }
