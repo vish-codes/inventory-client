@@ -39,7 +39,7 @@ export default function ReAssignForm({ toggleCloseReassign }) {
         <div className="flex items-center justify-center min-h-screen p-4">
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
             <form onSubmit={handleReassignFormSubmit}>
-              <div className="mb-4">
+              {/* <div className="mb-4"> */}
                 {/* <label className="block text-sm font-medium text-gray-700">
                 Laptop ID:
               </label> */}
@@ -50,7 +50,7 @@ export default function ReAssignForm({ toggleCloseReassign }) {
                 disabled={true}
                 onChange={(e) => setId(e.target.value)}
               /> */}
-              </div>
+              {/* </div> */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
                   Assign To:

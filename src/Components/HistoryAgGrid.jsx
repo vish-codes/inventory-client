@@ -4,7 +4,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
 
-export default function AgGridTable({
+export default function HistoryAgGrid({
   toggleWarningOn,
   toggleOpenReassign,
   getIdForDeletion,
@@ -24,6 +24,7 @@ export default function AgGridTable({
       AssignedTo: data.assignedTo,
       Accessories: data.accessories,
       Remark: data.remark,
+      
     }));
     setRowData(data);
   }, [listData]);
@@ -81,7 +82,8 @@ export default function AgGridTable({
       field: "Action",
       maxWidth: 350,
       cellRenderer: "buttonForTest",
-      cellRendererParams: {
+      cellRendererParams: 
+      {
         toggleWarningOn,
         toggleOpenReassign,
         getIdForDeletion,
@@ -116,16 +118,16 @@ export default function AgGridTable({
 function ButtonForTest(params) {
   const { data, toggleWarningOn, toggleOpenReassign, getIdForDeletion } =
     params;
-  const { getLaptopIds } = useContext(AppContext);
+//   const { getLaptopIds } = useContext(AppContext);
 
   const handleReAssignClick = () => {
-    getLaptopIds(data._id);
-    toggleOpenReassign();
+    // getLaptopIds(data._id);
+    // toggleOpenReassign();
   };
 
   const handleDeleteClick = () => {
-    getIdForDeletion(data._id);
-    toggleWarningOn();
+    // getIdForDeletion(data._id);
+    // toggleWarningOn();
   };
   return (
     <>

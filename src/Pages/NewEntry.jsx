@@ -19,7 +19,7 @@ export default function ReAssign({ toggleClose }) {
 
   function handleOwnedBy(e) {
     setOwnedBy(e.target.value);
-    if (e.target.value == "client") {
+    if (e.target.value == "Client") {
       setIsOwnedByClient(true);
     } else {
       setIsOwnedByClient(false);
@@ -40,7 +40,7 @@ export default function ReAssign({ toggleClose }) {
     if (startDate) {
       const date = formatDate(startDate);
       setFinalDate(date);
-      console.log(date);
+      // console.log(date);
     }
   }, [startDate]);
 
@@ -123,7 +123,7 @@ export default function ReAssign({ toggleClose }) {
                     <input
                       type="radio"
                       className="form-radio"
-                      value="company"
+                      value="Company"
                       checked={ownedBy === "Company"}
                       onChange={handleOwnedBy}
                     />
@@ -133,7 +133,7 @@ export default function ReAssign({ toggleClose }) {
                     <input
                       type="radio"
                       className="form-radio"
-                      value="client"
+                      value="Client"
                       checked={ownedBy === "Client"}
                       onChange={handleOwnedBy}
                     />
@@ -149,7 +149,7 @@ export default function ReAssign({ toggleClose }) {
                       type="text"
                       className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                       value={laptopClientName}
-                      defaultValue="Panorama"
+                      // defaultValue="Panorama"
                       onChange={(e) => setLaptopClientName(e.target.value)}
                     />
                   </div>

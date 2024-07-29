@@ -5,6 +5,7 @@ import LandingText from "../Components/LandingText";
 import DownArrow from "../Components/DownArrow";
 import Button from "../Components/Button";
 import AgGridTable from "../Components/AgGridTable";
+import HistoryTable from "../Components/HistoryTable";
 
 export default function Landing() {
 
@@ -19,7 +20,7 @@ export default function Landing() {
         />
         <DownArrow />
         <Button />
-        {/* <AgGridTable /> */}
+        {/* <HistoryTable /> */}
       </div>
     </div>
   );

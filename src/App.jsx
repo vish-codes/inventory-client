@@ -23,19 +23,19 @@ function App() {
           throw new Error("not ok");
         }
         const data = await response.json();
-        // console.log(data);
+        console.log(data);
         setListData(data);
         // localStorage.setItem("laptops", JSON.stringify(data.data));
       } catch (error) {
-        console.error(error);
+        console.error('ERROR: ',error);
       }
     }
     fetchData();
   }, []);
 
-  // DELETE data
+  // DELETE dat-----------------------------------//
   async function handleDelete(id) {
-    console.log("hello" + id);
+    console.log("Id getting deleted:" + id);
     if (!id) return;
     try {
       const response = await fetch(
