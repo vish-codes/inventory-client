@@ -3,13 +3,14 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
+import Loader from "./Loader";
 
 export default function AgGridTable({
   toggleWarningOn,
   toggleOpenReassign,
   getIdForDeletion,
 }) {
-  const { listData } = useContext(AppContext);
+  const { listData, isLoading } = useContext(AppContext);
   const [rowData, setRowData] = useState([{}]);
 
   useEffect(() => {
@@ -47,6 +48,8 @@ export default function AgGridTable({
     {
       field: "LaptopName",
       minWidth: 150,
+      // valueGetter: (el) => el.data.laptopName,
+      // cellRenderer: "historyButton",
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
@@ -97,24 +100,29 @@ export default function AgGridTable({
 
   const pagination = true;
   const paginationPageSize = 10;
-  const paginationPageSizeSelector = [10, 22];
+  const paginationPageSizeSelector = [10, 20];
 
   return (
     <div
       className="ag-theme-quartz m-5"
       style={{ height: "calc(100vh - 150px)", overflow: "hidden" }}
     >
-      <AgGridReact
-        rowData={rowData}
-        pagination={pagination}
-        paginationPageSize={paginationPageSize}
-        paginationPageSizeSelector={paginationPageSizeSelector}
-        columnDefs={columnDefs}
-        components={{
-          buttonForTest: ButtonForTest,
-        }}
-        domLayout="autoHeight" 
-      />
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <AgGridReact
+          rowData={rowData}
+          pagination={pagination}
+          paginationPageSize={paginationPageSize}
+          paginationPageSizeSelector={paginationPageSizeSelector}
+          columnDefs={columnDefs}
+          components={{
+            buttonForTest: ButtonForTest,
+            historyButton: HistoryButton,
+          }}
+          domLayout="autoHeight"
+        />
+      )}
     </div>
   );
 }
@@ -147,6 +155,11 @@ function ButtonForTest(params) {
       >
         Delete
       </button>
+      {/* <img src='./images/history.png' />; */}
     </>
   );
+}
+
+function HistoryButton(params) {
+  return <img src="./images/history.png" />;
 }

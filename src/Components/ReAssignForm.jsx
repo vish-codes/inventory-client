@@ -10,7 +10,14 @@ export default function ReAssignForm({ toggleCloseReassign }) {
   const { handleUpdate } = useContext(AppContext);
 
   const handleOptionChange = (event) => {
-    setSelectedOption((prev) => [...prev, event.target.value]);
+    const value = event.target.value;
+    setSelectedOption((prev) => {
+      if (event.target.checked) {
+        return [...prev, value];
+      } else {
+        return prev.filter((item) => item !== value);
+      }
+    });
   };
 
   function handleReassignFormSubmit(e) {
@@ -72,10 +79,10 @@ export default function ReAssignForm({ toggleCloseReassign }) {
                     <input
                       type="checkbox"
                       className="form-checkbox"
-                      value="Headphone"
+                      value="Charger"
                       onChange={handleOptionChange}
                     />
-                    <span className="ml-2">Headphone</span>
+                    <span className="ml-2">Charger</span>
                   </label>
                   <label className="inline-flex items-center ml-6">
                     <input

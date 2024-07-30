@@ -8,6 +8,7 @@ import { AppContext } from "../App";
 import DeleteWarning from "../Components/DeleteWarning";
 import AgGridTable from "../Components/AgGridTable";
 import Popup from "../Components/Popup";
+import Loader from "../Components/Loader";
 
 export default function DashBoard() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,7 +18,7 @@ export default function DashBoard() {
   const [getLaptopId, setGetLaptopId] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
 
-  const { handleDelete } = useContext(AppContext);
+  const { handleDelete, isLoading } = useContext(AppContext);
   //------------------------------------
 
   function resetGetLaptopId() {
@@ -49,7 +50,6 @@ export default function DashBoard() {
     setIsOpenReassign(false);
   }
 
-
   return (
     <div
       className={`bg-gray-50 shadow-lg flex flex-col rounded-2xl w-screen h-screen`}
@@ -60,6 +60,7 @@ export default function DashBoard() {
       <button
         className="flex font-sans items-center ml-10 justify-center rounded-3xl text-white border-2 border-pano-blue text-l bg-pano-blue shoadow-inner w-40 hover:bg-white hover:text-pano-blue hover:border-pano-blue"
         onClick={toggleOpen}
+        disabled={isLoading}
       >
         Add Entry +
       </button>
@@ -79,6 +80,7 @@ export default function DashBoard() {
       {isOpenReassign ? (
         <ReAssignForm toggleCloseReassign={toggleCloseReassign} />
       ) : null}
+      {/* <Loader /> */}
     </div>
   );
 }

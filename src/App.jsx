@@ -12,10 +12,12 @@ export const AppContext = createContext("");
 function App() {
   const [listData, setListData] = useState([]);
   const [getLaptopId, setGetLaptopId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // GET data
   useEffect(() => {
     async function fetchData() {
+      setIsLoading(true);
       try {
         const response = await fetch(
           "https://inventory-85i2.onrender.com/api/v1/allLaptops"
@@ -27,6 +29,8 @@ function App() {
         setListData(data);
       } catch (error) {
         console.error("ERROR: ", error);
+      } finally {
+        setIsLoading(false);
       }
     }
     fetchData();
@@ -128,6 +132,7 @@ function App() {
         handleUpdate,
         getLaptopIds,
         addNewEntry,
+        isLoading
       }}
     >
       <BrowserRouter>

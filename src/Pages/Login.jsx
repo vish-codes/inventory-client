@@ -1,11 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import BrandLogo from "../Components/BrandLogo";
 import Heading from "../Components/Heading";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { AppContext } from "../App";
 
 export default function Login() {
   const [error, setError] = useState(false);
   const [details, setDetails] = useState({ email: "", password: "" });
+  const [loginLoading, setLoginLoading] = useState(false);
+  const { isLoading } = useContext(AppContext);
 
   const navigate = useNavigate();
 
@@ -19,6 +22,7 @@ export default function Login() {
     if (details.email === "" && details.password === "") return;
 
     try {
+      setLoginLoading(true);
       const res = await fetch(
         "https://inventory-85i2.onrender.com/api/v1/login",
         {
@@ -29,16 +33,18 @@ export default function Login() {
       );
       if (!res.ok) {
         setError(true);
+        setDetails({ email: "", password: "" });
         throw new Error("Invalid credentials");
       }
       const data = await res.json();
-      console.log(data.token);
       localStorage.setItem("token", `Bearer ${data.token}`);
       setError(false);
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
       setError(true);
+    } finally {
+      setLoginLoading(false);
     }
   }
 
@@ -94,6 +100,7 @@ export default function Login() {
             <button
               className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
+              disabled={loginLoading}
             >
               Login
             </button>

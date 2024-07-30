@@ -15,6 +15,7 @@ export default function ReAssign({ toggleClose }) {
   const [startDate, setStartDate] = useState(new Date());
   const [finalDate, setFinalDate] = useState(null);
   const [empId, setEmpId] = useState("");
+
   const { addNewEntry } = useContext(AppContext);
 
   function handleOwnedBy(e) {
@@ -25,6 +26,7 @@ export default function ReAssign({ toggleClose }) {
       setIsOwnedByClient(false);
     }
   }
+
   // date formatting fuction :)
   const formatDate = (date) =>
     new Intl.DateTimeFormat("en", {
@@ -43,9 +45,15 @@ export default function ReAssign({ toggleClose }) {
   }, [startDate]);
 
   const handleOptionChange = (event) => {
-    setSelectedOption((prev) => [...prev, event.target.value]);
+    const value = event.target.value;
+    setSelectedOption((prev) => {
+      if (event.target.checked) {
+        return [...prev, value];
+      } else {
+        return prev.filter((item) => item !== value);
+      }
+    });
   };
-
   function handleFormSubmit(e) {
     e.preventDefault();
     let tempObj = {
@@ -160,10 +168,10 @@ export default function ReAssign({ toggleClose }) {
                     <input
                       type="checkbox"
                       className="form-checkbox"
-                      value="Headphone"
+                      value="Charger"
                       onChange={handleOptionChange}
                     />
-                    <span className="ml-2">Headphone</span>
+                    <span className="ml-2">Charger</span>
                   </label>
                   <label className="inline-flex items-center ml-6">
                     <input
@@ -241,6 +249,49 @@ export default function ReAssign({ toggleClose }) {
             </form>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function checkbox() {
+  const [selectedOption, setSelectedOption] = useState([]);
+  const handleOptionChange = (event) => {
+    setSelectedOption((prev) => [...prev, event.target.value]);
+  };
+  return (
+    <div className="mb-4">
+      <span className="block text-sm font-medium text-gray-700">
+        Accessories:
+      </span>
+      <div className="mt-2">
+        <label className="inline-flex items-center">
+          <input
+            type="checkbox"
+            className="form-checkbox"
+            value="Headphone"
+            onChange={handleOptionChange}
+          />
+          <span className="ml-2">Headphone</span>
+        </label>
+        <label className="inline-flex items-center ml-6">
+          <input
+            type="checkbox"
+            className="form-checkbox"
+            value="Keyboard"
+            onChange={handleOptionChange}
+          />
+          <span className="ml-2">Keyboard</span>
+        </label>
+        <label className="inline-flex items-center ml-6">
+          <input
+            type="checkbox"
+            className="form-checkbox"
+            value="Mouse"
+            onChange={handleOptionChange}
+          />
+          <span className="ml-2">Mouse</span>
+        </label>
       </div>
     </div>
   );
