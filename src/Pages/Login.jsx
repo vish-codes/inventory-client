@@ -16,7 +16,7 @@ export default function Login() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if(details.email === "" && details.password === "") return;
+    if (details.email === "" && details.password === "") return;
 
     try {
       const res = await fetch(
@@ -33,7 +33,7 @@ export default function Login() {
       }
       const data = await res.json();
       console.log(data.token);
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", `Bearer ${data.token}`);
       setError(false);
       navigate("/dashboard");
     } catch (err) {
@@ -52,7 +52,9 @@ export default function Login() {
           <BrandLogo>Inventory</BrandLogo>
           <p className="text-center my-4 font-sans font-bold text-2xl">Login</p>
           {error ? (
-            <p className="text-sm text-center text-red-400">Invalid Email or Password!</p>
+            <p className="text-sm text-center text-red-400">
+              Invalid Email or Password!
+            </p>
           ) : null}
           <div className="mb-4">
             <label

@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Landing from "./Pages/Landing";
 import Login from "./Pages/Login";
 import DashBoard from "./Pages/DashBoard";
+import PrivateRoutes from "../Auth/PrivateRoutes";
 import { useEffect } from "react";
 
 export const AppContext = createContext("");
@@ -25,20 +26,24 @@ function App() {
         const data = await response.json();
         setListData(data);
       } catch (error) {
-        console.error('ERROR: ',error);
+        console.error("ERROR: ", error);
       }
     }
     fetchData();
   }, []);
 
-  // DELETE dat-----------------------------------//
+  // DELETE data-----------------------------------//
   async function handleDelete(id) {
-    console.log("Id getting deleted:" + id);
     if (!id) return;
+
+    const token = localStorage.getItem("token");
     try {
       const response = await fetch(
         `https://inventory-85i2.onrender.com/api/v1/delete/${id}`,
-        { method: "DELETE", headers: { "Content-Type": "application/json" } }
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json", authorization: token },
+        }
       );
       if (!response.ok) {
         throw new Error("not ok");
@@ -58,12 +63,13 @@ function App() {
 
   async function handleUpdate(details) {
     if (!(getLaptopId || details)) return;
+    const token = localStorage.getItem("token");
     try {
       const response = await fetch(
         `https://inventory-85i2.onrender.com/api/v1/reAssign/${getLaptopId}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", authorization: token },
           body: JSON.stringify(details),
         }
       );
@@ -71,6 +77,7 @@ function App() {
         throw new Error("not ok");
       }
       const data = await response.json();
+      console.log(data);
       setListData(data);
       setGetLaptopId(null);
     } catch (error) {
@@ -85,12 +92,13 @@ function App() {
   // ---------------POST New Entry ----------------//
   async function addNewEntry(details) {
     if (!(getLaptopId || details)) return;
+    const token = localStorage.getItem("token");
     try {
       const response = await fetch(
         `https://inventory-85i2.onrender.com/api/v1/addLaptop`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", authorization: token },
           body: JSON.stringify(details),
         }
       );
@@ -108,29 +116,32 @@ function App() {
     addNewEntry;
   }, []);
 
-
   function getLaptopIds(id) {
     setGetLaptopId(id);
   }
 
-  // console.log(localStorage.getItem("data"));
   return (
     <AppContext.Provider
-      value={{ listData, handleDelete, handleUpdate, getLaptopIds, addNewEntry }}
+      value={{
+        listData,
+        handleDelete,
+        handleUpdate,
+        getLaptopIds,
+        addNewEntry,
+      }}
     >
       <BrowserRouter>
         <Routes>
           <Route index element={<Landing />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<DashBoard />} />
-          <Route path="/login" element={<Login />} />
+          <Route element={<PrivateRoutes />}>
+            {" "}
+            <Route path="/dashboard" element={<DashBoard />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </AppContext.Provider>
   );
-}
-{
-  /* <Route path="/send" element={< />} /> */
 }
 
 export default App;

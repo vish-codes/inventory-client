@@ -25,7 +25,6 @@ export default function ReAssign({ toggleClose }) {
       setIsOwnedByClient(false);
     }
   }
-  console.log(startDate);
   // date formatting fuction :)
   const formatDate = (date) =>
     new Intl.DateTimeFormat("en", {
@@ -40,15 +39,12 @@ export default function ReAssign({ toggleClose }) {
     if (startDate) {
       const date = formatDate(startDate);
       setFinalDate(date);
-      // console.log(date);
     }
   }, [startDate]);
 
-  // console.log('Date:', startDate, 'Type of :', typeof startDate);
   const handleOptionChange = (event) => {
     setSelectedOption((prev) => [...prev, event.target.value]);
   };
-  // console.log(selectedOption);
 
   function handleFormSubmit(e) {
     e.preventDefault();
@@ -225,15 +221,6 @@ export default function ReAssign({ toggleClose }) {
                   value={remarks}
                   onChange={(e) => setRemarks(e.target.value)}
                 ></textarea>
-                {/* <label className="block text-sm font-medium text-gray-700">
-                  Remarks:
-                </label>
-                <input
-                  type="text"
-                  className="mt-1 block border-2 border-ingigo-500 font-sans shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
-                  value={remarks}
-                  onChange={(e) => setRemarks(e.target.value)}
-                /> */}
               </div>
               <div className="flex justify-end">
                 <button

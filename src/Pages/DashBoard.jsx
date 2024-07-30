@@ -7,6 +7,7 @@ import ShowNumberCount from "../Components/ShowNumberCount";
 import { AppContext } from "../App";
 import DeleteWarning from "../Components/DeleteWarning";
 import AgGridTable from "../Components/AgGridTable";
+import Popup from "../Components/Popup";
 
 export default function DashBoard() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,6 +15,7 @@ export default function DashBoard() {
   const { listData } = useContext(AppContext);
   const [deleteWarn, setDeleteWarn] = useState(false);
   const [getLaptopId, setGetLaptopId] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
 
   const { handleDelete } = useContext(AppContext);
   //------------------------------------
@@ -24,7 +26,6 @@ export default function DashBoard() {
 
   function getIdForDeletion(id) {
     toggleWarningOn();
-    console.log(id);
     setGetLaptopId(id);
   }
 
@@ -36,27 +37,25 @@ export default function DashBoard() {
   }
   //------------------------------------
   function toggleOpen() {
-    console.log("Toggled open state");
     setIsOpen(true);
   }
   function toggleClose() {
-    console.log("toggled close state");
     setIsOpen(false);
   }
   function toggleOpenReassign() {
-    console.log("Toggled open state");
     setIsOpenReassign(true);
   }
   function toggleCloseReassign() {
-    console.log("toggled close state");
     setIsOpenReassign(false);
   }
+
 
   return (
     <div
       className={`bg-gray-50 shadow-lg flex flex-col rounded-2xl w-screen h-screen`}
     >
       <DashboardNavBar />
+      {showPopup ? <Popup /> : null}
       <ShowNumberCount listData={listData} />
       <button
         className="flex font-sans items-center ml-10 justify-center rounded-3xl text-white border-2 border-pano-blue text-l bg-pano-blue shoadow-inner w-40 hover:bg-white hover:text-pano-blue hover:border-pano-blue"
@@ -71,11 +70,6 @@ export default function DashBoard() {
           toggleWarningOff={toggleWarningOff}
         />
       ) : null}
-      {/* <LaptopTable
-        toggleWarningOn={toggleWarningOn}
-        toggleOpenReassign={toggleOpenReassign}
-        getIdForDeletion={getIdForDeletion}
-      /> */}
       <AgGridTable
         toggleWarningOn={toggleWarningOn}
         toggleOpenReassign={toggleOpenReassign}

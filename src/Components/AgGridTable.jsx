@@ -1,5 +1,5 @@
-import { AgGridReact } from "ag-grid-react"; 
-import "ag-grid-community/styles/ag-grid.css"; 
+import { AgGridReact } from "ag-grid-react";
+import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
@@ -31,21 +31,22 @@ export default function AgGridTable({
   const columnDefs = [
     {
       field: "SNo",
-      maxWidth: 100,
+      maxWidth: 80,
       valueGetter: "node.rowIndex + 1",
       filter: true,
       floatingFilter: true,
     },
-    { field: "Date", maxWidth: 140, filter: true, floatingFilter: true },
+    { field: "Date", minWidth: 120, filter: true, floatingFilter: true },
     {
       field: "SystemId",
-      maxWidth: 100,
+      maxWidth: 130,
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
     },
     {
       field: "LaptopName",
+      minWidth: 150,
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
@@ -53,6 +54,7 @@ export default function AgGridTable({
     {
       field: "OwnedBy",
       valueGetter: (el) => el.data.OwnedBy + " (" + el.data.OwnerName + ")",
+      minWidth: 150,
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
@@ -60,32 +62,33 @@ export default function AgGridTable({
     {
       field: "AssignedTo",
       valueGetter: (el) => el.data.AssignedTo + " (" + el.data.EmpId + ")",
+      minWidth: 150,
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
     },
     {
       field: "Accessories",
+      minWidth: 120,
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
     },
     {
       field: "Remark",
-      maxWidth: 200,
+      minWidth: 180,
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
     },
     {
       field: "Action",
-      maxWidth: 350,
+      minWidth: 200,
       cellRenderer: "buttonForTest",
       cellRendererParams: {
         toggleWarningOn,
         toggleOpenReassign,
         getIdForDeletion,
-        // params
       },
       flex: 1,
       cellClass: "no-divider",
@@ -97,17 +100,20 @@ export default function AgGridTable({
   const paginationPageSizeSelector = [10, 22];
 
   return (
-    <div className="ag-theme-quartz m-5" style={{ height: 567 }}>
+    <div
+      className="ag-theme-quartz m-5"
+      style={{ height: "calc(100vh - 150px)", overflow: "hidden" }}
+    >
       <AgGridReact
         rowData={rowData}
         pagination={pagination}
         paginationPageSize={paginationPageSize}
         paginationPageSizeSelector={paginationPageSizeSelector}
         columnDefs={columnDefs}
-        // treeData={true}
         components={{
           buttonForTest: ButtonForTest,
         }}
+        domLayout="autoHeight" 
       />
     </div>
   );
@@ -129,16 +135,15 @@ function ButtonForTest(params) {
   };
   return (
     <>
-      {" "}
       <button
         onClick={handleReAssignClick}
-        className="px-4 py-1 bg-pano-blue text-sm font-medium m-1 text-white rounded-md shadow-md mr-2 hover:bg-blue-800"
+        className="px-3 py-1 bg-pano-blue text-xs font-medium m-1 text-white rounded-md shadow-md mr-2 hover:bg-blue-800"
       >
         Re-Assign
       </button>
       <button
         onClick={handleDeleteClick}
-        className="px-4 m-1 text-sm font-medium  py-1 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600"
+        className="px-3 py-1 text-xs font-medium m-1 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600"
       >
         Delete
       </button>

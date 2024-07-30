@@ -8,9 +8,7 @@ const LaptopTable = ({
   toggleWarningOn,
 }) => {
   const { listData, handleDelete, getLaptopIds } = useContext(AppContext);
-  // console.log("this is list main data", listData);
   const tableData = listData?.data;
-  // console.log("this is cutout data" , tableData);
 
   return (
     <div className="overflow-x-auto mx-10 my-3 shadow-lg rounded">

@@ -6,16 +6,17 @@ export default function ReAssignForm({ toggleCloseReassign }) {
   const [assignTo, setAssignTo] = useState("");
   const [selectedOption, setSelectedOption] = useState([]);
   const [remarks, setRemarks] = useState("");
+  const [empId, setEmpId] = useState("");
   const { handleUpdate } = useContext(AppContext);
 
   const handleOptionChange = (event) => {
     setSelectedOption((prev) => [...prev, event.target.value]);
   };
-  // console.log(selectedOption);
 
   function handleReassignFormSubmit(e) {
     e.preventDefault();
     let tempObj = {
+      empId,
       assignedTo: assignTo,
       accessories: selectedOption,
       remark: remarks,
@@ -39,18 +40,17 @@ export default function ReAssignForm({ toggleCloseReassign }) {
         <div className="flex items-center justify-center min-h-screen p-4">
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
             <form onSubmit={handleReassignFormSubmit}>
-              {/* <div className="mb-4"> */}
-                {/* <label className="block text-sm font-medium text-gray-700">
-                Laptop ID:
-              </label> */}
-                {/* <input
-                type="text"
-                className="mt-1 block disabled:opacity-50 border-2 border-ingigo-500 font-mono shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-50"
-                value={id}
-                disabled={true}
-                onChange={(e) => setId(e.target.value)}
-              /> */}
-              {/* </div> */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Employee ID:
+                </label>
+                <input
+                  type="text"
+                  className="mt-1 block disabled:opacity-50 border-2 border-ingigo-500 font-mono shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-50"
+                  value={empId}
+                  onChange={(e) => setEmpId(e.target.value)}
+                />{" "}
+              </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
                   Assign To:

@@ -1,29 +1,26 @@
 import { Link } from "react-router-dom";
 
-// interface InputProps {
-//   placeholder?: string;
-//   type?: string;
-//   children?: ReactNode;
-// }
 const DashboardNavBar = () => {
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  }
+
   return (
-    <div className="shadow-lg sticky top-0 bg-gradient-to-t from-pano-blue to-pano-dark-blue flex justify-between items-center px-12 py-5 ">
-      <Link to="/">
-        {/* <h1 className="font-[pacifico] text-slate-700 flex flex-row justify-center items-center text-4xl m-2 cursor-pointer">
-          Inventory
-        </h1> */}
+    <div className="shadow-lg sticky top-0 bg-gradient-to-t from-pano-blue to-pano-dark-blue flex items-center justify-between px-4 md:px-12 py-3 md:py-5">
+      <Link to="/dashboard" className="flex items-center">
         <img
-          className="ml-9"
+          className="w-32 md:w-32"
           src="./images/panorama-light-logo.png"
           alt="panorama-logo"
         />
       </Link>
-      <div className="flex items-center space-x-4">
-        {/* <p className="font-mono text-xl">Hello,</p> */}
-        <div className="bg-gradient-to-t from-pano-dark-blue to-pano-blue text-2xl font-bold font-sans text-white cursor-pointer border-white border-2 rounded-full w-14 h-14 flex items-center justify-center">
-          U
-        </div>
-      </div>
+      <button 
+        onClick={handleLogout} 
+        className="font-mono font-bold text-white px-2 py-1 border-2 border-slate-300 hover:bg-blue-800 shadow-md rounded-md bg-pano-dark-blue text-xs md:text-sm">
+        Logout
+      </button>
     </div>
   );
 };
