@@ -6,6 +6,8 @@ import Login from "./Pages/Login";
 import DashBoard from "./Pages/DashBoard";
 import PrivateRoutes from "../Auth/PrivateRoutes";
 import { useEffect } from "react";
+import HistoryAgGridTable from "./Components/HistoryAgGridTable";
+import History from "./Pages/History";
 
 export const AppContext = createContext("");
 
@@ -13,6 +15,8 @@ function App() {
   const [listData, setListData] = useState([]);
   const [getLaptopId, setGetLaptopId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [history, setHistory] = useState(null);
+  const [getIdForHistory, setGetIdForHistory] = useState(null);
 
   // GET data
   useEffect(() => {
@@ -35,6 +39,31 @@ function App() {
     }
     fetchData();
   }, []);
+
+  // GET history data -------------------------------- //
+
+  async function getHistoryData() {
+    setIsLoading(true);
+    try {
+      const response = await fetch(
+        `https://inventory-85i2.onrender.com/api/v1/history/${getIdForHistory}`
+      );
+      if (!response.ok) {
+        throw new Error("not ok");
+      }
+      const data = await response.json();
+      setHistory(data);
+    } catch (error) {
+      console.error("ERROR: ", error);
+    } finally {
+      setIsLoading(false);
+      setGetIdForHistory(null);
+    }
+  }
+
+  useEffect(() => {
+    getHistoryData();
+  }, [getIdForHistory]);
 
   // DELETE data-----------------------------------//
   async function handleDelete(id) {
@@ -81,7 +110,6 @@ function App() {
         throw new Error("not ok");
       }
       const data = await response.json();
-      console.log(data);
       setListData(data);
       setGetLaptopId(null);
     } catch (error) {
@@ -124,6 +152,10 @@ function App() {
     setGetLaptopId(id);
   }
 
+  function getLaptopIdsForHistory(id) {
+    setGetIdForHistory(id);
+  }
+
   return (
     <AppContext.Provider
       value={{
@@ -132,7 +164,9 @@ function App() {
         handleUpdate,
         getLaptopIds,
         addNewEntry,
-        isLoading
+        isLoading,
+        history,
+        getLaptopIdsForHistory,
       }}
     >
       <BrowserRouter>
@@ -142,6 +176,7 @@ function App() {
           <Route element={<PrivateRoutes />}>
             {" "}
             <Route path="/dashboard" element={<DashBoard />} />
+            <Route path="/history/:id" element={<History />} />
           </Route>
         </Routes>
       </BrowserRouter>

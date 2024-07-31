@@ -4,6 +4,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
 import Loader from "./Loader";
+import { Link } from "react-router-dom";
 
 export default function AgGridTable({
   toggleWarningOn,
@@ -49,7 +50,7 @@ export default function AgGridTable({
       field: "LaptopName",
       minWidth: 150,
       // valueGetter: (el) => el.data.laptopName,
-      // cellRenderer: "historyButton",
+      cellRenderer: ReDirectToHistoryComponent,
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
@@ -118,12 +119,28 @@ export default function AgGridTable({
           columnDefs={columnDefs}
           components={{
             buttonForTest: ButtonForTest,
-            historyButton: HistoryButton,
           }}
+          onFirstDataRendered={(params) => params.api.sizeColumnsToFit()}
           domLayout="autoHeight"
         />
       )}
     </div>
+  );
+}
+
+function ReDirectToHistoryComponent(params) {
+  const { value, data } = params;
+  const { getLaptopIdsForHistory } = useContext(AppContext);
+  function handleClick() {
+    getLaptopIdsForHistory(data._id);
+  }
+  return (
+    <Link
+      to={`/history/${data.systemId}`}
+      className="text-blue-500 hover:underline"
+    >
+      <button onClick={handleClick}>{value}</button>
+    </Link>
   );
 }
 
@@ -158,8 +175,4 @@ function ButtonForTest(params) {
       {/* <img src='./images/history.png' />; */}
     </>
   );
-}
-
-function HistoryButton(params) {
-  return <img src="./images/history.png" />;
 }

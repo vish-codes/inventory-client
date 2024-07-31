@@ -9,6 +9,7 @@ import DeleteWarning from "../Components/DeleteWarning";
 import AgGridTable from "../Components/AgGridTable";
 import Popup from "../Components/Popup";
 import Loader from "../Components/Loader";
+import HistoryAgGridTable from "../Components/HistoryAgGridTable";
 
 export default function DashBoard() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +20,7 @@ export default function DashBoard() {
   const [showPopup, setShowPopup] = useState(false);
 
   const { handleDelete, isLoading } = useContext(AppContext);
-  //------------------------------------
+  //------------------------------------//
 
   function resetGetLaptopId() {
     setGetLaptopId(null);
@@ -80,7 +81,7 @@ export default function DashBoard() {
       {isOpenReassign ? (
         <ReAssignForm toggleCloseReassign={toggleCloseReassign} />
       ) : null}
-      {/* <Loader /> */}
+      {/* <HistoryAgGridTable /> */}
     </div>
   );
 }

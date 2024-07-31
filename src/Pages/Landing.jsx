@@ -5,7 +5,7 @@ import LandingText from "../Components/LandingText";
 import DownArrow from "../Components/DownArrow";
 import Button from "../Components/Button";
 import AgGridTable from "../Components/AgGridTable";
-import HistoryTable from "../Components/HistoryTable";
+import HistoryTable from "../Components/HistoryAgGridTable";
 import LoaderMain from "../Components/LoaderMain";
 
 export default function Landing() {
