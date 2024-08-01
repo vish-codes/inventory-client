@@ -34,7 +34,7 @@ export default function AgGridTable({
   const columnDefs = [
     {
       field: "SNo",
-      minWidth: 60,
+      minWidth: 80,
       valueGetter: "node.rowIndex + 1",
       filter: true,
       floatingFilter: true,
