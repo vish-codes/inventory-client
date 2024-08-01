@@ -41,6 +41,7 @@ function App() {
   // GET history data -------------------------------- //
 
   async function getHistoryData() {
+    if (!getIdForHistory) return;
     setIsLoading(true);
     try {
       const response = await fetch(

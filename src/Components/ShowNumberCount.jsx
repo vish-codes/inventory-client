@@ -4,12 +4,10 @@ const ShowNumberCount = ({ listData = {} }) => {
   const count = listData?.data?.length || 0;
 
   return (
-    <div className="flex items-center justify-center border-2 border-pano-blue-sec ml-4 sm:ml-6 md:ml-10 my-3 rounded-3xl p-1 sm:w-34 md:w-64 sm:m-5 shadow-md">
-      <div className="text-center">
-        <p className="text-base sm:text-lg md:text-xl font-semibold font-sans text-pano-blue-sec">
-          {`Available Items: ${count}`}
-        </p>
-      </div>
+    <div className="flex items-center justify-center border-2 border-blue-500 sm:border-blue-300 md:border-blue-400 rounded-xl p-1 m-2 ml-6 shadow-md max-w-xs">
+      <p className="text-xs sm:text-sm md:text-base font-semibold text-blue-500 text-center">
+        {`Available Items: ${count}`}
+      </p>
     </div>
   );
 };

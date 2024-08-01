@@ -91,7 +91,7 @@ export default function DashBoard() {
         <ShowNumberCount listData={listData} />
         {isHistoryVisible ? (
           <button
-            className="flex font-sans items-center ml-10 justify-center rounded-3xl text-red-500 border-2 border-red-500 text-l bg-white shoadow-inner w-40 hover:bg-red-500 hover:text-white hover:border-red-500"
+            className="flex font-sans items-center ml-6  justify-center rounded-3xl text-red-500 border-2 border-red-500 text-l bg-white shoadow-inner w-40 hover:bg-red-500 hover:text-white hover:border-red-500"
             onClick={togglehistoryOff}
             disabled={isLoading}
           >
@@ -99,7 +99,7 @@ export default function DashBoard() {
           </button>
         ) : (
           <button
-            className="flex font-sans items-center ml-10 justify-center rounded-3xl text-white border-2 border-pano-blue text-l bg-pano-blue shoadow-inner w-40 hover:bg-white hover:text-pano-blue hover:border-pano-blue"
+            className="flex font-sans items-center ml-6 justify-center rounded-3xl text-white border-2 border-pano-blue text-l bg-pano-blue shoadow-inner w-40 hover:bg-white hover:text-pano-blue hover:border-pano-blue"
             onClick={toggleOpen}
             disabled={isLoading}
           >
@@ -108,7 +108,7 @@ export default function DashBoard() {
         )}
         {deleteWarn ? (
           <DeleteWarning
-            notify={notify}
+            
             resetGetLaptopId={resetGetLaptopId}
             getLaptopId={getLaptopId}
             toggleWarningOff={toggleWarningOff}
@@ -126,11 +126,11 @@ export default function DashBoard() {
           />
         )}
         {isOpen ? (
-          <NewEntry NewEntryNotify={NewEntryNotify} toggleClose={toggleClose} />
+          <NewEntry toggleClose={toggleClose} />
         ) : null}
         {isOpenReassign ? (
           <ReAssignForm
-            reAssignNotify={reAssignNotify}
+            
             toggleCloseReassign={toggleCloseReassign}
           />
         ) : null}

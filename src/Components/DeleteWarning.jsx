@@ -5,12 +5,10 @@ export default function DeleteWarning({
   toggleWarningOff,
   getLaptopId,
   resetGetLaptopId,
-  notify,
 }) {
   const { handleDelete } = useContext(AppContext);
   function handleDeletionSubmit() {
     handleDelete(getLaptopId);
-    notify();
     resetGetLaptopId();
     toggleWarningOff();
     console.log("deleted");

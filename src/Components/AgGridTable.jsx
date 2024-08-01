@@ -34,15 +34,15 @@ export default function AgGridTable({
   const columnDefs = [
     {
       field: "SNo",
-      maxWidth: 80,
+      minWidth: 60,
       valueGetter: "node.rowIndex + 1",
       filter: true,
       floatingFilter: true,
     },
-    { field: "Date", minWidth: 120, filter: true, floatingFilter: true },
+    { field: "Date", minWidth: 150, filter: true, floatingFilter: true },
     {
       field: "SystemId",
-      maxWidth: 130,
+      minWidth: 100,
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
@@ -70,7 +70,7 @@ export default function AgGridTable({
     {
       field: "AssignedTo",
       valueGetter: (el) => el.data.AssignedTo + " (" + el.data.EmpId + ")",
-      minWidth: 150,
+      minWidth: 190,
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
@@ -141,7 +141,7 @@ function ReDirectToHistoryComponent(params) {
   }
   return (
     <button className="text-blue-500 hover:underline" onClick={handleClick}>
-      {value} hi
+      {value}
     </button>
   );
 }

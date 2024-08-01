@@ -3,7 +3,7 @@ import { AppContext } from "../App";
 import Datepicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-export default function ReAssign({ toggleClose, NewEntryNotify }) {
+export default function ReAssign({ toggleClose }) {
   const [id, setId] = useState("");
   const [laptop, setLaptop] = useState("");
   const [isOwnedByClient, setIsOwnedByClient] = useState(false);
@@ -68,7 +68,6 @@ export default function ReAssign({ toggleClose, NewEntryNotify }) {
       remark: remarks,
     };
     addNewEntry(tempObj);
-    NewEntryNotify();
     toggleClose();
   }
 
@@ -93,7 +92,7 @@ export default function ReAssign({ toggleClose, NewEntryNotify }) {
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-indigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   value={id}
                   onChange={(e) => setId(e.target.value)}
                 />
@@ -104,7 +103,7 @@ export default function ReAssign({ toggleClose, NewEntryNotify }) {
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-indigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   value={laptop}
                   onChange={(e) => setLaptop(e.target.value)}
                 />
@@ -114,7 +113,7 @@ export default function ReAssign({ toggleClose, NewEntryNotify }) {
                   Date:
                 </label>
                 <Datepicker
-                  className="border-2 border-indigo-500 rounded-md text-sm w-full"
+                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
                 />
@@ -132,7 +131,7 @@ export default function ReAssign({ toggleClose, NewEntryNotify }) {
                       checked={ownedBy === "Company"}
                       onChange={handleOwnedBy}
                     />
-                    <span className="ml-2">Company</span>
+                    <span className="mx-2">Company</span>
                   </label>
                   <label className="inline-flex items-center mb-2">
                     <input
@@ -142,7 +141,7 @@ export default function ReAssign({ toggleClose, NewEntryNotify }) {
                       checked={ownedBy === "Client"}
                       onChange={handleOwnedBy}
                     />
-                    <span className="ml-2">Client</span>
+                    <span className="mx-2">Client</span>
                   </label>
                 </div>
                 {isOwnedByClient && (
@@ -152,7 +151,7 @@ export default function ReAssign({ toggleClose, NewEntryNotify }) {
                     </label>
                     <input
                       type="text"
-                      className="mt-1 block border-2 border-indigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                      className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                       value={laptopClientName}
                       onChange={(e) => setLaptopClientName(e.target.value)}
                     />
@@ -171,7 +170,7 @@ export default function ReAssign({ toggleClose, NewEntryNotify }) {
                       value="Charger"
                       onChange={handleOptionChange}
                     />
-                    <span className="ml-2">Charger</span>
+                    <span className="mx-2">Charger</span>
                   </label>
                   <label className="inline-flex items-center mb-2">
                     <input
@@ -180,7 +179,7 @@ export default function ReAssign({ toggleClose, NewEntryNotify }) {
                       value="Keyboard"
                       onChange={handleOptionChange}
                     />
-                    <span className="ml-2">Keyboard</span>
+                    <span className="mx-2">Keyboard</span>
                   </label>
                   <label className="inline-flex items-center mb-2">
                     <input
@@ -189,7 +188,7 @@ export default function ReAssign({ toggleClose, NewEntryNotify }) {
                       value="Mouse"
                       onChange={handleOptionChange}
                     />
-                    <span className="ml-2">Mouse</span>
+                    <span className="mx-2">Mouse</span>
                   </label>
                 </div>
               </div>
@@ -199,7 +198,7 @@ export default function ReAssign({ toggleClose, NewEntryNotify }) {
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-indigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   value={employeeName}
                   onChange={(e) => setEmployeeName(e.target.value)}
                 />
@@ -210,7 +209,7 @@ export default function ReAssign({ toggleClose, NewEntryNotify }) {
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-indigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   value={empId}
                   onChange={(e) => setEmpId(e.target.value)}
                 />
@@ -224,7 +223,7 @@ export default function ReAssign({ toggleClose, NewEntryNotify }) {
                 </label>
                 <textarea
                   rows="2"
-                  className="mt-1 text-sm block border-2 border-indigo-500 font-sans shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   placeholder="Leave a comment..."
                   value={remarks}
                   onChange={(e) => setRemarks(e.target.value)}

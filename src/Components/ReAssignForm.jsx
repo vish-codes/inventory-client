@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { AppContext } from "../App";
 
-export default function ReAssignForm({ toggleCloseReassign, reAssignNotify }) {
+export default function ReAssignForm({ toggleCloseReassign }) {
   // const [id, setId] = useState("");
   const [assignTo, setAssignTo] = useState("");
   const [selectedOption, setSelectedOption] = useState([]);
@@ -40,7 +40,6 @@ export default function ReAssignForm({ toggleCloseReassign, reAssignNotify }) {
       remark: remarks,
     };
     handleUpdate(tempObj);
-    reAssignNotify();
     toggleCloseReassign();
   }
 
@@ -65,7 +64,7 @@ export default function ReAssignForm({ toggleCloseReassign, reAssignNotify }) {
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-indigo-500 font-mono shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   value={empId}
                   onChange={(e) => setEmpId(e.target.value)}
                 />
@@ -76,7 +75,7 @@ export default function ReAssignForm({ toggleCloseReassign, reAssignNotify }) {
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-indigo-500 font-mono shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   value={assignTo}
                   onChange={(e) => setAssignTo(e.target.value)}
                 />
@@ -94,7 +93,7 @@ export default function ReAssignForm({ toggleCloseReassign, reAssignNotify }) {
                       value="Charger"
                       onChange={handleOptionChange}
                     />
-                    <span className="ml-2">Charger</span>
+                    <span className="mx-2">Charger</span>
                   </label>
                   <label className="inline-flex items-center mb-2">
                     <input
@@ -103,7 +102,7 @@ export default function ReAssignForm({ toggleCloseReassign, reAssignNotify }) {
                       value="Keyboard"
                       onChange={handleOptionChange}
                     />
-                    <span className="ml-2">Keyboard</span>
+                    <span className="mx-2">Keyboard</span>
                   </label>
                   <label className="inline-flex items-center mb-2">
                     <input
@@ -112,7 +111,7 @@ export default function ReAssignForm({ toggleCloseReassign, reAssignNotify }) {
                       value="Mouse"
                       onChange={handleOptionChange}
                     />
-                    <span className="ml-2">Mouse</span>
+                    <span className="mx-2">Mouse</span>
                   </label>
                 </div>
               </div>
@@ -122,7 +121,7 @@ export default function ReAssignForm({ toggleCloseReassign, reAssignNotify }) {
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-indigo-500 font-mono shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   value={remarks}
                   onChange={(e) => setRemarks(e.target.value)}
                 />
