@@ -119,12 +119,13 @@ export default function ReAssignForm({ toggleCloseReassign }) {
                 <label className="block text-sm font-medium text-gray-700">
                   Remarks:
                 </label>
-                <input
-                  type="text"
+                <textarea
+                  rows="2"
                   className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  placeholder="Leave a comment..."
                   value={remarks}
                   onChange={(e) => setRemarks(e.target.value)}
-                />
+                ></textarea>
               </div>
               <div className="flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-2">
                 <button
