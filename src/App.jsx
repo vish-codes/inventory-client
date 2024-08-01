@@ -61,7 +61,7 @@ function App() {
 
   useEffect(() => {
     getHistoryData();
-  }, [getIdForHistory]);
+  }, [getIdForHistory, getLaptopId]);
 
   // DELETE data----------------------------------- //
   async function handleDelete(id) {
