@@ -30,34 +30,34 @@ export default function HistoryAgGridTable({ togglehistoryOn }) {
       valueGetter: "node.rowIndex + 1",
       filter: true,
       floatingFilter: true,
-      minWidth: 80, 
+      minWidth: 80,
     },
     {
       field: "FromDate",
       filter: true,
       floatingFilter: true,
-      minWidth: 160, 
+      minWidth: 160,
     },
     {
       field: "ToDate",
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
-      minWidth: 160, 
+      minWidth: 160,
     },
     {
       field: "SystemId",
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
-      minWidth: 120, 
+      minWidth: 120,
     },
     {
       field: "LaptopName",
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
-      minWidth: 150, 
+      minWidth: 150,
     },
     {
       field: "AssignedTo",
@@ -66,14 +66,14 @@ export default function HistoryAgGridTable({ togglehistoryOn }) {
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
-      minWidth: 200, 
+      minWidth: 200,
     },
     {
       field: "Accessories",
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
-      minWidth: 190, 
+      minWidth: 190,
     },
   ];
 
@@ -82,7 +82,7 @@ export default function HistoryAgGridTable({ togglehistoryOn }) {
   return (
     <div
       className="ag-theme-quartz m-5 overflow-x-auto"
-      style={{ height: "calc(100vh - 150px)"}}
+      style={{ height: "calc(100vh - 150px)" }}
     >
       {isLoading ? (
         <p>Loading...</p>
@@ -91,6 +91,7 @@ export default function HistoryAgGridTable({ togglehistoryOn }) {
           rowData={rowData}
           pagination={true}
           paginationPageSize={paginationPageSize}
+          paginationPageSizeSelector={false}
           columnDefs={columnDefs}
           domLayout="autoHeight"
           onFirstDataRendered={(params) => params.api.sizeColumnsToFit()} // Adjust column minWidth on initial render

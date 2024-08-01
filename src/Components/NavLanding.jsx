@@ -5,7 +5,7 @@ export default function NavLanding() {
     <div className="shadow-lg sticky top-0 bg-gradient-to-t from-pano-blue to-pano-dark-blue flex items-center justify-between px-4 sm:px-6 md:px-10 lg:px-28 py-4">
       <Link to="/" className="flex items-center">
         <img
-          className="w-36 sm:w-42 md:w-48 lg:w-56"
+          className="w-36 m-4 sm:w-42 md:w-48 lg:w-56"
           src="./images/panorama-light-logo.png"
           alt="panorama-logo"
         />
