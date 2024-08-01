@@ -1,14 +1,11 @@
 import { useContext, useState } from "react";
 import DashboardNavBar from "../Components/DashboardNavBar";
-import LaptopTable from "../Components/LaptopTable";
 import NewEntry from "./NewEntry";
 import ReAssignForm from "../Components/ReAssignForm";
 import ShowNumberCount from "../Components/ShowNumberCount";
 import { AppContext } from "../App";
 import DeleteWarning from "../Components/DeleteWarning";
 import AgGridTable from "../Components/AgGridTable";
-import Popup from "../Components/Popup";
-import Loader from "../Components/Loader";
 import HistoryAgGridTable from "../Components/HistoryAgGridTable";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -86,10 +83,8 @@ export default function DashBoard() {
       <div
         className={`bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col mt-8 rounded-2xl w-screen h-screen sm:px-5`}
       >
-        {/* {showPopup ? <Popup /> : null} */}
         <ToastContainer onClick={notify} />
         <ShowNumberCount listData={listData} />
-       
         {isHistoryVisible ? (
           <button
             className="flex font-sans items-center ml-6  justify-center rounded-3xl text-red-500 border-2 border-red-500 text-l bg-white shoadow-inner w-40 hover:bg-red-500 hover:text-white hover:border-red-500"
@@ -107,6 +102,10 @@ export default function DashBoard() {
             Add Entry +
           </button>
         )}
+        <h2 className="font-sans text-center font-bold underline text-xl pt-4 text-gray-600">
+          {isHistoryVisible ? "History" : "Accessories"} Table
+        </h2>
+
         {deleteWarn ? (
           <DeleteWarning
             resetGetLaptopId={resetGetLaptopId}
@@ -115,7 +114,7 @@ export default function DashBoard() {
           />
         ) : null}
 
-        {isHistoryVisible  ? (
+        {isHistoryVisible ? (
           <HistoryAgGridTable togglehistoryOn={togglehistoryOn} />
         ) : (
           <AgGridTable
