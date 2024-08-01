@@ -42,7 +42,7 @@ export default function AgGridTable({
     { field: "Date", minWidth: 150, filter: true, floatingFilter: true },
     {
       field: "SystemId",
-      minWidth: 100,
+      minWidth: 130,
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
