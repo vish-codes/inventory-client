@@ -84,11 +84,12 @@ export default function DashBoard() {
       {" "}
       <DashboardNavBar />
       <div
-        className={`bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col rounded-2xl w-screen h-screen sm:px-5`}
+        className={`bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col mt-8 rounded-2xl w-screen h-screen sm:px-5`}
       >
         {/* {showPopup ? <Popup /> : null} */}
         <ToastContainer onClick={notify} />
         <ShowNumberCount listData={listData} />
+       
         {isHistoryVisible ? (
           <button
             className="flex font-sans items-center ml-6  justify-center rounded-3xl text-red-500 border-2 border-red-500 text-l bg-white shoadow-inner w-40 hover:bg-red-500 hover:text-white hover:border-red-500"
@@ -108,14 +109,13 @@ export default function DashBoard() {
         )}
         {deleteWarn ? (
           <DeleteWarning
-            
             resetGetLaptopId={resetGetLaptopId}
             getLaptopId={getLaptopId}
             toggleWarningOff={toggleWarningOff}
           />
         ) : null}
 
-        {isHistoryVisible ? (
+        {isHistoryVisible  ? (
           <HistoryAgGridTable togglehistoryOn={togglehistoryOn} />
         ) : (
           <AgGridTable
@@ -125,16 +125,10 @@ export default function DashBoard() {
             getIdForDeletion={getIdForDeletion}
           />
         )}
-        {isOpen ? (
-          <NewEntry toggleClose={toggleClose} />
-        ) : null}
+        {isOpen ? <NewEntry toggleClose={toggleClose} /> : null}
         {isOpenReassign ? (
-          <ReAssignForm
-            
-            toggleCloseReassign={toggleCloseReassign}
-          />
+          <ReAssignForm toggleCloseReassign={toggleCloseReassign} />
         ) : null}
-        {/* <HistoryAgGridTable /> */}
       </div>
     </>
   );

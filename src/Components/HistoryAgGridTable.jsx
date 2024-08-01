@@ -3,7 +3,7 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
-import Loader from "./Loader";
+// import Loader from "./Loader";
 
 export default function HistoryAgGridTable({ togglehistoryOn }) {
   const { history, isLoading } = useContext(AppContext);
@@ -81,11 +81,11 @@ export default function HistoryAgGridTable({ togglehistoryOn }) {
 
   return (
     <div
-      className="ag-theme-quartz m-5"
+      className="ag-theme-quartz m-5 overflow-x-auto"
       style={{ height: "calc(100vh - 150px)", overflow: "auto", minWidth: "100%" }}
     >
       {isLoading ? (
-        <Loader />
+        <p>Loading...</p>
       ) : (
         <AgGridReact
           rowData={rowData}

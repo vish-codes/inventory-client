@@ -109,7 +109,7 @@ export default function AgGridTable({
 
   return (
     <div
-      className="ag-theme-quartz m-5"
+      className="ag-theme-quartz m-5 overflow-x-auto"
       style={{ height: "calc(100vh - 150px)", overflow: "hidden" }}
     >
       {isLoading ? (

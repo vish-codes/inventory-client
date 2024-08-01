@@ -51,7 +51,7 @@ export default function Login() {
 
   return (
     <div className="bg-gray-50 flex flex-col justify-center items-center min-h-screen md:flex-row">
-      {isLoading ? (
+      {isLoading && loginLoading ? (
         <LoaderMain />
       ) : (
         <div className="w-full max-w-xs">
