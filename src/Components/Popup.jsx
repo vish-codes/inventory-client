@@ -1,3 +1,4 @@
+/*
 import React from "react";
 
 export default function Popup() {
@@ -57,3 +58,4 @@ export default function Popup() {
     </div>
   );
 }
+*/

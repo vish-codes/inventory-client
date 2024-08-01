@@ -1,3 +1,4 @@
+/*
 import { useContext } from "react";
 import { AppContext } from "../App";
 import DeleteWarning from "./DeleteWarning";
@@ -115,3 +116,4 @@ function TableRows({
 }
 
 export default LaptopTable;
+*/
