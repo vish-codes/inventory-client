@@ -8,6 +8,7 @@ import Loader from "./Loader";
 export default function HistoryAgGridTable({ togglehistoryOn }) {
   const { history, isLoading } = useContext(AppContext);
   const [rowData, setRowData] = useState([]);
+
   useEffect(() => {
     let data =
       history?.data?.history?.map((data) => ({
@@ -29,34 +30,34 @@ export default function HistoryAgGridTable({ togglehistoryOn }) {
       valueGetter: "node.rowIndex + 1",
       filter: true,
       floatingFilter: true,
-      flex: 1,
+      minWidth: 80, 
     },
     {
       field: "FromDate",
       filter: true,
       floatingFilter: true,
-      flex: 1,
+      minWidth: 160, 
     },
     {
       field: "ToDate",
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
-      flex: 1,
+      minWidth: 160, 
     },
     {
       field: "SystemId",
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
-      flex: 1,
+      minWidth: 120, 
     },
     {
       field: "LaptopName",
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
-      flex: 1,
+      minWidth: 150, 
     },
     {
       field: "AssignedTo",
@@ -65,21 +66,24 @@ export default function HistoryAgGridTable({ togglehistoryOn }) {
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
-      flex: 1,
+      minWidth: 200, 
     },
     {
       field: "Accessories",
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
-      flex: 1,
+      minWidth: 190, 
     },
   ];
 
   const paginationPageSize = 10;
 
   return (
-    <div className="ag-theme-quartz flex flex-col w-full h-full p-5">
+    <div
+      className="ag-theme-quartz m-5"
+      style={{ height: "calc(100vh - 150px)", overflow: "auto", minWidth: "100%" }}
+    >
       {isLoading ? (
         <Loader />
       ) : (
@@ -89,8 +93,7 @@ export default function HistoryAgGridTable({ togglehistoryOn }) {
           paginationPageSize={paginationPageSize}
           columnDefs={columnDefs}
           domLayout="autoHeight"
-          // className="w-full h-full"
-          onFirstDataRendered={(params) => params.api.sizeColumnsToFit()} // column fix for widths on first render
+          onFirstDataRendered={(params) => params.api.sizeColumnsToFit()} // Adjust column minWidth on initial render
         />
       )}
     </div>

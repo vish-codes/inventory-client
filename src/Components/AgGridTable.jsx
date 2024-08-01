@@ -124,6 +124,7 @@ export default function AgGridTable({
           components={{
             buttonForTest: ButtonForTest,
           }}
+          rowSelection="multiple"
           onFirstDataRendered={(params) => params.api.sizeColumnsToFit()}
           domLayout="autoHeight"
         />
