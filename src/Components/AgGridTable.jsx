@@ -105,7 +105,7 @@ export default function AgGridTable({
 
   const pagination = true;
   const paginationPageSize = 10;
-  const paginationPageSizeSelector = [10, 20];
+  // const paginationPageSizeSelector = [10, 20];
 
   return (
     <div
@@ -119,7 +119,7 @@ export default function AgGridTable({
           rowData={rowData}
           pagination={pagination}
           paginationPageSize={paginationPageSize}
-          paginationPageSizeSelector={paginationPageSizeSelector}
+          paginationPageSizeSelector={false}
           columnDefs={columnDefs}
           components={{
             buttonForTest: ButtonForTest,
