@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
 import Loader from "./Loader";
 
-export default function HistoryAgGridTable() {
+export default function HistoryAgGridTable({ togglehistoryOn }) {
   const { history, isLoading } = useContext(AppContext);
   const [rowData, setRowData] = useState([]);
   useEffect(() => {

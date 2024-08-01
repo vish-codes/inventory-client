@@ -10,6 +10,7 @@ export default function AgGridTable({
   toggleWarningOn,
   toggleOpenReassign,
   getIdForDeletion,
+  togglehistoryOn,
 }) {
   const { listData, isLoading } = useContext(AppContext);
   const [rowData, setRowData] = useState([{}]);
@@ -51,6 +52,9 @@ export default function AgGridTable({
       minWidth: 150,
       // valueGetter: (el) => el.data.laptopName,
       cellRenderer: ReDirectToHistoryComponent,
+      cellRendererParams: {
+        togglehistoryOn,
+      },
       filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
@@ -129,18 +133,16 @@ export default function AgGridTable({
 }
 
 function ReDirectToHistoryComponent(params) {
-  const { value, data } = params;
+  const { value, data, togglehistoryOn } = params;
   const { getLaptopIdsForHistory } = useContext(AppContext);
   function handleClick() {
     getLaptopIdsForHistory(data._id);
+    togglehistoryOn();
   }
   return (
-    <Link
-      to={`/history/${data.systemId}`}
-      className="text-blue-500 hover:underline"
-    >
-      <button onClick={handleClick}>{value}</button>
-    </Link>
+    <button className="text-blue-500 hover:underline" onClick={handleClick}>
+      {value} hi
+    </button>
   );
 }
 

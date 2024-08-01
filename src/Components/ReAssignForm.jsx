@@ -1,13 +1,22 @@
 import { useContext, useState } from "react";
 import { AppContext } from "../App";
 
-export default function ReAssignForm({ toggleCloseReassign }) {
+export default function ReAssignForm({ toggleCloseReassign, reAssignNotify }) {
   // const [id, setId] = useState("");
   const [assignTo, setAssignTo] = useState("");
   const [selectedOption, setSelectedOption] = useState([]);
   const [remarks, setRemarks] = useState("");
   const [empId, setEmpId] = useState("");
   const { handleUpdate } = useContext(AppContext);
+
+  // date formatting fuction :)
+  const formatDate = (date) =>
+    new Intl.DateTimeFormat("en", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      // weekday: "long",
+    }).format(new Date(date));
 
   const handleOptionChange = (event) => {
     const value = event.target.value;
@@ -22,13 +31,16 @@ export default function ReAssignForm({ toggleCloseReassign }) {
 
   function handleReassignFormSubmit(e) {
     e.preventDefault();
+    const date = formatDate(new Date());
     let tempObj = {
       empId,
+      date,
       assignedTo: assignTo,
       accessories: selectedOption,
       remark: remarks,
     };
     handleUpdate(tempObj);
+    reAssignNotify();
     toggleCloseReassign();
   }
 
@@ -43,9 +55,9 @@ export default function ReAssignForm({ toggleCloseReassign }) {
         className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
         aria-hidden="true"
       ></div>
-      <div className="fixed z-10 inset-0 overflow-y-auto shadow-2xl">
+      <div className="fixed z-10 inset-0 overflow-y-auto">
         <div className="flex items-center justify-center min-h-screen p-4">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm md:max-w-md lg:max-w-lg">
             <form onSubmit={handleReassignFormSubmit}>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
@@ -53,10 +65,10 @@ export default function ReAssignForm({ toggleCloseReassign }) {
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block disabled:opacity-50 border-2 border-ingigo-500 font-mono shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-50"
+                  className="mt-1 block border-2 border-indigo-500 font-mono shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   value={empId}
                   onChange={(e) => setEmpId(e.target.value)}
-                />{" "}
+                />
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
@@ -64,7 +76,7 @@ export default function ReAssignForm({ toggleCloseReassign }) {
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-ingigo-500 font-mono shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className="mt-1 block border-2 border-indigo-500 font-mono shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   value={assignTo}
                   onChange={(e) => setAssignTo(e.target.value)}
                 />
@@ -75,7 +87,7 @@ export default function ReAssignForm({ toggleCloseReassign }) {
                   Accessories:
                 </span>
                 <div className="mt-2">
-                  <label className="inline-flex items-center">
+                  <label className="inline-flex items-center mb-2">
                     <input
                       type="checkbox"
                       className="form-checkbox"
@@ -84,7 +96,7 @@ export default function ReAssignForm({ toggleCloseReassign }) {
                     />
                     <span className="ml-2">Charger</span>
                   </label>
-                  <label className="inline-flex items-center ml-6">
+                  <label className="inline-flex items-center mb-2">
                     <input
                       type="checkbox"
                       className="form-checkbox"
@@ -93,7 +105,7 @@ export default function ReAssignForm({ toggleCloseReassign }) {
                     />
                     <span className="ml-2">Keyboard</span>
                   </label>
-                  <label className="inline-flex items-center ml-6">
+                  <label className="inline-flex items-center mb-2">
                     <input
                       type="checkbox"
                       className="form-checkbox"
@@ -110,22 +122,22 @@ export default function ReAssignForm({ toggleCloseReassign }) {
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-ingigo-500 font-mono shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className="mt-1 block border-2 border-indigo-500 font-mono shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   value={remarks}
                   onChange={(e) => setRemarks(e.target.value)}
                 />
               </div>
-              <div className="flex justify-end">
+              <div className="flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-2">
                 <button
-                  type="submit"
-                  className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                  type="button"
+                  className="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                   onClick={() => toggleCloseReassign()}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="inline-flex justify-center px-4 py-2 ml-1 text-sm font-medium text-white bg-pano-blue  border-black rounded-md shadow-sm hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+                  className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-pano-blue border border-transparent rounded-md shadow-sm hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
                   onClick={handleReassignFormSubmit}
                 >
                   Confirm

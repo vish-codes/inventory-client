@@ -6,8 +6,6 @@ import Login from "./Pages/Login";
 import DashBoard from "./Pages/DashBoard";
 import PrivateRoutes from "../Auth/PrivateRoutes";
 import { useEffect } from "react";
-import HistoryAgGridTable from "./Components/HistoryAgGridTable";
-import History from "./Pages/History";
 
 export const AppContext = createContext("");
 
@@ -18,7 +16,7 @@ function App() {
   const [history, setHistory] = useState(null);
   const [getIdForHistory, setGetIdForHistory] = useState(null);
 
-  // GET data
+  // GET data ------------------------------------ //
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
@@ -57,7 +55,6 @@ function App() {
       console.error("ERROR: ", error);
     } finally {
       setIsLoading(false);
-      setGetIdForHistory(null);
     }
   }
 
@@ -65,7 +62,7 @@ function App() {
     getHistoryData();
   }, [getIdForHistory]);
 
-  // DELETE data-----------------------------------//
+  // DELETE data----------------------------------- //
   async function handleDelete(id) {
     if (!id) return;
 
@@ -88,11 +85,12 @@ function App() {
     }
   }
   useEffect(() => {
-    handleDelete;
-  }, [listData]);
+    if (getIdForHistory) {
+      handleDelete;
+    }
+  }, [listData, getIdForHistory]);
 
-  // ------------------------------------------------------
-  // UPDATE data
+  // UPDATE data -------------------------------------------- //
 
   async function handleUpdate(details) {
     if (!(getLaptopId || details)) return;
@@ -121,7 +119,7 @@ function App() {
     handleUpdate;
   }, [getLaptopId]);
 
-  // ---------------POST New Entry ----------------//
+  // POST New Entry ------------------------------------ //
   async function addNewEntry(details) {
     if (!(getLaptopId || details)) return;
     const token = localStorage.getItem("token");
@@ -176,7 +174,6 @@ function App() {
           <Route element={<PrivateRoutes />}>
             {" "}
             <Route path="/dashboard" element={<DashBoard />} />
-            <Route path="/history/:id" element={<History />} />
           </Route>
         </Routes>
       </BrowserRouter>
