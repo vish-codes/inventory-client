@@ -3,6 +3,7 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
+import Load from "../Pages/Load";
 // import Loader from "./Loader";
 
 export default function HistoryAgGridTable({ togglehistoryOn }) {
@@ -85,8 +86,9 @@ export default function HistoryAgGridTable({ togglehistoryOn }) {
       style={{ height: "calc(100vh - 150px)" }}
     >
       {isLoading ? (
-        <p>Loading...</p>
+        <Load />
       ) : (
+        // <p>Loading...</p>
         <AgGridReact
           rowData={rowData}
           pagination={true}

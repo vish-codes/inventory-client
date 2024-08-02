@@ -69,6 +69,7 @@ function App() {
 
     const token = localStorage.getItem("token");
     try {
+      setIsLoading(true);
       const response = await fetch(
         `https://inventory-85i2.onrender.com/api/v1/delete/${id}`,
         {
@@ -83,6 +84,8 @@ function App() {
       setListData(data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
   useEffect(() => {
@@ -97,6 +100,7 @@ function App() {
     if (!(getLaptopId || details)) return;
     const token = localStorage.getItem("token");
     try {
+      setIsLoading(true);
       const response = await fetch(
         `https://inventory-85i2.onrender.com/api/v1/reAssign/${getLaptopId}`,
         {
@@ -113,6 +117,8 @@ function App() {
       setGetLaptopId(null);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 

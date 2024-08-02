@@ -2,8 +2,14 @@ import React from "react";
 
 export default function Load() {
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="rounded-md h-12 w-12 border-4 border-t-4 border-blue-500 border-transparent animate-spin"></div>
+    <div className="flex items-center justify-center">
+      {/* //   <div class="w-12 h-12 border-8 border-dashed rounded-full animate-spin border-blue-600"></div>
+    // </div> */}
+      <div class="flex gap-2">
+        <div class="w-5 h-5 rounded-full animate-pulse bg-blue-600"></div>
+        <div class="w-5 h-5 rounded-full animate-pulse bg-blue-600"></div>
+        <div class="w-5 h-5 rounded-full animate-pulse bg-blue-600"></div>
+      </div>
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
 import Loader from "./Loader";
 import { Link } from "react-router-dom";
+import Load from "../Pages/Load";
 
 export default function AgGridTable({
   toggleWarningOn,
@@ -113,7 +114,7 @@ export default function AgGridTable({
       style={{ height: "calc(100vh - 150px)", overflow: "hidden" }}
     >
       {isLoading ? (
-        <Loader />
+        <Load />
       ) : (
         <AgGridReact
           rowData={rowData}
