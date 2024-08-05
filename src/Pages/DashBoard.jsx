@@ -81,9 +81,9 @@ export default function DashBoard() {
       {" "}
       <DashboardNavBar />
       <div
-        className={`bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col mt-8 rounded-2xl w-screen h-screen sm:px-5`}
+        className={`bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col mt-8 rounded-2xl w-full h-screen sm:px-5`}
       >
-        <ToastContainer onClick={notify} />
+        {/* <ToastContainer onClick={notify} /> */}
         <ShowNumberCount listData={listData} />
         {isHistoryVisible ? (
           <button
