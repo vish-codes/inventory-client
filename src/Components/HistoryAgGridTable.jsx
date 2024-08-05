@@ -105,7 +105,7 @@ export default function HistoryAgGridTable({ togglehistoryOn }) {
       ) : (
         <>
           <button
-            className="font-sans  mb-2 text-green-700 border-2 border-green-700 p-1 rounded-lg hover:text-white hover:bg-green-700 hover:border-2 hover:border-green-700"
+            className="font-sans text-l px-4 mb-2 text-green-700 border-2 border-green-700 p-1 rounded-lg hover:text-white hover:bg-green-700 hover:border-2 hover:border-green-700"
             onClick={exportAsExcel}
           >
             Export As Excel

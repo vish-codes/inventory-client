@@ -22,7 +22,7 @@ export default function AgGridTable({
   }
 
   function exportAsExcel() {
-    if(gridApiRef.current){
+    if (gridApiRef.current) {
       gridApiRef.current.exportDataAsCsv();
     }
   }
@@ -129,7 +129,7 @@ export default function AgGridTable({
       ) : (
         <>
           <button
-            className="font-sans mb-2 text-sm text-white border-2 border-green-700 bg-green-700 p-1 rounded-lg hover:text-green-700 hover:bg-white hover:border-2 hover:border-green-700"
+            className="font-sans mb-2 text-l px-4 text-white border-2 border-green-700 bg-green-700 p-1 rounded-lg hover:text-green-700 hover:bg-white hover:border-2 hover:border-green-700"
             onClick={exportAsExcel}
           >
             Export As Excel
@@ -144,6 +144,9 @@ export default function AgGridTable({
             animateRows={true}
             ref={gridApiRef}
             onGridReady={onGridReady}
+            overlayNoRowsTemplate={
+              '<span aria-live="polite" aria-atomic="true">No data available! Please search for other values</span>'
+            }
             components={{
               buttonForTest: ButtonForTest,
             }}
