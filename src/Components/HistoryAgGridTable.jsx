@@ -1,14 +1,25 @@
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "../App";
 import Load from "../Pages/Load";
-// import Loader from "./Loader";
+// import 'ag-grid-enterprise';
 
 export default function HistoryAgGridTable({ togglehistoryOn }) {
   const { history, isLoading } = useContext(AppContext);
   const [rowData, setRowData] = useState([]);
+  const gridApiRef = useRef(null);
+
+  const onGridReady = (params) => {
+    gridApiRef.current = params.api;
+  };
+
+  const exportAsExcel = () => {
+    if (gridApiRef.current) {
+      gridApiRef.current.exportDataAsCsv();
+    }
+  };
 
   useEffect(() => {
     let data =
@@ -78,6 +89,10 @@ export default function HistoryAgGridTable({ togglehistoryOn }) {
     },
   ];
 
+  const onBtExport = () => {
+    gridApi.exportDataAsExcel();
+  };
+
   const paginationPageSize = 10;
 
   return (
@@ -88,16 +103,30 @@ export default function HistoryAgGridTable({ togglehistoryOn }) {
       {isLoading ? (
         <Load />
       ) : (
-        // <p>Loading...</p>
-        <AgGridReact
-          rowData={rowData}
-          pagination={true}
-          paginationPageSize={paginationPageSize}
-          paginationPageSizeSelector={false}
-          columnDefs={columnDefs}
-          domLayout="autoHeight"
-          onFirstDataRendered={(params) => params.api.sizeColumnsToFit()} // Adjust column minWidth on initial render
-        />
+        <>
+          <button
+            className="font-sans  mb-2 text-green-700 border-2 border-green-700 p-1 rounded-lg hover:text-white hover:bg-green-700 hover:border-2 hover:border-green-700"
+            onClick={exportAsExcel}
+          >
+            Export As Excel
+          </button>
+          <AgGridReact
+            rowData={rowData}
+            pagination={true}
+            paginationPageSize={paginationPageSize}
+            paginationPageSizeSelector={false}
+            columnDefs={columnDefs}
+            domLayout="autoHeight"
+            rowSelection="single"
+            animateRows={true}
+            ref={gridApiRef}
+            onGridReady={onGridReady}
+            onFirstDataRendered={(params) => params.api.sizeColumnsToFit()}
+            overlayNoRowsTemplate={
+              '<span aria-live="polite" aria-atomic="true">No data available! Please search for other values</span>'
+            }
+          />
+        </>
       )}
     </div>
   );

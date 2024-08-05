@@ -1,7 +1,7 @@
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "../App";
 import Loader from "./Loader";
 import { Link } from "react-router-dom";
@@ -15,6 +15,17 @@ export default function AgGridTable({
 }) {
   const { listData, isLoading } = useContext(AppContext);
   const [rowData, setRowData] = useState([{}]);
+  const gridApiRef = useRef(null);
+
+  function onGridReady(params) {
+    gridApiRef.current = params.api;
+  }
+
+  function exportAsExcel() {
+    if(gridApiRef.current){
+      gridApiRef.current.exportDataAsCsv();
+    }
+  }
 
   useEffect(() => {
     let data = listData?.data?.map((data) => ({
@@ -116,19 +127,30 @@ export default function AgGridTable({
       {isLoading ? (
         <Load />
       ) : (
-        <AgGridReact
-          rowData={rowData}
-          pagination={pagination}
-          paginationPageSize={paginationPageSize}
-          paginationPageSizeSelector={false}
-          columnDefs={columnDefs}
-          components={{
-            buttonForTest: ButtonForTest,
-          }}
-          rowSelection="multiple"
-          onFirstDataRendered={(params) => params.api.sizeColumnsToFit()}
-          domLayout="autoHeight"
-        />
+        <>
+          <button
+            className="font-sans mb-2 text-sm text-white border-2 border-green-700 bg-green-700 p-1 rounded-lg hover:text-green-700 hover:bg-white hover:border-2 hover:border-green-700"
+            onClick={exportAsExcel}
+          >
+            Export As Excel
+          </button>
+          <AgGridReact
+            rowData={rowData}
+            pagination={pagination}
+            paginationPageSize={paginationPageSize}
+            paginationPageSizeSelector={false}
+            columnDefs={columnDefs}
+            rowSelection="single"
+            animateRows={true}
+            ref={gridApiRef}
+            onGridReady={onGridReady}
+            components={{
+              buttonForTest: ButtonForTest,
+            }}
+            onFirstDataRendered={(params) => params.api.sizeColumnsToFit()}
+            domLayout="autoHeight"
+          />
+        </>
       )}
     </div>
   );
