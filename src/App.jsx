@@ -6,6 +6,7 @@ import Login from "./Pages/Login";
 import DashBoard from "./Pages/DashBoard";
 import PrivateRoutes from "../Auth/PrivateRoutes";
 import { useEffect } from "react";
+import GeneratePDF from "./Pages/GeneratePDF";
 
 export const AppContext = createContext("");
 
@@ -181,6 +182,7 @@ function App() {
           <Route element={<PrivateRoutes />}>
             {" "}
             <Route path="/dashboard" element={<DashBoard />} />
+            <Route path="/genpdf" element={<GeneratePDF />} />
           </Route>
         </Routes>
       </BrowserRouter>

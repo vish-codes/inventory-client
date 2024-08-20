@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 
+mongodbPASS.txt
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
