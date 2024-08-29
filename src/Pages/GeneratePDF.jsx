@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { jsPDF } from "jspdf";
+import { motion } from "framer-motion";
 import Papa from "papaparse";
 import * as XLSX from "xlsx";
 import DashboardPdf from "../Components/DashboardPdf";
@@ -10,7 +11,7 @@ const GeneratePDF = () => {
 
   // Values variables START -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
   // const [dateOfInvoices, setDateOfInvoices] = useState(new Date());
-
+  const [errorMessage, setErrorMessage] = useState(false);
   const [isPdfPreviewVisible, setIsPdfPreviewVisible] = useState(false);
 
   const [resource, setResource] = useState({});
@@ -29,7 +30,50 @@ const GeneratePDF = () => {
       ["State/Code"]: state,
       ["Gst In"]: gstIn,
       ["Resource 1"]: resource,
+      ["Currency Type"]: currencyType,
+      ["Gst Rate"]: gstRate,
     } = data[0];
+
+    const requiredFields = {
+      invoiceNo,
+      dateOfInvoice,
+      companyName,
+      add1,
+      add2,
+      state,
+      gstIn,
+      resource,
+      currencyType,
+      gstRate,
+    };
+
+    // Check for missing fields
+    const missingFields = Object.entries(requiredFields)
+      .filter(([key, value]) => !value)
+      .map(([key]) => key);
+
+    if (missingFields.length > 0) {
+      console.error("Missing fields:", missingFields);
+      setErrorMessage(true);
+      setTimeout(() => {
+        // Check for missing fields
+        const missingFields = Object.entries(requiredFields)
+          .filter(([key, value]) => !value)
+          .map(([key]) => key);
+
+        if (missingFields.length > 0) {
+          console.error("Missing fields:", missingFields);
+          setErrorMessage(true);
+          setTimeout(() => {
+            setErrorMessage(false);
+          }, 7000);
+          return;
+        }
+        setErrorMessage(false);
+      }, 7000);
+      return;
+    }
+
     setCommonDataForPdf(() => ({
       invoiceNo,
       dateOfInvoice,
@@ -39,23 +83,27 @@ const GeneratePDF = () => {
       state,
       gstIn,
       resource,
+      gstRate,
+      currencyType,
     }));
-    calculateTotals();
+    calculateTotals(gstRate);
     handleRenderPdfPreview();
   }
 
+  // function for showing and hiding pdf preview
   function handleRenderPdfPreview() {
     generatePDF();
     setIsPdfPreviewVisible(true);
   }
 
+  // function responsible for download of pdf
   function handleFileSave() {
     generatePDF("active");
   }
 
   // calculate how subtotal, and total
 
-  const calculateTotals = () => {
+  const calculateTotals = (gstRate) => {
     // Calculate subtotal
     const subTotal = resourcesArr.reduce(
       (acc, val) => acc + parseFloat(val.payPerDay * val.days),
@@ -63,7 +111,7 @@ const GeneratePDF = () => {
     );
 
     // Calculate IGST and total
-    const igst = subTotal * 0.18;
+    const igst = (subTotal * gstRate) / 100;
     const total = subTotal + igst;
 
     // Set the state with an object containing the totals
@@ -194,7 +242,7 @@ const GeneratePDF = () => {
     let resourceTemp = resource;
     let tempArr = [];
 
-    const hello = resource.map((val, i) => {
+    const trimmedVar = resource.map((val, i) => {
       let customObject = {
         username: val.value0.split("=")[1].trim(),
         workingOn: val.value1.split("=")[1].trim(),
@@ -246,7 +294,7 @@ const GeneratePDF = () => {
     const doc = new jsPDF({
       orientation: "portrait",
       unit: "mm",
-      format: [270, 225], // w,h
+      format: [300, 225], // w,h
     });
 
     // doc.text(inputText || 'Hello world!', 10, 10);
@@ -400,7 +448,9 @@ const GeneratePDF = () => {
 
       doc.setFont("helvetica", "bold");
       doc.text(
-        `${res.days} Days * ${res.hours} Hours * ${res.payPerDay} INR`,
+        `${res.days} Days * ${res.hours} Hours * ${res.payPerDay} ${
+          commonDataForPdf.currencyType ? commonDataForPdf.currencyType : "INR"
+        }`,
         31.5,
         currentY + 6.7
       );
@@ -409,7 +459,13 @@ const GeneratePDF = () => {
       const temp = res.payPerDay * res.days;
       doc.text(temp.toString(), 173, currentY + 3.3);
 
-      doc.text("INR", 185, currentY + 3.3);
+      doc.text(
+        `${
+          commonDataForPdf.currencyType ? commonDataForPdf.currencyType : "INR"
+        }`,
+        185,
+        currentY + 3.3
+      );
       // ------- SAC CODE ----------------//
       doc.text(`${res.sacCode}`, 141, currentY + 3.3);
 
@@ -428,18 +484,42 @@ const GeneratePDF = () => {
 
     doc.text("SUBTOTAL", 31.5, subtotalY - 5);
     doc.text(totals.subTotal.toString(), 173, subtotalY - 5);
-    doc.text("INR", 185, subtotalY - 5);
+    doc.text(
+      `${
+        commonDataForPdf.currencyType ? commonDataForPdf.currencyType : "INR"
+      }`,
+      185,
+      subtotalY - 5
+    );
 
     doc.line(30, igstY - 10, 195, igstY - 10); // Divider for IGSTb ------------------
-    doc.text("IGST 18%", 31.5, igstY - 6);
+    doc.text(
+      `IGST ${
+        commonDataForPdf.gstRate ? `${commonDataForPdf.gstRate}%` : "N/A"
+      }`,
+      31.5,
+      igstY - 6
+    );
     doc.text(totals.igst.toString(), 173, igstY - 6);
-    doc.text("INR", 185, igstY - 6);
+    doc.text(
+      `${
+        commonDataForPdf.currencyType ? commonDataForPdf.currencyType : "INR"
+      }`,
+      185,
+      igstY - 6
+    );
 
     doc.line(30, totalY - 10.5, 195, totalY - 10.5); // Divider for TOTAL ------------------
     doc.setFont("helvetica", "bold");
     doc.text("TOTAL", 31.5, totalY - 6.5);
     doc.text(totals.total.toString(), 173, totalY - 6.5);
-    doc.text("INR", 185, totalY - 6.5);
+    doc.text(
+      `${
+        commonDataForPdf.currencyType ? commonDataForPdf.currencyType : "INR"
+      }`,
+      185,
+      totalY - 6.5
+    );
 
     // Thank You Message Position --------------------
     doc.setFontSize(9);
@@ -452,7 +532,7 @@ const GeneratePDF = () => {
       doc.save(
         `${
           commonDataForPdf.companyName
-            ? commonDataForPdf.companyName
+            ? `${commonDataForPdf.companyName}.pdf`
             : "Invoice.pdf"
         }`
       );
@@ -477,8 +557,9 @@ const GeneratePDF = () => {
     <div>
       <DashboardPdf />
       <div
-        className={`bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col mt-8 rounded-2xl w-full h-screen sm:px-5`}
+        className={`bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col mt-3 rounded-2xl w-full h-screen sm:px-5`}
       >
+        {errorMessage ? <ErrorComponent /> : null}
         <button
           onClick={generatePDFmain}
           className="py-1 m-2 w-32 px-2 rounded-md bg-pano-blue text-white shadow-lg font-sans"
@@ -495,20 +576,20 @@ const GeneratePDF = () => {
         </div>
         {isPdfPreviewVisible ? (
           <>
-            <div class="relative h-10 w-full">
+            <div className="relative h-10 w-full mb-5">
               <p className="absolute top-0 right-28 w-22 mx-5 p-2 ">
                 can't see preview?{" "}
               </p>
               <button
                 onClick={handleFileSave}
-                class="absolute top-0 right-0 w-22 mx-5 border boder-black p-2 text-sm rounded-lg bg-slate-600 text-white "
+                className="absolute top-0 right-0 w-22 mx-5 border boder-black p-2 text-sm rounded-lg bg-slate-600 text-white "
               >
                 Download PDF
               </button>
             </div>
             <iframe
               src={pdfUrl}
-              style={{ width: "100%", height: "800px", marginTop: "5px" }}
+              style={{ width: "100%", height: "800px" }}
               frameBorder="0"
               title="PDF Preview"
             ></iframe>
@@ -524,3 +605,29 @@ const GeneratePDF = () => {
 };
 
 export default GeneratePDF;
+
+function ErrorComponent() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 0 }}
+      animate={{ x: -10, opacity: 1 }}
+      exit={{ opacity: 0, x: 0 }}
+      className="flex items-center m-1 p-3 w-fit text-sm text-red-800 border border-red-300 rounded-lg bg-gray-50 ml-auto"
+      role="alert"
+    >
+      <svg
+        className="flex-shrink-0 inline w-4 h-4 me-3"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+      </svg>
+      <div>
+        <span className="font-medium">Alert!</span> Change a few things up and
+        try generating again.
+      </div>
+    </motion.div>
+  );
+}

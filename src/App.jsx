@@ -30,6 +30,7 @@ function App() {
         }
         const data = await response.json();
         setListData(data);
+        console.log(data);
       } catch (error) {
         console.error("ERROR: ", error);
       } finally {

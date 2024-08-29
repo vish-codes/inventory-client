@@ -15,6 +15,7 @@ export default function ReAssign({ toggleClose }) {
   const [startDate, setStartDate] = useState(new Date());
   const [finalDate, setFinalDate] = useState(null);
   const [empId, setEmpId] = useState("");
+  const [laptopPass, setLaptopPass] = useState("");
 
   const { addNewEntry } = useContext(AppContext);
 
@@ -60,6 +61,7 @@ export default function ReAssign({ toggleClose }) {
       systemId: id,
       date: finalDate,
       laptopName: laptop,
+      laptopPass,
       assignedTo: employeeName,
       empId,
       ownedBy,
@@ -106,6 +108,17 @@ export default function ReAssign({ toggleClose }) {
                   className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   value={laptop}
                   onChange={(e) => setLaptop(e.target.value)}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Laptop Password:
+                </label>
+                <input
+                  type="text"
+                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  value={laptopPass}
+                  onChange={(e) => setLaptopPass(e.target.value)}
                 />
               </div>
               <div className="mb-4">
