@@ -33,6 +33,7 @@ export default function AgGridTable({
       Date: data.date,
       SystemId: data.systemId,
       LaptopName: data.laptopName,
+      LaptopPassword: data.laptopPass,
       OwnedBy: data.ownedBy,
       OwnerName: data.ownerName,
       EmpId: data.empId,
@@ -63,7 +64,6 @@ export default function AgGridTable({
       field: "SystemId",
       minWidth: 130,
 
-      filter: "agSetColumnFilter",
       filter: true,
       floatingFilter: true,
     },
@@ -75,7 +75,13 @@ export default function AgGridTable({
       cellRendererParams: {
         togglehistoryOn,
       },
-      filter: "agSetColumnFilter",
+      filter: true,
+      floatingFilter: true,
+    },
+    {
+      field: "LaptopPassword",
+      minWidth: 150,
+
       filter: true,
       floatingFilter: true,
     },
@@ -83,7 +89,7 @@ export default function AgGridTable({
       field: "OwnedBy",
       valueGetter: (el) => el.data.OwnedBy + " (" + el.data.OwnerName + ")",
       minWidth: 150,
-      filter: "agSetColumnFilter",
+
       filter: true,
       floatingFilter: true,
     },
@@ -91,21 +97,21 @@ export default function AgGridTable({
       field: "AssignedTo",
       valueGetter: (el) => el.data.AssignedTo + " (" + el.data.EmpId + ")",
       minWidth: 190,
-      filter: "agSetColumnFilter",
+
       filter: true,
       floatingFilter: true,
     },
     {
       field: "Accessories",
       minWidth: 120,
-      filter: "agSetColumnFilter",
+
       filter: true,
       floatingFilter: true,
     },
     {
       field: "Remark",
       minWidth: 180,
-      filter: "agSetColumnFilter",
+
       filter: true,
       floatingFilter: true,
     },

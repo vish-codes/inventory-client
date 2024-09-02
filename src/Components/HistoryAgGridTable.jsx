@@ -52,21 +52,21 @@ export default function HistoryAgGridTable({ togglehistoryOn }) {
     },
     {
       field: "ToDate",
-      filter: "agSetColumnFilter",
+
       filter: true,
       floatingFilter: true,
       minWidth: 160,
     },
     {
       field: "SystemId",
-      filter: "agSetColumnFilter",
+
       filter: true,
       floatingFilter: true,
       minWidth: 120,
     },
     {
       field: "LaptopName",
-      filter: "agSetColumnFilter",
+
       filter: true,
       floatingFilter: true,
       minWidth: 150,
@@ -75,14 +75,14 @@ export default function HistoryAgGridTable({ togglehistoryOn }) {
       field: "AssignedTo",
       valueGetter: (params) =>
         `${params.data.AssignedTo} (${params.data.EmpId})`,
-      filter: "agSetColumnFilter",
+
       filter: true,
       floatingFilter: true,
       minWidth: 200,
     },
     {
       field: "Accessories",
-      filter: "agSetColumnFilter",
+
       filter: true,
       floatingFilter: true,
       minWidth: 190,

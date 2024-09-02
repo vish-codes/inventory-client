@@ -17,27 +17,22 @@ export default function ReAssign({ toggleClose }) {
   const [empId, setEmpId] = useState("");
   const [laptopPass, setLaptopPass] = useState("");
 
+  const [errors, setErrors] = useState({});
+
   const { addNewEntry } = useContext(AppContext);
 
   function handleOwnedBy(e) {
     setOwnedBy(e.target.value);
-    if (e.target.value == "Client") {
-      setIsOwnedByClient(true);
-    } else {
-      setIsOwnedByClient(false);
-    }
+    setIsOwnedByClient(e.target.value === "Client");
   }
 
-  // date formatting fuction :)
   const formatDate = (date) =>
     new Intl.DateTimeFormat("en", {
       day: "numeric",
       month: "long",
       year: "numeric",
-      // weekday: "long",
     }).format(new Date(date));
 
-  // getting date formatted here :)
   useEffect(() => {
     if (startDate) {
       const date = formatDate(startDate);
@@ -55,20 +50,38 @@ export default function ReAssign({ toggleClose }) {
       }
     });
   };
+
+  function validateForm() {
+    const newErrors = {};
+    if (!id) newErrors.id = "Laptop Id is required.";
+    if (!laptop) newErrors.laptop = "Laptop Name is required.";
+    if (!laptopPass) newErrors.laptopPass = "Laptop Password is required.";
+    if (!employeeName) newErrors.employeeName = "Assign To field is required.";
+    if (!empId) newErrors.empId = "Employee Id is required.";
+    if (!finalDate) newErrors.finalDate = "Date is required.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
   function handleFormSubmit(e) {
     e.preventDefault();
+
+    if (!validateForm()) return; // Prevent form submission if validation fails
+
     let tempObj = {
-      systemId: id,
+      systemId: id.trim(),
       date: finalDate,
-      laptopName: laptop,
-      laptopPass,
-      assignedTo: employeeName,
-      empId,
-      ownedBy,
-      ownerName: laptopClientName,
+      laptopName: laptop.trim(),
+      laptopPass: laptopPass.trim(),
+      assignedTo: employeeName.trim(),
+      empId: empId.trim(),
+      ownedBy: ownedBy.trim(),
+      ownerName: laptopClientName.trim(),
       accessories: selectedOption,
-      remark: remarks,
+      remark: remarks.trim(),
     };
+
     addNewEntry(tempObj);
     toggleClose();
   }
@@ -94,10 +107,15 @@ export default function ReAssign({ toggleClose }) {
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className={`mt-1 block border-2 font-sans text-sm shadow-inner w-full rounded-md ${
+                    errors.id ? "border-red-500" : "border-indigo-500"
+                  } focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50`}
                   value={id}
                   onChange={(e) => setId(e.target.value)}
                 />
+                {errors.id && (
+                  <p className="text-red-500 text-sm mt-1">{errors.id}</p>
+                )}
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
@@ -105,10 +123,15 @@ export default function ReAssign({ toggleClose }) {
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className={`mt-1 block border-2 font-sans text-sm shadow-inner w-full rounded-md ${
+                    errors.laptop ? "border-red-500" : "border-indigo-500"
+                  } focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50`}
                   value={laptop}
                   onChange={(e) => setLaptop(e.target.value)}
                 />
+                {errors.laptop && (
+                  <p className="text-red-500 text-sm mt-1">{errors.laptop}</p>
+                )}
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
@@ -116,20 +139,34 @@ export default function ReAssign({ toggleClose }) {
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className={`mt-1 block border-2 font-sans text-sm shadow-inner w-full rounded-md ${
+                    errors.laptopPass ? "border-red-500" : "border-indigo-500"
+                  } focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50`}
                   value={laptopPass}
                   onChange={(e) => setLaptopPass(e.target.value)}
                 />
+                {errors.laptopPass && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.laptopPass}
+                  </p>
+                )}
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
                   Date:
                 </label>
                 <Datepicker
-                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className={`mt-1 block border-2 font-sans text-sm shadow-inner w-full rounded-md ${
+                    errors.finalDate ? "border-red-500" : "border-indigo-500"
+                  } focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50`}
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
                 />
+                {errors.finalDate && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.finalDate}
+                  </p>
+                )}
               </div>
               <div className="mb-4">
                 <span className="block text-sm font-medium text-gray-700">
@@ -143,6 +180,7 @@ export default function ReAssign({ toggleClose }) {
                       value="Company"
                       checked={ownedBy === "Company"}
                       onChange={handleOwnedBy}
+                      required
                     />
                     <span className="mx-2">Company</span>
                   </label>
@@ -153,6 +191,7 @@ export default function ReAssign({ toggleClose }) {
                       value="Client"
                       checked={ownedBy === "Client"}
                       onChange={handleOwnedBy}
+                      required
                     />
                     <span className="mx-2">Client</span>
                   </label>
@@ -164,7 +203,7 @@ export default function ReAssign({ toggleClose }) {
                     </label>
                     <input
                       type="text"
-                      className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                      className="mt-1 block border-2 border-indigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                       value={laptopClientName}
                       onChange={(e) => setLaptopClientName(e.target.value)}
                     />
@@ -211,10 +250,17 @@ export default function ReAssign({ toggleClose }) {
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className={`mt-1 block border-2 font-sans text-sm shadow-inner w-full rounded-md ${
+                    errors.employeeName ? "border-red-500" : "border-indigo-500"
+                  } focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50`}
                   value={employeeName}
                   onChange={(e) => setEmployeeName(e.target.value)}
                 />
+                {errors.employeeName && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.employeeName}
+                  </p>
+                )}
               </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
@@ -222,40 +268,39 @@ export default function ReAssign({ toggleClose }) {
                 </label>
                 <input
                   type="text"
-                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                  className={`mt-1 block border-2 font-sans text-sm shadow-inner w-full rounded-md ${
+                    errors.empId ? "border-red-500" : "border-indigo-500"
+                  } focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50`}
                   value={empId}
                   onChange={(e) => setEmpId(e.target.value)}
                 />
+                {errors.empId && (
+                  <p className="text-red-500 text-sm mt-1">{errors.empId}</p>
+                )}
               </div>
               <div className="mb-4">
-                <label
-                  htmlFor="message"
-                  className="block mb-2 text-sm font-medium text-gray-700"
-                >
+                <label className="block text-sm font-medium text-gray-700">
                   Remarks:
                 </label>
                 <textarea
-                  rows="2"
-                  className="mt-1 block border-2 border-ingigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
-                  placeholder="Leave a comment..."
+                  className="mt-1 block border-2 border-indigo-500 font-sans text-sm shadow-inner w-full rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
                   value={remarks}
                   onChange={(e) => setRemarks(e.target.value)}
-                ></textarea>
+                />
               </div>
-              <div className="flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-2">
-                <button
-                  type="button"
-                  className="inline-flex justify-center px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                  onClick={() => toggleClose()}
-                >
-                  Cancel
-                </button>
+              <div className="flex justify-end mt-6">
                 <button
                   type="submit"
-                  className="inline-flex justify-center px-4 py-2 text-sm font-medium text-white bg-pano-blue border border-transparent rounded-md shadow-sm hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
-                  onClick={handleFormSubmit}
+                  className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                  Confirm
+                  Submit
+                </button>
+                <button
+                  type="button"
+                  onClick={toggleClose}
+                  className="ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                >
+                  Cancel
                 </button>
               </div>
             </form>

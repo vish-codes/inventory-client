@@ -34,11 +34,11 @@ export default function ReAssignForm({ toggleCloseReassign }) {
     if (!(empId && assignTo && selectedOption && remarks)) return;
     const date = formatDate(new Date());
     let tempObj = {
-      empId,
+      empId: empId.trim(),
       date,
-      assignedTo: assignTo,
-      accessories: selectedOption,
-      remark: remarks,
+      assignedTo: assignTo.trim(),
+      accessories: selectedOption.trim(),
+      remark: remarks.trim(),
     };
     handleUpdate(tempObj);
     toggleCloseReassign();
