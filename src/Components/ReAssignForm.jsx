@@ -37,7 +37,7 @@ export default function ReAssignForm({ toggleCloseReassign }) {
       empId: empId.trim(),
       date,
       assignedTo: assignTo.trim(),
-      accessories: selectedOption.trim(),
+      accessories: selectedOption,
       remark: remarks.trim(),
     };
     handleUpdate(tempObj);
