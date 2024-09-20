@@ -24,7 +24,7 @@ const GeneratePDF = () => {
     const {
       ["Invoice no."]: invoiceNo,
       ["Date of Invoice"]: dateOfInvoice,
-      ["Comapny Name"]: companyName,
+      ["Company Name"]: companyName,
       ["Address line 1"]: add1,
       ["Address line 2"]: add2,
       ["State/Code"]: state,
@@ -554,56 +554,90 @@ const GeneratePDF = () => {
   }, [inputText, resourcesArr]);
 
   return (
-    <div>
+    <div className="bg-gray-50">
       <DashboardPdf />
-      <div
-        className={`bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col mt-3 rounded-2xl w-full h-screen sm:px-5`}
-      >
-        {errorMessage ? <ErrorComponent /> : null}
-        <button
-          onClick={generatePDFmain}
-          className="py-1 m-2 w-32 px-2 rounded-md bg-pano-blue text-white shadow-lg font-sans"
-        >
-          Generate PDF
-        </button>
-        <div className="border font-sans border-black w-auto p-2 m-2 rounded-md">
-          <label>Select file : </label>
-          <input
-            type="file"
-            onChange={handleFileUpload}
-            accept=".csv, .xlsx, .xls"
-          />
-        </div>
-        {isPdfPreviewVisible ? (
-          <>
-            <div className="relative h-10 w-full mb-5">
-              <p className="absolute top-0 right-28 w-22 mx-5 p-2 ">
-                can't see preview?{" "}
-              </p>
-              <button
-                onClick={handleFileSave}
-                className="absolute top-0 right-0 w-22 mx-5 border boder-black p-2 text-sm rounded-lg bg-slate-600 text-white "
-              >
-                Download PDF
-              </button>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {" "}
+        {/* Added container with auto margins */}
+        <div className="bg-gray-50 flex flex-col w-full min-h-screen sm:px-5 md:px-7 lg:px-20">
+          {errorMessage && <ErrorComponent message={errorMessage} />}
+          <div className=" items-center mt-4 mb-2">
+            <button
+              onClick={generatePDFmain}
+              className="py-1 px-4 rounded-md bg-pano-blue text-white shadow-lg font-sans hover:bg-blue-600 transition-colors"
+            >
+              Generate PDF
+            </button>
+            <div className="flex-grow mx-4 my-2">
+              <label className="block mt-5 text-sm font-medium text-gray-700 mb-1">
+                Select file:
+              </label>
+              <div className="flex justify-center px-6 pt-5 pb-1 border-2 border-gray-300 border-dashed rounded-md">
+                <div className="space-y-1 text-center">
+                  <svg
+                    className="mx-auto h-12 w-12 text-gray-400"
+                    stroke="currentColor"
+                    fill="none"
+                    viewBox="0 0 48 48"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <div className="flex text-sm text-gray-600">
+                    <label
+                      htmlFor="file-upload"
+                      className="ml-1 bg-gray-50 relative cursor-pointer rounded-md font-medium text-pano-blue hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
+                    >
+                      <span>Click here upload a file</span>
+                      <input
+                        id="file-upload"
+                        name="file-upload"
+                        type="file"
+                        className="sr-only"
+                        onChange={handleFileUpload}
+                        accept=".csv, .xlsx, .xls"
+                      />
+                    </label>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    CSV, XLSX, XLS up to 10MB
+                  </p>
+                </div>
+              </div>
             </div>
-            <iframe
-              src={pdfUrl}
-              style={{ width: "100%", height: "800px" }}
-              frameBorder="0"
-              title="PDF Preview"
-            ></iframe>
-          </>
-        ) : (
-          <div className="mx-2">
-            Please upload and Generate PDF to see preview
           </div>
-        )}
+          {isPdfPreviewVisible ? (
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <p className="text-sm text-gray-600">Can't see preview?</p>
+                <button
+                  onClick={handleFileSave}
+                  className="py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500"
+                >
+                  Download PDF
+                </button>
+              </div>
+              <iframe
+                src={pdfUrl}
+                className="w-full h-[800px] border-none rounded-md shadow-lg"
+                title="PDF Preview"
+              ></iframe>
+            </div>
+          ) : (
+            <div className="text-center text-gray-500 mt-1">
+              Please upload a file and Generate PDF to see preview
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
 };
-
 export default GeneratePDF;
 
 function ErrorComponent() {
@@ -612,7 +646,7 @@ function ErrorComponent() {
       initial={{ opacity: 0, x: 0 }}
       animate={{ x: -10, opacity: 1 }}
       exit={{ opacity: 0, x: 0 }}
-      className="flex items-center m-1 p-3 w-fit text-sm text-red-800 border border-red-300 rounded-lg bg-gray-50 ml-auto"
+      className="flex items-center mt-5 m-1 p-3 w-fit text-sm text-red-800 border border-red-300 rounded-lg bg-gray-50 ml-auto"
       role="alert"
     >
       <svg
