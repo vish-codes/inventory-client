@@ -7,6 +7,8 @@ import DashBoard from "./Pages/DashBoard";
 import PrivateRoutes from "../Auth/PrivateRoutes";
 import { useEffect } from "react";
 import GeneratePDF from "./Pages/GeneratePDF";
+import Payslip from "./Components/payslip/Payslip";
+import PayslipForm from "./Components/payslip/PayslipForm";
 
 export const AppContext = createContext("");
 
@@ -183,6 +185,7 @@ function App() {
             {" "}
             <Route path="/dashboard" element={<DashBoard />} />
             <Route path="/genpdf" element={<GeneratePDF />} />
+            <Route path="/genpayslip" element={<Payslip />} />
           </Route>
         </Routes>
       </BrowserRouter>

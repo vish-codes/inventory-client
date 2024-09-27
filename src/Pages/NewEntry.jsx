@@ -17,6 +17,8 @@ export default function ReAssign({ toggleClose }) {
   const [empId, setEmpId] = useState("");
   const [laptopPass, setLaptopPass] = useState("");
 
+  const [accessoryIds, setAccessoryIds] = useState({});
+
   const [errors, setErrors] = useState({});
 
   const { addNewEntry } = useContext(AppContext);
@@ -44,11 +46,21 @@ export default function ReAssign({ toggleClose }) {
     const value = event.target.value;
     setSelectedOption((prev) => {
       if (event.target.checked) {
+        setAccessoryIds((prevIds) => ({ ...prevIds, [value]: "" }));
         return [...prev, value];
       } else {
+        setAccessoryIds((prevIds) => {
+          const newIds = { ...prevIds };
+          delete newIds[value];
+          return newIds;
+        });
         return prev.filter((item) => item !== value);
       }
     });
+  };
+
+  const handleAccessoryIdChange = (accessory, id) => {
+    setAccessoryIds((prevIds) => ({ ...prevIds, [accessory]: id }));
   };
 
   function validateForm() {
@@ -78,8 +90,11 @@ export default function ReAssign({ toggleClose }) {
       empId: empId.trim(),
       ownedBy: ownedBy.trim(),
       ownerName: laptopClientName.trim(),
-      accessories: selectedOption,
       remark: remarks.trim(),
+      accessories: selectedOption.map((accessory) => ({
+        name: accessory,
+        id: accessoryIds[accessory],
+      })),
     };
 
     addNewEntry(tempObj);
@@ -215,33 +230,31 @@ export default function ReAssign({ toggleClose }) {
                   Accessories:
                 </span>
                 <div className="mt-2">
-                  <label className="inline-flex items-center mb-2">
-                    <input
-                      type="checkbox"
-                      className="form-checkbox"
-                      value="Charger"
-                      onChange={handleOptionChange}
-                    />
-                    <span className="mx-2">Charger</span>
-                  </label>
-                  <label className="inline-flex items-center mb-2">
-                    <input
-                      type="checkbox"
-                      className="form-checkbox"
-                      value="Keyboard"
-                      onChange={handleOptionChange}
-                    />
-                    <span className="mx-2">Keyboard</span>
-                  </label>
-                  <label className="inline-flex items-center mb-2">
-                    <input
-                      type="checkbox"
-                      className="form-checkbox"
-                      value="Mouse"
-                      onChange={handleOptionChange}
-                    />
-                    <span className="mx-2">Mouse</span>
-                  </label>
+                  {["Charger", "Keyboard", "Mouse"].map((accessory) => (
+                    <div key={accessory} className="mb-2">
+                      <label className="inline-flex items-center">
+                        <input
+                          type="checkbox"
+                          className="form-checkbox"
+                          value={accessory}
+                          onChange={handleOptionChange}
+                          checked={selectedOption.includes(accessory)}
+                        />
+                        <span className="mx-2">{accessory}</span>
+                      </label>
+                      {selectedOption.includes(accessory) && (
+                        <input
+                          type="text"
+                          className="ml-2 border-2 border-indigo-500 font-sans text-sm shadow-inner rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+                          placeholder={`${accessory} ID`}
+                          value={accessoryIds[accessory] || ""}
+                          onChange={(e) =>
+                            handleAccessoryIdChange(accessory, e.target.value)
+                          }
+                        />
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="mb-4">

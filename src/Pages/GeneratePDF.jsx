@@ -67,7 +67,7 @@ const GeneratePDF = () => {
           setTimeout(() => {
             setErrorMessage(false);
           }, 7000);
-          return;
+          // return;
         }
         setErrorMessage(false);
       }, 7000);
