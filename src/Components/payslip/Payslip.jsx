@@ -35,7 +35,7 @@ const Payslip = () => {
     const doc = new jsPDF({
       orientation: "portrait",
       unit: "mm",
-      format: [300, 225], // w,h
+      format: [270, 225], // w,h
     });
 
     // document border rectangle
@@ -63,23 +63,25 @@ const Payslip = () => {
 
     // Title
     doc.setFontSize(10);
-    doc.text("Payslip for the period of September 2024", 80, 65);
+    const payPeriod = formData.payPeriod || 'Invalid date';
+    doc.text(`Payslip for the period of ${payPeriod}`, 80, 65); 
 
     // Employee Details
     doc.setFontSize(9);
     doc.text("Employee ID", 20, 75);
-    doc.text(formData.empId, 60, 75);
+    doc.text(`: ${formData.empId}`, 60, 75);
     doc.text("Pay Date", 20, 80);
-    doc.text(formData.payDate, 60, 80);
+    doc.text(`: ${formData.payDate}`, 60, 80);
     doc.text("Name", 115, 75);
-    doc.text(formData.name, 150, 75);
+    doc.text(`: ${formData.name}`, 150, 75);
     doc.text("Bank Name", 115, 80);
-    doc.text(formData.bankName, 150, 80);
+    doc.text(`: ${formData.bankName}`, 150, 80);
+    doc.setFont("helvetica", "normal");
 
     // Table Headers for Earnings and Deductions
     doc.setFontSize(10);
     doc.text("Earnings", 20, 106);
-    doc.text("Amount", 80, 106);
+    doc.text("Amount", 83, 106);
     doc.text("Deductions", 115, 106);
     doc.text("Amount", 175, 106);
 
@@ -92,15 +94,15 @@ const Payslip = () => {
 
     // Earnings
     doc.text("Basic Pay", 20, 115);
-    doc.text(formData.basicPay, 80, 115);
+    doc.text(`${formData.basicPay}.00`, 95, 115, { align: "right" });
     doc.text("House Rent Allowance", 20, 120);
-    doc.text(formData.houseRentAllowance, 80, 120);
+    doc.text(`${formData.houseRentAllowance}.00`, 95, 120, { align: "right" });
     doc.text("Project Allowance", 20, 125);
-    doc.text(formData.projectAllowance, 80, 125);
+    doc.text(`${formData.projectAllowance}.00`, 95, 125, { align: "right" });
     doc.text("Medical Allowance", 20, 130);
-    doc.text(formData.medicalAllowance, 80, 130);
+    doc.text(`${formData.medicalAllowance}.00`, 95, 130, { align: "right" });
     doc.text("Conveyance Allowance", 20, 135);
-    doc.text(formData.conveyanceAllowance, 80, 135);
+    doc.text(`${formData.conveyanceAllowance}.00`, 95, 135, { align: "right" });
 
     // horizontal divider
     doc.line(15, 140, 210, 140);
@@ -113,13 +115,13 @@ const Payslip = () => {
 
     // Deductions
     doc.text("TDS", 115, 115);
-    doc.text("0.00", 175, 115);
+    doc.text("0.00", 187, 115, { align: "right" });
     doc.text("Total Deductions", 115, 145);
-    doc.text("0.00", 175, 145);
+    doc.text("0.00", 187, 145, { align: "right" });
 
     // Net Pay
     doc.text("Net Pay (Rounded)", 115, 152);
-    doc.text(`${formData.totalPay}.00`, 175, 152);
+    doc.text(`${formData.totalPay}.00`, 187, 152, { align: "right" });
 
     // horizontal divider
     doc.line(15, 160, 210, 160);

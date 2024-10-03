@@ -324,6 +324,7 @@ const GeneratePDF = () => {
     // Bank Details---------------------------
     // Border Rectangle ----------------------
     doc.rect(30, 56, 170, 20);
+    //       x1, y1, x2, y2 ------------------
     // vertical Divider ----------------------
     doc.line(110, 56, 110, 76);
     // multi horizonal divider ---------------

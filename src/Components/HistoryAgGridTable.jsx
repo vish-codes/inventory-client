@@ -97,7 +97,7 @@ export default function HistoryAgGridTable({ togglehistoryOn }) {
 
   return (
     <div
-      className="ag-theme-quartz m-5 overflow-x-auto"
+      className="ag-theme-quartz m-5 overflow-x"
       style={{ height: "calc(100vh - 150px)" }}
     >
       {isLoading ? (
