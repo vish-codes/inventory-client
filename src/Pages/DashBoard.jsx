@@ -9,6 +9,7 @@ import AgGridTable from "../Components/AgGridTable";
 import HistoryAgGridTable from "../Components/HistoryAgGridTable";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import DashboardPdf from "../Components/DashboardPdf";
 
 export default function DashBoard() {
   const [isOpen, setIsOpen] = useState(false);
@@ -79,7 +80,7 @@ export default function DashBoard() {
   return (
     <>
       {" "}
-      <DashboardNavBar />
+      <DashboardPdf />
       <div
         className={`bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col mt-8 rounded-2xl w-full h-screen sm:px-5`}
       >

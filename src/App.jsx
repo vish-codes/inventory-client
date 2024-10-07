@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import GeneratePDF from "./Pages/GeneratePDF";
 import Payslip from "./Components/payslip/Payslip";
 import PayslipForm from "./Components/payslip/PayslipForm";
+import Appointment from "./Components/letters/Appointment";
 
 export const AppContext = createContext("");
 
@@ -181,6 +182,7 @@ function App() {
         <Routes>
           <Route index element={<Landing />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/appointment" element={<Appointment />} />
           <Route element={<PrivateRoutes />}>
             {" "}
             <Route path="/dashboard" element={<DashBoard />} />

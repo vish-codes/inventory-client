@@ -72,35 +72,37 @@ console.log(result);
         conveyanceAllowance;
 
       if (totalPay < 25000) {
-        // Fixed allowances for salaries below 20000
+        // Fixed allowances for salaries below 25000
         houseRentAllowance = 1600;
         projectAllowance = 1100;
         medicalAllowance = 1300;
         conveyanceAllowance = 1000;
 
         // Calculate basic pay as the remaining amount
-        basicPay =
-          totalPay -
-          (houseRentAllowance +
-            projectAllowance +
-            medicalAllowance +
-            conveyanceAllowance);
+        basicPay = totalPay - (houseRentAllowance + projectAllowance + medicalAllowance + conveyanceAllowance);
 
         // Ensure basic pay is not negative
         basicPay = Math.max(basicPay, 0);
       } else {
-        // Percentage-based calculation for salaries 20000 and above
+        // Percentage-based calculation for salaries 25000 and above
         const basicPayPercentage = 0.8;
-        const houseRentAllowancePercentage = 0.05;
-        const projectAllowancePercentage = 0.04;
-        const medicalAllowancePercentage = 0.03;
-        const conveyanceAllowancePercentage = 0.03;
+        const houseRentAllowancePercentage = 0.06;
+        const projectAllowancePercentage = 0.05;
+        const medicalAllowancePercentage = 0.055;
+        const conveyanceAllowancePercentage = 0.035;
 
-        basicPay = totalPay * basicPayPercentage;
-        houseRentAllowance = totalPay * houseRentAllowancePercentage;
-        projectAllowance = totalPay * projectAllowancePercentage;
-        medicalAllowance = totalPay * medicalAllowancePercentage;
-        conveyanceAllowance = totalPay * conveyanceAllowancePercentage;
+        // Calculate all values
+        basicPay = Math.round(totalPay * basicPayPercentage);
+        houseRentAllowance = Math.round(totalPay * houseRentAllowancePercentage);
+        projectAllowance = Math.round(totalPay * projectAllowancePercentage);
+        medicalAllowance = Math.round(totalPay * medicalAllowancePercentage);
+        conveyanceAllowance = Math.round(totalPay * conveyanceAllowancePercentage);
+
+        // Calculate the sum of all components
+        const sum = basicPay + houseRentAllowance + projectAllowance + medicalAllowance + conveyanceAllowance;
+
+        // Adjust basic pay to ensure the total matches
+        basicPay += (totalPay - sum);
       }
 
       setFormData((prevData) => ({
