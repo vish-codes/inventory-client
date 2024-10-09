@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
-const DashboardPdf = () => {
+const NavBarLetters = () => {
   const [isLettersOpen, setIsLettersOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -18,7 +18,7 @@ const DashboardPdf = () => {
             <NavLink to="/dashboard">
               <img
                 className="h-8 w-auto"
-                src="./images/panorama-light-logo.png"
+                src="../images/panorama-light-logo.png"
                 alt="Panorama Logo"
               />
             </NavLink>
@@ -92,4 +92,4 @@ const DropdownItem = ({ to, label }) => (
   </NavLink>
 );
 
-export default DashboardPdf;
+export default NavBarLetters;

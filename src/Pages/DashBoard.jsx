@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import DashboardNavBar from "../Components/DashboardNavBar";
+// import DashboardNavBar from "../Components/DashboardNavBar";
 import NewEntry from "./NewEntry";
 import ReAssignForm from "../Components/ReAssignForm";
 import ShowNumberCount from "../Components/ShowNumberCount";
@@ -7,7 +7,7 @@ import { AppContext } from "../App";
 import DeleteWarning from "../Components/DeleteWarning";
 import AgGridTable from "../Components/AgGridTable";
 import HistoryAgGridTable from "../Components/HistoryAgGridTable";
-import { ToastContainer, toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DashboardPdf from "../Components/DashboardPdf";
 
@@ -17,10 +17,10 @@ export default function DashBoard() {
   const { listData } = useContext(AppContext);
   const [deleteWarn, setDeleteWarn] = useState(false);
   const [getLaptopId, setGetLaptopId] = useState(null);
-  const [showPopup, setShowPopup] = useState(false);
+  // const [showPopup, setShowPopup] = useState(false);
   const [isHistoryVisible, setIsHistoryVisible] = useState(false);
 
-  const { handleDelete, isLoading } = useContext(AppContext);
+  const { isLoading } = useContext(AppContext);
   //------------------------------------//
   // for history compoent toggle
 
@@ -64,18 +64,18 @@ export default function DashBoard() {
   }
 
   // for delete confirmation
-  const notify = () => toast("Item Deleted!");
+  // const notify = () => toast("Item Deleted!");
 
   // for re-assign confirmation
-  const reAssignNotify = () =>
-    toast("Re-Assigned Successfully!", {
-      className: "bg-blue-500 text-white border border-blue-700",
-      bodyClassName: "text-sm font-medium",
-      progressClassName: "bg-blue-300",
-    });
+  // const reAssignNotify = () =>
+  //   toast("Re-Assigned Successfully!", {
+  //     className: "bg-blue-500 text-white border border-blue-700",
+  //     bodyClassName: "text-sm font-medium",
+  //     progressClassName: "bg-blue-300",
+  //   });
 
   // for new entry confirmation
-  const NewEntryNotify = () => toast("New Entry Added Successfully!");
+  // const NewEntryNotify = () => toast("New Entry Added Successfully!");
 
   return (
     <>

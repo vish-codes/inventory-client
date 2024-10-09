@@ -12,7 +12,7 @@ export default function Appointment() {
     const doc = new jsPDF({
       orientation: "portrait",
       unit: "mm",
-      format: [270, 225], // w,h
+      format: "a4",
     });
 
     // document border rectangle
