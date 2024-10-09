@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { jsPDF } from "jspdf";
 
 import DashboardPdf from "../../Components/DashboardPdf";
+import NavBarLetters from "./NavBarLetters";
 
 export default function Appointment() {
   const [inputText, setInputText] = useState("");
@@ -16,8 +17,8 @@ export default function Appointment() {
     });
 
     // document border rectangle
-    // const imgformDate1 = "";
-    // doc.addImage(imgformDate1, "PNG", 15, 10, 50, 30);
+    const imgformDate1 = "../images/panorama.png";
+    doc.addImage(imgformDate1, "PNG", 15, 10, 50, 30);
 
     // Add date and text
     doc.setFontSize(10.5);
@@ -509,7 +510,7 @@ export default function Appointment() {
 
     // Clean up the blob URL when the component unmounts or updates
     return () => URL.revokeObjectURL(pdfUrl);
-  }, [pdfUrl]);
+  }, []);
 
   //   const handleFormSubmit = (formData) => {
   //     setFormData(formData);
@@ -519,7 +520,7 @@ export default function Appointment() {
 
   return (
     <div className="mx-auto bg-gray-50">
-      <DashboardPdf />
+      <NavBarLetters />
       <div className="max-w-7xl mx-auto">
         <div className="bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col mt-3 rounded-2xl w-full h-screen sm:px-5">
           <iframe

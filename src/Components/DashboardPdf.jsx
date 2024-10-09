@@ -41,7 +41,7 @@ const DashboardPdf = () => {
                       <div className="py-1" role="menu" aria-orientation="vertical">
                         <DropdownItem to="/letters/offer" label="Offer Letter" />
                         <DropdownItem to="/letters/appointment" label="Appointment Letter" />
-                        <DropdownItem to="/letters/termination" label="Termination Letter" />
+                        <DropdownItem to="/letters/appraisal" label="Appraisal Letter" />
                       </div>
                     </div>
                   )}

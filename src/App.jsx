@@ -9,8 +9,9 @@ import { useEffect } from "react";
 import GeneratePDF from "./Pages/GeneratePDF";
 import Payslip from "./Components/payslip/Payslip";
 import PayslipForm from "./Components/payslip/PayslipForm";
-import Appointment from "./Components/letters/Appointment";
 import Appraisal from "./Components/letters/Apperaisal";
+import Offer from "./Components/letters/Offer";
+import Appointment from "./Components/letters/Appointment";
 
 export const AppContext = createContext("");
 
@@ -189,7 +190,9 @@ function App() {
             <Route path="/dashboard" element={<DashBoard />} />
             <Route path="/genpdf" element={<GeneratePDF />} />
             <Route path="/genpayslip" element={<Payslip />} />
-            <Route path="letters/offer" element={<Appraisal />} />
+            <Route path="/letters/appraisal" element={<Appraisal />} />
+            <Route path="/letters/offer" element={<Offer />} />
+            <Route path="/letters/appointment" element={<Appointment />} />
           </Route>
         </Routes>
       </BrowserRouter>
