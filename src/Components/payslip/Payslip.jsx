@@ -53,13 +53,32 @@ const Payslip = () => {
     doc.addImage(imgformDate, "PNG", 60, 90, 100, 22);
 
     // Company address
+    doc.setFontSize(11); // Reduced font size for better fit
+    doc.setFont("helvetica", "bold");
+    const companyName = formData.includePvtLtd ? "Panorama Software Solutions Pvt Ltd" : "Panorama Software Solutions";
+    
+    // Calculate the width of the longest line
     doc.setFontSize(9);
-    // line 1
-    doc.text("Panorama Software Solutions", 138, 40);
-    // line 2
-    doc.text("621-622, Tower 1, Assotech Business Cresterra", 138, 45);
-    // line 3
-    doc.text("Sector-135, Noida-201301, Uttar Pradesh", 138, 50);
+    const addressLine1 = "621-622, Tower 1, Assotech Business Cresterra";
+    const addressLine2 = "Sector-135, Noida-201301, Uttar Pradesh";
+    const longestLineWidth = Math.max(
+      doc.getStringUnitWidth(companyName) * 11 / doc.internal.scaleFactor,
+      doc.getStringUnitWidth(addressLine1) * 9 / doc.internal.scaleFactor,
+      doc.getStringUnitWidth(addressLine2) * 9 / doc.internal.scaleFactor
+    );
+
+    const textX = 220 - 15 - longestLineWidth; // Right margin at 15mm from right edge, aligned to the longest line
+
+    // Company name
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "bold");
+    doc.text(companyName, textX, 40);
+
+    // Address lines
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.text(addressLine1, textX, 45);
+    doc.text(addressLine2, textX, 50);
 
     // Title
     doc.setFontSize(10);
@@ -115,13 +134,13 @@ const Payslip = () => {
 
     // Deductions
     doc.text("TDS", 115, 115);
-    doc.text("0.00", 187, 115, { align: "right" });
+    doc.text(`${formData.tds}.00`, 187, 115, { align: "right" });
     doc.text("Total Deductions", 115, 145);
-    doc.text("0.00", 187, 145, { align: "right" });
+    doc.text(`${formData.tds}.00`, 187, 145, { align: "right" });
 
     // Net Pay
     doc.text("Net Pay (Rounded)", 115, 152);
-    doc.text(`${formData.totalPay}.00`, 187, 152, { align: "right" });
+    doc.text(`${formData.netPay}.00`, 187, 152, { align: "right" });
 
     // horizontal divider
     doc.line(15, 160, 210, 160);

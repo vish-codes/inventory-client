@@ -15,14 +15,19 @@ const PayslipForm = ({ onSubmit, onClose }) => {
     projectAllowance: "",
     medicalAllowance: "",
     conveyanceAllowance: "",
+    tds: "", // Add this new field
+    netPay: "", // Add this field to store the net pay after TDS deduction
+    includePvtLtd: true, // Add this new field
   });
 
   const [showPreview, setShowPreview] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setFormData({ ...formData, [name]: value });
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
   const handleDateChange = (date) => {
@@ -64,6 +69,7 @@ console.log(result);
       if (!formData.totalPay) return;
 
       const totalPay = parseFloat(formData.totalPay);
+      const tds = parseFloat(formData.tds) || 0;
 
       let basicPay,
         houseRentAllowance,
@@ -79,7 +85,12 @@ console.log(result);
         conveyanceAllowance = 1000;
 
         // Calculate basic pay as the remaining amount
-        basicPay = totalPay - (houseRentAllowance + projectAllowance + medicalAllowance + conveyanceAllowance);
+        basicPay =
+          totalPay -
+          (houseRentAllowance +
+            projectAllowance +
+            medicalAllowance +
+            conveyanceAllowance);
 
         // Ensure basic pay is not negative
         basicPay = Math.max(basicPay, 0);
@@ -93,17 +104,28 @@ console.log(result);
 
         // Calculate all values
         basicPay = Math.round(totalPay * basicPayPercentage);
-        houseRentAllowance = Math.round(totalPay * houseRentAllowancePercentage);
+        houseRentAllowance = Math.round(
+          totalPay * houseRentAllowancePercentage
+        );
         projectAllowance = Math.round(totalPay * projectAllowancePercentage);
         medicalAllowance = Math.round(totalPay * medicalAllowancePercentage);
-        conveyanceAllowance = Math.round(totalPay * conveyanceAllowancePercentage);
+        conveyanceAllowance = Math.round(
+          totalPay * conveyanceAllowancePercentage
+        );
 
         // Calculate the sum of all components
-        const sum = basicPay + houseRentAllowance + projectAllowance + medicalAllowance + conveyanceAllowance;
+        const sum =
+          basicPay +
+          houseRentAllowance +
+          projectAllowance +
+          medicalAllowance +
+          conveyanceAllowance;
 
         // Adjust basic pay to ensure the total matches
-        basicPay += (totalPay - sum);
+        basicPay += totalPay - sum;
       }
+
+      const netPay = totalPay - tds;
 
       setFormData((prevData) => ({
         ...prevData,
@@ -112,13 +134,13 @@ console.log(result);
         projectAllowance: projectAllowance,
         medicalAllowance: medicalAllowance,
         conveyanceAllowance: conveyanceAllowance,
-        netPay: totalPay,
+        netPay: netPay,
         totalPay: totalPay,
       }));
     }
 
     calculateValues();
-  }, [formData.totalPay]);
+  }, [formData.totalPay, formData.tds]); // Add formData.tds as a dependency
 
   // Separate function for formatting currency
   const formatCurrency = (value) => {
@@ -196,6 +218,16 @@ console.log(result);
         </p>
         <p>
           <strong>Conveyance Allowance:</strong> {formData.conveyanceAllowance}
+        </p>
+        <p>
+          <strong>TDS:</strong> {formData.tds}
+        </p>
+        <p>
+          <strong>Net Pay:</strong> {formData.netPay}
+        </p>
+        <p>
+          <strong>Include "Pvt Ltd":</strong>{" "}
+          {formData.includePvtLtd ? "Yes" : "No"}
         </p>
       </div>
       <div className="flex justify-end space-x-4 mt-8">
@@ -314,6 +346,26 @@ console.log(result);
         </div>
         <div>
           <label
+            htmlFor="tds"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            TDS
+          </label>
+          <input
+            type="number"
+            name="tds"
+            id="tds"
+            value={formData.tds}
+            onChange={handleChange}
+            placeholder="Enter TDS"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-2 w-full">
+        <div>
+          <label
             htmlFor="basicPay"
             className="block text-sm font-medium text-gray-700 mb-1"
           >
@@ -330,9 +382,6 @@ console.log(result);
             required
           />
         </div>
-      </div>
-
-      <div className="grid grid-cols-3 gap-6 w-full">
         <div>
           <label
             htmlFor="houseRentAllowance"
@@ -405,6 +454,39 @@ console.log(result);
             required
           />
         </div>
+
+        <div>
+          <label
+            htmlFor="netPay"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Net Pay
+          </label>
+          <input
+            type="number"
+            name="netPay"
+            id="netPay"
+            value={formData.netPay}
+            disabled={true}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          />
+        </div>
+      </div>
+      <div className="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          id="includePvtLtd"
+          name="includePvtLtd"
+          checked={formData.includePvtLtd}
+          onChange={handleChange}
+          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+        />
+        <label
+          htmlFor="includePvtLtd"
+          className="text-sm font-medium text-gray-700"
+        >
+          Include "Pvt Ltd" in company name?
+        </label>
       </div>
 
       <div className="flex justify-end space-x-4 mt-8">
