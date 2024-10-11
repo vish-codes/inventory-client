@@ -33,6 +33,45 @@ const Apperaisal = () => {
       format: "a4",
     });
 
+    // Helper function to add justified text
+    const addJustifiedText = (text, startY, fontSize = 10, lineHeight = 5) => {
+      doc.setFontSize(fontSize);
+      const pageWidth = doc.internal.pageSize.width;
+      const margin = 20;
+      const maxWidth = pageWidth - 2 * margin;
+      
+      const words = text.split(' ');
+      let line = '';
+      let y = startY;
+      
+      for (let i = 0; i < words.length; i++) {
+        const testLine = line + words[i] + ' ';
+        const testWidth = doc.getStringUnitWidth(testLine) * fontSize / doc.internal.scaleFactor;
+        
+        if (testWidth > maxWidth) {
+          // Justify the line
+          if (line.trim() !== '') {
+            const spaces = line.split(' ').length - 1;
+            const spaceWidth = (maxWidth - doc.getStringUnitWidth(line.trim()) * fontSize / doc.internal.scaleFactor) / spaces;
+            let xOffset = margin;
+            line.trim().split(' ').forEach((word, index) => {
+              doc.text(word, xOffset, y);
+              xOffset += doc.getStringUnitWidth(word + ' ') * fontSize / doc.internal.scaleFactor;
+              if (index < spaces) xOffset += spaceWidth;
+            });
+          }
+          line = words[i] + ' ';
+          y += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      // Add any remaining text
+      doc.text(line.trim(), margin, y);
+      
+      return y + lineHeight; // Return the new Y position
+    };
+
     // company logo
     const logoPath = "../images/panorama.png";
     doc.addImage(logoPath, "PNG", 10, 12, 69, 14, { align: "left" });
@@ -79,7 +118,7 @@ const Apperaisal = () => {
     // Add body paragraphs
     doc.setFontSize(10);
     let yPos = 90;
-    const lineHeight = 5;
+
     const paragraphs = [
       "In continuation to your sustained performance, we are glad to inform you that your revised compensation is 2,76,000/-(Rupees Two Lakh and Seventy-Six Thousand only) per annum with effect from 01-April-2024.",
       "We are confident that you will meet your responsibility with the same level of enthusiasm and enterprise which you have exhibited since you came to work with your company.",
@@ -94,41 +133,19 @@ const Apperaisal = () => {
     paragraphs[0] = salaryParagraph;
 
     paragraphs.forEach((para) => {
-      const lines = doc.splitTextToSize(para, 170);
-      lines.forEach((line) => {
-        doc.text(line, 20, yPos);
-        yPos += lineHeight;
-      });
-      yPos += 5;
+      yPos = addJustifiedText(para, yPos, 10, 5) + 5; // Add a small gap between paragraphs
     });
 
-    doc.text(
-      "All other Terms and conditions of your appointment will remain the same as per your last",
-      20,
-      155
-    );
-
-    doc.text("appointment letter.", 20, 160);
+    yPos = addJustifiedText("All other Terms and conditions of your appointment will remain the same as per your last appointment letter.", yPos, 10, 5);
 
     doc.setFont("helvetica", "normal");
-
-    doc.text(
-      "However, these terms and conditions will be superseded by rules, regulations,",
-      53,
-      160
-    );
-
-    doc.text(
-      "policies and processes as given in the latest version of Employee Handbook at any point of time.",
-      20,
-      165
-    );
+    yPos = addJustifiedText("However, these terms and conditions will be superseded by rules, regulations, policies and processes as given in the latest version of Employee Handbook at any point of time.", yPos, 10, 5);
 
     doc.setFont("helvetica", "bold");
-    doc.text("Keep up your good performance!", 20, 180);
+    doc.text("Keep up your good performance!", 20, yPos += 10);
 
     doc.setFont("helvetica", "normal");
-    doc.text("Sincerely,", 20, 190);
+    doc.text("Sincerely,", 20, yPos += 10);
 
     // Add signature area
     doc.setFont("helvetica", "bold");
@@ -137,19 +154,14 @@ const Apperaisal = () => {
     doc.text("Noida, UP, India", 20, 237);
     doc.text("Employee", 180, 225, { align: "right" });
 
-    // divider botton
+    // divider bottom
     doc.line(9, 279, 201, 279);
 
     // Add footer
     doc.setFontSize(9.5);
     doc.setTextColor(120, 120, 120);
     doc.setFont("helvetica", "normal");
-    doc.text(
-      "Unit no - 621-622, 6th Floor, Tower 1, Assotech Business Cresterra, Sector 135, Noida - 201304, Uttar Pradesh",
-      105,
-      285,
-      { align: "center" }
-    );
+    doc.text("Unit no - 621-622, 6th Floor, Tower 1, Assotech Business Cresterra, Sector 135, Noida - 201304, Uttar Pradesh", 105, 285, { align: "center" });
     doc.text("Classification: Confidential", 105, 290, { align: "center" });
 
     // Generate PDF preview
