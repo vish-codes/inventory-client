@@ -8,13 +8,17 @@ const ApperaisalForm = ({ onSubmit, onClose }) => {
     name: "",
     salary: "",
     date: "",
+    includePvtLtd: true, // Add this new field
   });
 
   const [showPreview, setShowPreview] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, type, checked } = e.target;
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: type === 'checkbox' ? checked : value
+    }));
   };
 
   const handleDateChange = (date) => {
@@ -131,6 +135,19 @@ const ApperaisalForm = ({ onSubmit, onClose }) => {
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
           required
         />
+      </div>
+      <div className="flex items-center space-x-2 mt-4">
+        <input
+          type="checkbox"
+          id="includePvtLtd"
+          name="includePvtLtd"
+          checked={formData.includePvtLtd}
+          onChange={handleChange}
+          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+        />
+        <label htmlFor="includePvtLtd" className="text-sm font-medium text-gray-700">
+          Include "Pvt Ltd" in company name?
+        </label>
       </div>
       <div className="flex justify-end space-x-4 mt-8">
         <button

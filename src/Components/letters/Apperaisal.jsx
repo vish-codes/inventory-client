@@ -39,28 +39,39 @@ const Apperaisal = () => {
       const pageWidth = doc.internal.pageSize.width;
       const margin = 20;
       const maxWidth = pageWidth - 2 * margin;
-      
-      const words = text.split(' ');
-      let line = '';
+
+      const words = text.split(" ");
+      let line = "";
       let y = startY;
-      
+
       for (let i = 0; i < words.length; i++) {
-        const testLine = line + words[i] + ' ';
-        const testWidth = doc.getStringUnitWidth(testLine) * fontSize / doc.internal.scaleFactor;
-        
+        const testLine = line + words[i] + " ";
+        const testWidth =
+          (doc.getStringUnitWidth(testLine) * fontSize) /
+          doc.internal.scaleFactor;
+
         if (testWidth > maxWidth) {
           // Justify the line
-          if (line.trim() !== '') {
-            const spaces = line.split(' ').length - 1;
-            const spaceWidth = (maxWidth - doc.getStringUnitWidth(line.trim()) * fontSize / doc.internal.scaleFactor) / spaces;
+          if (line.trim() !== "") {
+            const spaces = line.split(" ").length - 1;
+            const spaceWidth =
+              (maxWidth -
+                (doc.getStringUnitWidth(line.trim()) * fontSize) /
+                  doc.internal.scaleFactor) /
+              spaces;
             let xOffset = margin;
-            line.trim().split(' ').forEach((word, index) => {
-              doc.text(word, xOffset, y);
-              xOffset += doc.getStringUnitWidth(word + ' ') * fontSize / doc.internal.scaleFactor;
-              if (index < spaces) xOffset += spaceWidth;
-            });
+            line
+              .trim()
+              .split(" ")
+              .forEach((word, index) => {
+                doc.text(word, xOffset, y);
+                xOffset +=
+                  (doc.getStringUnitWidth(word + " ") * fontSize) /
+                  doc.internal.scaleFactor;
+                if (index < spaces) xOffset += spaceWidth;
+              });
           }
-          line = words[i] + ' ';
+          line = words[i] + " ";
           y += lineHeight;
         } else {
           line = testLine;
@@ -68,7 +79,7 @@ const Apperaisal = () => {
       }
       // Add any remaining text
       doc.text(line.trim(), margin, y);
-      
+
       return y + lineHeight; // Return the new Y position
     };
 
@@ -79,7 +90,8 @@ const Apperaisal = () => {
     // company name and address
     doc.setFontSize(12);
     doc.setFont("times", "bold");
-    doc.text("PANORAMA SOFTWARE SOLUTIONS PVT LTD", 200, 15, {
+    const companyName = formData.includePvtLtd ? "PANORAMA SOFTWARE SOLUTIONS PVT LTD" : "PANORAMA SOFTWARE SOLUTIONS";
+    doc.text(companyName, 200, 15, {
       align: "right",
     });
     doc.setFontSize(8);
@@ -113,7 +125,9 @@ const Apperaisal = () => {
     doc.text(text, 105, 75, { align: "center" });
 
     const textWidth = doc.getTextWidth(text);
+    doc.setDrawColor(12, 112, 137);
     doc.line(85.5, 76, 85.5 + textWidth, 76);
+    doc.setDrawColor(0);
 
     // Add body paragraphs
     doc.setFontSize(10);
@@ -136,21 +150,31 @@ const Apperaisal = () => {
       yPos = addJustifiedText(para, yPos, 10, 5) + 5; // Add a small gap between paragraphs
     });
 
-    yPos = addJustifiedText("All other Terms and conditions of your appointment will remain the same as per your last appointment letter.", yPos, 10, 5);
+    yPos = addJustifiedText(
+      "All other Terms and conditions of your appointment will remain the same as per your last appointment letter.",
+      yPos,
+      10,
+      5
+    );
 
     doc.setFont("helvetica", "normal");
-    yPos = addJustifiedText("However, these terms and conditions will be superseded by rules, regulations, policies and processes as given in the latest version of Employee Handbook at any point of time.", yPos, 10, 5);
+    yPos = addJustifiedText(
+      "However, these terms and conditions will be superseded by rules, regulations, policies and processes as given in the latest version of Employee Handbook at any point of time.",
+      yPos,
+      10,
+      5
+    );
 
     doc.setFont("helvetica", "bold");
-    doc.text("Keep up your good performance!", 20, yPos += 10);
+    doc.text("Keep up your good performance!", 20, (yPos += 10));
 
     doc.setFont("helvetica", "normal");
-    doc.text("Sincerely,", 20, yPos += 10);
+    doc.text("Sincerely,", 20, (yPos += 10));
 
     // Add signature area
     doc.setFont("helvetica", "bold");
     doc.text("HR Executive", 20, 225);
-    doc.text("Panorama Software Solutions", 20, 231);
+    doc.text(formData.includePvtLtd ? "Panorama Software Solutions Pvt Ltd" : "Panorama Software Solutions", 20, 231);
     doc.text("Noida, UP, India", 20, 237);
     doc.text("Employee", 180, 225, { align: "right" });
 
@@ -161,7 +185,12 @@ const Apperaisal = () => {
     doc.setFontSize(9.5);
     doc.setTextColor(120, 120, 120);
     doc.setFont("helvetica", "normal");
-    doc.text("Unit no - 621-622, 6th Floor, Tower 1, Assotech Business Cresterra, Sector 135, Noida - 201304, Uttar Pradesh", 105, 285, { align: "center" });
+    doc.text(
+      "Unit no - 621-622, 6th Floor, Tower 1, Assotech Business Cresterra, Sector 135, Noida - 201304, Uttar Pradesh",
+      105,
+      285,
+      { align: "center" }
+    );
     doc.text("Classification: Confidential", 105, 290, { align: "center" });
 
     // Generate PDF preview
@@ -178,7 +207,10 @@ const Apperaisal = () => {
   }, [formData]);
 
   const handleFormSubmit = (data) => {
-    setFormData(data);
+    setFormData({
+      ...data,
+      includePvtLtd: data.includePvtLtd
+    });
     setShowForm(false);
   };
 

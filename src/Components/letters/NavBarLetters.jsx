@@ -38,11 +38,24 @@ const NavBarLetters = () => {
                   </button>
                   {isLettersOpen && (
                     <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                      <div className="py-1" role="menu" aria-orientation="vertical">
-                        <DropdownItem to="/letters/offer" label="Offer Letter" />
-                        <DropdownItem to="/letters/appointment" label="Appointment Letter" />
-                        <DropdownItem to="/letters/appraisal" label="Appraisal Letter" />
-                        <DropdownItem to="/letters/termination" label="Termination Letter" />
+                      <div
+                        className="py-1"
+                        role="menu"
+                        aria-orientation="vertical"
+                      >
+                        <DropdownItem
+                          to="/letters/offer"
+                          label="Offer Letter"
+                        />
+                        <DropdownItem
+                          to="/letters/appointment"
+                          label="Appointment Letter"
+                        />
+                        <DropdownItem
+                          to="/letters/appraisal"
+                          label="Appraisal Letter"
+                        />
+                        {/* <DropdownItem to="/letters/termination" label="Termination Letter" /> */}
                       </div>
                     </div>
                   )}

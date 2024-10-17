@@ -37,61 +37,110 @@ export default function Offer() {
       doc.setFontSize(fontSize);
       const pageWidth = doc.internal.pageSize.width;
       const margin = 20;
-      const subPointIndent = 10; // Indentation for sub-points
+      const subPointIndent = 10;
       const maxWidth = pageWidth - 2 * margin;
 
       const lines = text.split("\n");
       let y = startY;
 
-      lines.forEach((line) => {
-        const isSubPoint = /^\s*[a-z]\)/.test(line); // Check if line starts with a letter followed by )
+      lines.forEach((line, lineIndex) => {
+        const isSubPoint = /^\s*[a-z]\)/.test(line);
         const currentMargin = isSubPoint ? margin + subPointIndent : margin;
         const currentMaxWidth = isSubPoint
           ? maxWidth - subPointIndent
           : maxWidth;
 
-        const words = line.split(" ");
-        let currentLine = "";
+        const segments = line.split(/(\*\*.*?\*\*)/);
+        let lineContent = [];
+        let currentLineWidth = 0;
 
-        for (let i = 0; i < words.length; i++) {
-          const testLine = currentLine + words[i] + " ";
-          const testWidth =
-            (doc.getStringUnitWidth(testLine) * fontSize) /
-            doc.internal.scaleFactor;
+        segments.forEach((segment) => {
+          const isBold = segment.startsWith("**") && segment.endsWith("**");
+          const text = isBold ? segment.slice(2, -2) : segment;
+          const words = text.split(" ");
 
-          if (testWidth > currentMaxWidth) {
-            // Justify the line
-            if (currentLine.trim() !== "") {
-              const spaces = currentLine.split(" ").length - 1;
-              const spaceWidth =
-                (currentMaxWidth -
-                  (doc.getStringUnitWidth(currentLine.trim()) * fontSize) /
-                    doc.internal.scaleFactor) /
-                spaces;
-              let xOffset = currentMargin;
-              currentLine
-                .trim()
-                .split(" ")
-                .forEach((word, index) => {
-                  doc.text(word, xOffset, y);
-                  xOffset +=
-                    (doc.getStringUnitWidth(word + " ") * fontSize) /
-                    doc.internal.scaleFactor;
-                  if (index < spaces) xOffset += spaceWidth;
-                });
+          words.forEach((word, wordIndex) => {
+            const wordWidth =
+              (doc.getStringUnitWidth(word) * fontSize) /
+              doc.internal.scaleFactor;
+            const spaceWidth =
+              (doc.getStringUnitWidth(" ") * fontSize) /
+              doc.internal.scaleFactor;
+
+            if (
+              currentLineWidth + wordWidth + spaceWidth > currentMaxWidth &&
+              lineContent.length > 0
+            ) {
+              // Print the current line
+              printJustifiedLine(
+                doc,
+                lineContent,
+                currentMargin,
+                y,
+                currentMaxWidth,
+                fontSize,
+                false
+              );
+              y += lineHeight;
+              lineContent = [];
+              currentLineWidth = 0;
             }
-            currentLine = words[i] + " ";
-            y += lineHeight;
-          } else {
-            currentLine = testLine;
-          }
+
+            lineContent.push({ text: word, isBold, width: wordWidth });
+            currentLineWidth += wordWidth + spaceWidth;
+          });
+        });
+
+        // Print the last line of the paragraph
+        if (lineContent.length > 0) {
+          printJustifiedLine(
+            doc,
+            lineContent,
+            currentMargin,
+            y,
+            currentMaxWidth,
+            fontSize,
+            true
+          );
+          y += lineHeight;
         }
-        // Add any remaining text
-        doc.text(currentLine.trim(), currentMargin, y);
-        y += lineHeight;
+
+        // Add extra space between paragraphs
+        if (lineIndex < lines.length - 1) {
+          y += lineHeight / 2;
+        }
       });
 
-      return y; // Return the new Y position
+      return y;
+    };
+
+    const printJustifiedLine = (
+      doc,
+      lineContent,
+      margin,
+      y,
+      maxWidth,
+      fontSize,
+      isLastLine
+    ) => {
+      const lineWidth = lineContent.reduce((sum, item) => sum + item.width, 0);
+      const spaces = lineContent.length - 1;
+
+      let spaceWidth;
+      if (isLastLine || spaces === 0) {
+        // Don't justify the last line or lines with single words
+        spaceWidth =
+          (doc.getStringUnitWidth(" ") * fontSize) / doc.internal.scaleFactor;
+      } else {
+        spaceWidth = (maxWidth - lineWidth) / spaces;
+      }
+
+      let xOffset = margin;
+      lineContent.forEach((item, index) => {
+        doc.setFont("helvetica", item.isBold ? "bold" : "normal");
+        doc.text(item.text, xOffset, y);
+        xOffset += item.width + (index < spaces ? spaceWidth : 0);
+      });
     };
 
     // Header function
@@ -159,32 +208,34 @@ export default function Offer() {
     doc.setDrawColor(0);
 
     // Content for page one
-    const contentPageOne = [
-      `We are pleased to offer you the position of ${data.designation} with Panorama Software Solutions. Your joining date will be the ${data.joiningDate}, on the following terms and conditions:`,
-      `1. Designation: Your present designation is ${data.designation}. We may change this designation from time to time, to reflect a change in your responsibilities.`,
-      "2. Emoluments: You will be paid a monthly salary as discussed with you. Details will be provided in the Appointment Letter after your joining. We will review these emoluments annually, based on your performance, attitude to work, and conformance with other terms and conditions of employment; but we shall be under no obligation to increase them.",
-      `3. Probation: You will be on probation for the first ${data.probationPeriod} months, the period of probation may be extended, at our sole discretion, for a further period of 6 months depending on your performance. We will issue a written probation extension notice for any extension beyond the first ${data.probationPeriod} months. During the probation period, the company is at liberty to terminate the service at any time by giving 30 days notice.`,
-      "4. Termination: We reserve the right to terminate your services by giving you 30 days notice or by paying 15 days in lieu of on the basis of your performance. However, if Any information given by you at the time of your interview is found to be false or incorrect or in case of any Professional misconduct or non-performance, your services are liable to be terminated without any notice or Payment of salary in lieu of.",
-      "5. Leave: You will be allowed to leave based on the policies in force at the time. Presently, you are entitled to 12 working days leave each year. Leave will accrue from the date of joining but can be availed only after Confirmation. You are expected to take prior approval before going on leave. If you are absent from work from Home without prior permission, or you overstay your leave or take more leaves than you are entitled to, we Shall be at the liberty to treat you as voluntarily having abandoned the service of the company. While working On the client side, you will be following the holiday calendar of the client.",
-      "6. Other employment: You will not, while working at Panorama Software solutions, undertake directly or indirectly employment with, or provision of paid services or material unpaid involvement with any other Organization, without express permission from us. Doing so will be cause for immediate dismissal. Involvement with any other organization, without express permission from us. Doing so will cause immediate dismissal and take legal action.",
-      "7. Project: This is to clarify that if a project is issued on your name whilst serving Panorama Software Solutions, then it will be considered Panorama Software Solutions intellectual property. Even after your termination or the completion of your bond, that project will belong to Panorama Software Solutions. You will have no right over the projects assigned to you after you leave, which was earlier issued on your name by Panorama Software Solutions.",
+    let contentPageOne = [
+      `We are pleased to offer you the position of **${data.designation}** with Panorama Software Solutions. Your joining date will be the **${data.joiningDate}**, on the following terms and conditions:`,
+      `**1. Designation:** Your present designation is **${data.designation}**. We may change this designation from time to time, to reflect a change in your responsibilities.`,
+      "**2. Emoluments:** You will be paid a monthly salary as discussed with you. Details will be provided in the Appointment Letter after your joining. We will review these emoluments annually, based on your performance, attitude to work, and conformance with other terms and conditions of employment; but we shall be under no obligation to increase them.",
+      `**3. Probation:** You will be on probation for the first**${data.probationPeriod} months**, the period of probation may be extended, at our sole discretion, for a further period of 6 months depending on your performance. We will issue a written probation extension notice for any extension beyond the first**${data.probationPeriod} months**. During the probation period, the company is at liberty to terminate the service at any time by giving 30 days notice.`,
+      "**4. Termination:** We reserve the right to terminate your services by giving you 30 days notice or by paying 15 days in lieu of on the basis of your performance. However, if Any information given by you at the time of your interview is found to be false or incorrect or in case of any Professional misconduct or non-performance, your services are liable to be terminated without any notice or Payment of salary in lieu of.",
+      "**5. Leave:** You will be allowed to leave based on the policies in force at the time. Presently, you are entitled to 12 working days leave each year. Leave will accrue from the date of joining but can be availed only after Confirmation. You are expected to take prior approval before going on leave. If you are absent from work from Home without prior permission, or you overstay your leave or take more leaves than you are entitled to, we Shall be at the liberty to treat you as voluntarily having abandoned the service of the company. While working On the client side, you will be following the holiday calendar of the client.",
+      "**6. Other employment:** You will not, while working at **Panorama** **Software****Solutions**, undertake directly or indirectly employment with, or provision of paid services or material unpaid involvement with any other Organization, without express permission from us. Doing so will be cause for immediate dismissal. Involvement with any other organization, without express permission from us. Doing so will cause immediate dismissal and take legal action.",
+      "**7. Project:** This is to clarify that if a project is issued on your name whilst serving Panorama Software Solutions, then it will be considered Panorama Software Solutions intellectual property. Even after your termination or the completion of your bond, that project will belong to Panorama Software Solutions. You will have no right over the projects assigned to you after you leave, which was earlier issued on your name by Panorama Software Solutions.",
     ];
 
     // Content for page two
-    const contentPageTwo = [
-      "8. Confidentiality: You will maintain complete confidentiality with respect to all information, documents, and materials about Panorama Software Solutions and its clients that may come into your possession in the Course of your employment with the company. You will not divulge any such information, documents or materials to anyone outsider the company for any reason. This obligation will extend to proprietary information, Documents, and materials belonging to the company, clients or other third parties, which are received by you, you also agree that even after the company, you will not disclose confidential information given to you by clients or the company in the course of your employment, nor make use or appear to make use of such information in ways likely to damage the interests of those clients or of the company.",
+    let contentPageTwo = [
+      "**8. Confidentiality:** You will maintain complete confidentiality with respect to all information, documents, and materials about Panorama Software Solutions and its clients that may come into your possession in the Course of your employment with the company. You will not divulge any such information, documents or materials to anyone outsider the company for any reason. This obligation will extend to proprietary information, Documents, and materials belonging to the company, clients or other third parties, which are received by you, you also agree that even after the company, you will not disclose confidential information given to you by clients or the company in the course of your employment, nor make use or appear to make use of such information in ways likely to damage the interests of those clients or of the company.",
       "Also you must not share or discuss the details of compensation with anybody within the company or the Clients. Not following this would also be treated as a serious confidentiality breach.",
-      "9. Communications: Should the company wish to formally communicate with you about your employment:",
+      "**9. Communications:** Should the company wish to formally communicate with you about your employment:",
       "a) In the absence of any written communication about a change of address, all communication will be sent to the address in the application, and shall be deemed to have been received by you.",
       "b) Any written communication given to you in presence of witnesses or displayed on a notice board in the office will be deemed to have been given to you even if you refuse it.",
-      "10. Code-of-conduct: You are at all times expected to behave in a manner that brings credit to yourself and to the company. You are also required to follow office policies and procedures, as described in the memorandums communicated to your form from time to time. While working at the client's office, you are expected to follow the code-of-conduct of the client failing which would entitle us to terminate your services.",
-      "11. Notice-Period: The followings are the conditions pertaining to the Notice Period: -",
+      "**10. Code-of-conduct:** You are at all times expected to behave in a manner that brings credit to yourself and to the company. You are also required to follow office policies and procedures, as described in the memorandums communicated to your form from time to time. While working at the client's office, you are expected to follow the code-of-conduct of the client failing which would entitle us to terminate your services.",
+      "**11. Notice-Period:** The followings are the conditions pertaining to the Notice Period: -",
       "a) You will be required to give three months notice in writing to the Panorama Software solution.",
       "b) No leave can be availed during the Notice Period. In case anyone takes any leaves during the notice period, their working day will be stretched accordingly.",
       "c) That salary will not be credited during the notice period. That the said salary will be credited within 45 working days after the employee's last day or after completion of Notice Period.",
-      `12. Employment Duration: Bond Period: A ${data.bondPeriod}-year bond (${
+      `**12. Employment Duration: Bond Period:** A **${
+        data.bondPeriod
+      }-year bond (${
         data.bondPeriod * 12
-      } months + 3 months notice period mandatory) period will be in effect starting from the mentioned start date above. During the bond period, you will be required to remain employed with Panorama Software Solutions. If you choose to terminate your employment before the completion of the bond period, you will be obligated to pay Panorama Software Solutions a lump sum amount of 2 Lakh Rupees (INR) or whatever money was credited to you by the company (whichever one is higher) plus any expenses incurred in connection with your recruitment, training, or relocation as per the company's policy.`,
+      }** **months** + **3 months** **notice** **period** **mandatory)**  period will be in effect starting from the mentioned start date above. During the bond period, you will be required to remain employed with Panorama Software Solutions. If you choose to terminate your employment before the completion of the bond period, you will be obligated to pay Panorama Software Solutions a lump sum amount of 2 Lakh Rupees (INR) or whatever money was credited to you by the company (whichever one is higher) plus any expenses incurred in connection with your recruitment, training, or relocation as per the company's policy.`,
       "Please convey your acceptance of this offer letter and terms and conditions there to by returning the enclosed copy duly signed.",
     ];
 
