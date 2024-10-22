@@ -55,16 +55,18 @@ const Payslip = () => {
     // Company address
     doc.setFontSize(11); // Reduced font size for better fit
     doc.setFont("helvetica", "bold");
-    const companyName = formData.includePvtLtd ? "Panorama Software Solutions Pvt Ltd" : "Panorama Software Solutions";
-    
+    const companyName = formData.includePvtLtd
+      ? "Panorama Software Solutions Pvt Ltd"
+      : "Panorama Software Solutions";
+
     // Calculate the width of the longest line
     doc.setFontSize(9);
     const addressLine1 = "621-622, Tower 1, Assotech Business Cresterra";
     const addressLine2 = "Sector-135, Noida-201301, Uttar Pradesh";
     const longestLineWidth = Math.max(
-      doc.getStringUnitWidth(companyName) * 11 / doc.internal.scaleFactor,
-      doc.getStringUnitWidth(addressLine1) * 9 / doc.internal.scaleFactor,
-      doc.getStringUnitWidth(addressLine2) * 9 / doc.internal.scaleFactor
+      (doc.getStringUnitWidth(companyName) * 11) / doc.internal.scaleFactor,
+      (doc.getStringUnitWidth(addressLine1) * 9) / doc.internal.scaleFactor,
+      (doc.getStringUnitWidth(addressLine2) * 9) / doc.internal.scaleFactor
     );
 
     const textX = 220 - 15 - longestLineWidth; // Right margin at 15mm from right edge, aligned to the longest line
@@ -82,8 +84,8 @@ const Payslip = () => {
 
     // Title
     doc.setFontSize(10);
-    const payPeriod = formData.payPeriod || 'Invalid date';
-    doc.text(`Payslip for the period of ${payPeriod}`, 80, 65); 
+    const payPeriod = formData.payPeriod || "Invalid date";
+    doc.text(`Payslip for the period of ${payPeriod}`, 80, 65);
 
     // Employee Details
     doc.setFontSize(9);
@@ -134,9 +136,13 @@ const Payslip = () => {
 
     // Deductions
     doc.text("TDS", 115, 115);
-    doc.text(`${formData.tds}.00`, 187, 115, { align: "right" });
+    doc.text(`${formData.tds ? formData.tds : 0}.00`, 187, 115, {
+      align: "right",
+    });
     doc.text("Total Deductions", 115, 145);
-    doc.text(`${formData.tds}.00`, 187, 145, { align: "right" });
+    doc.text(`${formData.tds ? formData.tds : 0}.00`, 187, 145, {
+      align: "right",
+    });
 
     // Net Pay
     doc.text("Net Pay (Rounded)", 115, 152);

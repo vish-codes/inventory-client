@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ag-grid-enterprise/excel-export": "^32.0.2",
+    "@react-pdf/renderer": "^4.0.0",
     "ag-grid-react": "^32.0.2",
     "date-fns": "^4.1.0",
     "file-saver": "^2.0.5",
