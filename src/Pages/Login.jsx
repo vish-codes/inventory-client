@@ -25,7 +25,7 @@ export default function Login() {
     try {
       setLoginLoading(true);
       const res = await fetch(
-        "https://inventory-85i2.onrender.com/api/v1/login",
+        "https://panorama-server-i79k.onrender.com/api/v1/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -102,20 +102,14 @@ export default function Login() {
                 onChange={handleChange}
               />
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between w-full">
               <button
-                className="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-blue-700 w-full hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="submit"
                 disabled={loginLoading}
               >
                 Login
               </button>
-              <Link
-                to="/login"
-                className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-              >
-                Forgot Password?
-              </Link>
             </div>
           </form>
         </div>

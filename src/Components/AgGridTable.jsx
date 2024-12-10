@@ -19,6 +19,12 @@ export default function AgGridTable({
 
   function onGridReady(params) {
     gridApiRef.current = params.api;
+    params.api.sizeColumnsToFit();
+    window.addEventListener("resize", () => {
+      setTimeout(() => {
+        params.api.sizeColumnsToFit();
+      });
+    });
   }
 
   function exportAsExcel() {
@@ -47,25 +53,25 @@ export default function AgGridTable({
   const columnDefs = [
     {
       field: "SNo",
-      minWidth: 80,
+      maxWidth: 80,
       valueGetter: "node.rowIndex + 1",
       filter: true,
-
       floatingFilter: true,
+      resizable: true,
     },
     {
       field: "Date",
-      minWidth: 150,
-
+      minWidth: 120,
       filter: true,
       floatingFilter: true,
+      resizable: true,
     },
     {
       field: "SystemId",
       minWidth: 130,
-
       filter: true,
       floatingFilter: true,
+      resizable: true,
     },
     {
       field: "LaptopName",
@@ -77,6 +83,7 @@ export default function AgGridTable({
       },
       filter: true,
       floatingFilter: true,
+      resizable: true,
     },
     {
       field: "LaptopPassword",
@@ -84,6 +91,7 @@ export default function AgGridTable({
 
       filter: true,
       floatingFilter: true,
+      resizable: true,
     },
     {
       field: "OwnedBy",
@@ -92,6 +100,7 @@ export default function AgGridTable({
 
       filter: true,
       floatingFilter: true,
+      resizable: true,
     },
     {
       field: "AssignedTo",
@@ -100,13 +109,23 @@ export default function AgGridTable({
 
       filter: true,
       floatingFilter: true,
+      resizable: true,
     },
     {
       field: "Accessories",
-      minWidth: 120,
-
+      minWidth: 200,
+      valueGetter: (params) => {
+        if (!params.data.accessories) return "";
+        return params.data.accessories
+          .map((acc) => `${acc.name} (${acc.id})`)
+          .join(", ");
+      },
       filter: true,
       floatingFilter: true,
+      resizable: true,
+      wrapText: true,
+      autoHeight: true,
+      cellStyle: { lineHeight: "1.2", padding: "8px" },
     },
     {
       field: "Remark",
@@ -114,6 +133,7 @@ export default function AgGridTable({
 
       filter: true,
       floatingFilter: true,
+      resizable: true,
     },
     {
       field: "Action",
@@ -126,6 +146,7 @@ export default function AgGridTable({
       },
       flex: 1,
       cellClass: "no-divider",
+      resizable: true,
     },
   ];
 
@@ -135,8 +156,11 @@ export default function AgGridTable({
 
   return (
     <div
-      className="ag-theme-quartz m-5 overflow-x-auto"
-      style={{ height: "calc(100vh - 150px)", overflow: "hidden" }}
+      className="ag-theme-quartz m-5"
+      style={{
+        height: "calc(100vh - 150px)",
+        width: "auto",
+      }}
     >
       {isLoading ? (
         <Load />
@@ -148,25 +172,30 @@ export default function AgGridTable({
           >
             Export As CSV
           </button>
-          <AgGridReact
-            rowData={rowData}
-            pagination={pagination}
-            paginationPageSize={paginationPageSize}
-            paginationPageSizeSelector={false}
-            columnDefs={columnDefs}
-            rowSelection="single"
-            animateRows={true}
-            ref={gridApiRef}
-            onGridReady={onGridReady}
-            overlayNoRowsTemplate={
-              '<span aria-live="polite" aria-atomic="true">No data available! Please search for other values</span>'
-            }
-            components={{
-              buttonForTest: ButtonForTest,
-            }}
-            onFirstDataRendered={(params) => params.api.sizeColumnsToFit()}
-            domLayout="autoHeight"
-          />
+          <div className="overflow-x-auto">
+            <AgGridReact
+              rowData={rowData}
+              pagination={pagination}
+              paginationPageSize={paginationPageSize}
+              paginationPageSizeSelector={false}
+              columnDefs={columnDefs}
+              rowSelection="single"
+              animateRows={true}
+              ref={gridApiRef}
+              onGridReady={onGridReady}
+              overlayNoRowsTemplate={
+                '<span aria-live="polite" aria-atomic="true">No data available! Please search for other values</span>'
+              }
+              components={{
+                buttonForTest: ButtonForTest,
+              }}
+              defaultColDef={{
+                resizable: true,
+                sortable: true,
+              }}
+              domLayout="autoHeight"
+            />
+          </div>
         </>
       )}
     </div>

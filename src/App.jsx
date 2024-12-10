@@ -12,6 +12,8 @@ import PayslipForm from "./Components/payslip/PayslipForm";
 import Appraisal from "./Components/letters/Apperaisal";
 import Offer from "./Components/letters/Offer";
 import Appointment from "./Components/letters/Appointment";
+import Training from "./Components/letters/Training";
+import Experience from "./Components/letters/Experience";
 
 export const AppContext = createContext("");
 
@@ -28,7 +30,7 @@ function App() {
       setIsLoading(true);
       try {
         const response = await fetch(
-          "https://inventory-85i2.onrender.com/api/v1/allLaptops"
+          "https://panorama-server-i79k.onrender.com/api/v1/allLaptops"
         );
         if (!response.ok) {
           throw new Error("not ok");
@@ -51,7 +53,7 @@ function App() {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `https://inventory-85i2.onrender.com/api/v1/history/${getIdForHistory}`
+        `https://panorama-server-i79k.onrender.com/api/v1/history/${getIdForHistory}`
       );
       if (!response.ok) {
         throw new Error("not ok");
@@ -77,7 +79,7 @@ function App() {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `https://inventory-85i2.onrender.com/api/v1/delete/${id}`,
+        `https://panorama-server-i79k.onrender.com/api/v1/delete/${id}`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json", authorization: token },
@@ -108,7 +110,7 @@ function App() {
     try {
       setIsLoading(true);
       const response = await fetch(
-        `https://inventory-85i2.onrender.com/api/v1/reAssign/${getLaptopId}`,
+        `https://panorama-server-i79k.onrender.com/api/v1/reAssign/${getLaptopId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json", authorization: token },
@@ -138,7 +140,7 @@ function App() {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(
-        `https://inventory-85i2.onrender.com/api/v1/addLaptop`,
+        `https://panorama-server-i79k.onrender.com/api/v1/addLaptop`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json", authorization: token },
@@ -184,7 +186,7 @@ function App() {
         <Routes>
           <Route index element={<Landing />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/appointment" element={<Appointment />} />
+          {/* <Route path="/appointment" element={<Appointment />} /> */}
           <Route element={<PrivateRoutes />}>
             {" "}
             <Route path="/dashboard" element={<DashBoard />} />
@@ -193,6 +195,8 @@ function App() {
             <Route path="/letters/appraisal" element={<Appraisal />} />
             <Route path="/letters/offer" element={<Offer />} />
             <Route path="/letters/appointment" element={<Appointment />} />
+            <Route path="/letters/training" element={<Training />} />
+            <Route path="/letters/experience" element={<Experience />} />
           </Route>
         </Routes>
       </BrowserRouter>

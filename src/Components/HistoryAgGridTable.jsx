@@ -39,53 +39,61 @@ export default function HistoryAgGridTable({ togglehistoryOn }) {
   const columnDefs = [
     {
       field: "SNo",
+      maxWidth: 80,
       valueGetter: "node.rowIndex + 1",
       filter: true,
       floatingFilter: true,
-      minWidth: 80,
+      resizable: true,
     },
     {
       field: "FromDate",
       filter: true,
       floatingFilter: true,
       minWidth: 160,
+      resizable: true,
     },
     {
       field: "ToDate",
-
       filter: true,
       floatingFilter: true,
       minWidth: 160,
+      resizable: true,
     },
     {
       field: "SystemId",
-
       filter: true,
       floatingFilter: true,
       minWidth: 120,
+      resizable: true,
     },
     {
       field: "LaptopName",
-
       filter: true,
       floatingFilter: true,
       minWidth: 150,
+      resizable: true,
     },
     {
       field: "AssignedTo",
       valueGetter: (params) =>
         `${params.data.AssignedTo} (${params.data.EmpId})`,
-
       filter: true,
       floatingFilter: true,
       minWidth: 200,
+      resizable: true,
     },
     {
       field: "Accessories",
-
+      valueGetter: (params) => {
+        if (!params.data.accessories) return "";
+        return params.data.accessories
+          .map((acc) => `${acc.name} (${acc.id})`)
+          .join(", ");
+      },
       filter: true,
       floatingFilter: true,
       minWidth: 190,
+      resizable: true,
     },
   ];
 
@@ -97,8 +105,13 @@ export default function HistoryAgGridTable({ togglehistoryOn }) {
 
   return (
     <div
-      className="ag-theme-quartz m-5 overflow-x"
-      style={{ height: "calc(100vh - 150px)" }}
+      className="ag-theme-quartz m-5"
+      style={{
+        height: "calc(100vh - 150px)",
+        wrapText: true,
+        autoHeight: true,
+        cellStyle: { lineHeight: "1.2", padding: "8px" },
+      }}
     >
       {isLoading ? (
         <Load />

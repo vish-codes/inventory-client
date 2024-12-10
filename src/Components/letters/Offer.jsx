@@ -36,7 +36,7 @@ Font.register({
 // Styles
 const styles = StyleSheet.create({
   page: {
-    fontFamily: "Helvetica",
+    fontFamily: "Times-Roman",
     fontSize: 10,
     paddingTop: 20,
     paddingBottom: 65,
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     textAlign: "justify",
     letterSpacing: 0.2,
-    fontFamily: "Helvetica",
+    fontFamily: "Times-Roman",
     fontSize: 10,
   },
   subPoint: {
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.2,
   },
   bold: {
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Times-Bold",
   },
   footer: {
     position: "absolute",
@@ -141,7 +141,9 @@ const OfferLetterPDF = ({ data }) => (
         <Image style={styles.logo} src="../images/panorama.png" />
         <View style={styles.companyInfo}>
           <Text style={styles.companyName}>
-            {data.includePvtLtd ? "PANORAMA SOFTWARE SOLUTIONS PVT LTD" : "PANORAMA SOFTWARE SOLUTIONS"}
+            {data.includePvtLtd
+              ? "PANORAMA SOFTWARE SOLUTIONS PVT LTD"
+              : "PANORAMA SOFTWARE SOLUTIONS"}
           </Text>
           <Text>
             Unit no - 621-622, 6th Floor, Tower 1, Assotech Business Cresterra,
@@ -354,7 +356,7 @@ const OfferLetterPDF = ({ data }) => (
         </Text>
         <View
           style={{
-            marginTop: 30,
+            marginTop: 80,
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "flex-start",
@@ -409,36 +411,38 @@ export default function Offer() {
   };
 
   return (
-    <div className="mx-auto bg-gray-50">
+    <div className="mx-auto">
       <NavBarLetters />
       <div className="max-w-7xl mx-auto">
-        <div className="mt-5">
-          <button
-            onClick={() => setShowForm(true)}
-            className="py-1 px-4 mx-24 rounded-md bg-pano-blue text-white shadow-lg font-sans hover:bg-blue-600 transition-colors"
-          >
-            Generate Offer Letter
-          </button>
-        </div>
+        <div className="flex md:px-7 lg:px-20 flex-col mt-3 rounded-2xl w-full h-screen sm:px-5">
+          <div className="mt-5">
+            <button
+              onClick={() => setShowForm(true)}
+              className="py-1 px-4 mx-24 rounded-md bg-pano-blue text-white shadow-lg font-sans hover:bg-blue-600 transition-colors"
+            >
+              Generate Offer Letter
+            </button>
+          </div>
 
-        {showForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-4 rounded-lg">
-              <OfferForm
-                onSubmit={handleFormSubmit}
-                onClose={() => setShowForm(false)}
-              />
+          {showForm && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <div className="bg-white p-4 rounded-lg">
+                <OfferForm
+                  onSubmit={handleFormSubmit}
+                  onClose={() => setShowForm(false)}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {formData && (
-          <div className="bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col mt-3 rounded-2xl w-full h-screen sm:px-5">
-            <PDFViewer width="100%" height="800px">
-              <OfferLetterPDF data={formData} />
-            </PDFViewer>
-          </div>
-        )}
+          {formData && (
+            <div className="bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col mt-3 rounded-2xl w-full h-screen sm:px-5">
+              <PDFViewer width="100%" height="800px">
+                <OfferLetterPDF data={formData} />
+              </PDFViewer>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

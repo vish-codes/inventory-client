@@ -18,7 +18,7 @@ export default function Landing() {
       ) : (
         <>
           <NavLanding />
-          <div className="mx-10">
+          <div className="mx-8">
             <LandingText
               headline="Manage Your Inventory"
               followUp="Discover streamlined inventory management solutions that optimize sourcing, storage, and sales processes. Our system ensures efficient stock control, cost minimization, and prompt customer delivery. By leveraging data insights, we enhance operational efficiency, reduce waste, and meet fluctuating demands effectively"

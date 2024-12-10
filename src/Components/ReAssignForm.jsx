@@ -7,6 +7,7 @@ export default function ReAssignForm({ toggleCloseReassign }) {
   const [selectedOption, setSelectedOption] = useState([]);
   const [remarks, setRemarks] = useState("");
   const [empId, setEmpId] = useState("");
+  const [accessoryIds, setAccessoryIds] = useState({});
   const { handleUpdate } = useContext(AppContext);
 
   // date formatting fuction :)
@@ -18,28 +19,52 @@ export default function ReAssignForm({ toggleCloseReassign }) {
       // weekday: "long",
     }).format(new Date(date));
 
-  const handleOptionChange = (event) => {
-    const value = event.target.value;
+  const handleOptionChange = (accessory, checked, id = "") => {
     setSelectedOption((prev) => {
-      if (event.target.checked) {
-        return [...prev, value];
-      } else {
-        return prev.filter((item) => item !== value);
+      if (id === "") {
+        // Handle checkbox change
+        if (checked) {
+          return [...prev, accessory];
+        } else {
+          setAccessoryIds((prev) => {
+            const newIds = { ...prev };
+            delete newIds[accessory];
+            return newIds;
+          });
+          return prev.filter((item) => item !== accessory);
+        }
       }
+      return prev;
     });
+
+    // Handle ID input if provided
+    if (id !== "") {
+      setAccessoryIds((prev) => ({
+        ...prev,
+        [accessory]: id,
+      }));
+    }
   };
 
   function handleReassignFormSubmit(e) {
     e.preventDefault();
     if (!(empId && assignTo && selectedOption && remarks)) return;
     const date = formatDate(new Date());
+
+    // Format accessories like in NewEntry
+    const accessoriesData = selectedOption.map((accessory) => ({
+      name: accessory,
+      id: accessoryIds[accessory] || "",
+    }));
+
     let tempObj = {
       empId: empId.trim(),
       date,
       assignedTo: assignTo.trim(),
-      accessories: selectedOption,
+      accessories: accessoriesData,
       remark: remarks.trim(),
     };
+    console.log(tempObj);
     handleUpdate(tempObj);
     toggleCloseReassign();
   }
@@ -87,33 +112,36 @@ export default function ReAssignForm({ toggleCloseReassign }) {
                   Accessories:
                 </span>
                 <div className="mt-2">
-                  <label className="inline-flex items-center mb-2">
-                    <input
-                      type="checkbox"
-                      className="form-checkbox"
-                      value="Charger"
-                      onChange={handleOptionChange}
-                    />
-                    <span className="mx-2">Charger</span>
-                  </label>
-                  <label className="inline-flex items-center mb-2">
-                    <input
-                      type="checkbox"
-                      className="form-checkbox"
-                      value="Keyboard"
-                      onChange={handleOptionChange}
-                    />
-                    <span className="mx-2">Keyboard</span>
-                  </label>
-                  <label className="inline-flex items-center mb-2">
-                    <input
-                      type="checkbox"
-                      className="form-checkbox"
-                      value="Mouse"
-                      onChange={handleOptionChange}
-                    />
-                    <span className="mx-2">Mouse</span>
-                  </label>
+                  {["Charger", "Keyboard", "Mouse"].map((accessory) => (
+                    <div key={accessory} className="flex items-center mb-2">
+                      <label className="inline-flex items-center">
+                        <input
+                          type="checkbox"
+                          className="form-checkbox"
+                          checked={selectedOption.includes(accessory)}
+                          onChange={(e) =>
+                            handleOptionChange(accessory, e.target.checked)
+                          }
+                        />
+                        <span className="mx-2">{accessory}</span>
+                      </label>
+                      {selectedOption.includes(accessory) && (
+                        <input
+                          type="text"
+                          value={accessoryIds[accessory] || ""}
+                          onChange={(e) => {
+                            const newValue = e.target.value;
+                            setAccessoryIds((prev) => ({
+                              ...prev,
+                              [accessory]: newValue,
+                            }));
+                          }}
+                          className="ml-2 w-1/3 border-2 border-indigo-500 font-sans text-sm shadow-inner rounded-md h-7 px-3"
+                          placeholder="ID"
+                        />
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="mb-4">

@@ -27,8 +27,9 @@ const NavBarLetters = () => {
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
                 <NavItem to="/dashboard" label="Dashboard" />
-                <NavItem to="/genpayslip" label="Payslip" />
                 <NavItem to="/genpdf" label="Invoice" />
+                <NavItem to="/genpayslip" label="Payslip" />
+
                 <div className="relative">
                   <button
                     onClick={() => setIsLettersOpen(!isLettersOpen)}
@@ -55,7 +56,14 @@ const NavBarLetters = () => {
                           to="/letters/appraisal"
                           label="Appraisal Letter"
                         />
-                        {/* <DropdownItem to="/letters/termination" label="Termination Letter" /> */}
+                        <DropdownItem
+                          to="/letters/training"
+                          label="Training Letter"
+                        />
+                        <DropdownItem
+                          to="/letters/experience"
+                          label="Experience Letter"
+                        />
                       </div>
                     </div>
                   )}

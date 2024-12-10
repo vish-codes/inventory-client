@@ -10,7 +10,7 @@ const Payslip = () => {
   const [inputText, setInputText] = useState("");
   const [pdfUrl, setPdfUrl] = useState("");
   const [isPdfPreviewVisible, setIsPdfPreviewVisible] = useState(false);
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(false);////
   const [formData, setFormData] = useState(null);
 
   const paySlipVariables = {
@@ -115,38 +115,40 @@ const Payslip = () => {
 
     // Earnings
     doc.text("Basic Pay", 20, 115);
-    doc.text(`${formData.basicPay}.00`, 95, 115, { align: "right" });
+    doc.text(`${new Intl.NumberFormat('en-IN').format(formData.basicPay)}.00`, 95, 115, { align: "right" });
     doc.text("House Rent Allowance", 20, 120);
-    doc.text(`${formData.houseRentAllowance}.00`, 95, 120, { align: "right" });
+    doc.text(`${new Intl.NumberFormat('en-IN').format(formData.houseRentAllowance)}.00`, 95, 120, { align: "right" });
     doc.text("Project Allowance", 20, 125);
-    doc.text(`${formData.projectAllowance}.00`, 95, 125, { align: "right" });
+    doc.text(`${new Intl.NumberFormat('en-IN').format(formData.projectAllowance)}.00`, 95, 125, { align: "right" });
     doc.text("Medical Allowance", 20, 130);
-    doc.text(`${formData.medicalAllowance}.00`, 95, 130, { align: "right" });
+    doc.text(`${new Intl.NumberFormat('en-IN').format(formData.medicalAllowance)}.00`, 95, 130, { align: "right" });
     doc.text("Conveyance Allowance", 20, 135);
-    doc.text(`${formData.conveyanceAllowance}.00`, 95, 135, { align: "right" });
+    doc.text(`${new Intl.NumberFormat('en-IN').format(formData.conveyanceAllowance)}.00`, 95, 135, { align: "right" });
 
     // horizontal divider
     doc.line(15, 140, 210, 140);
 
+    // Total Earnings (Rounded)
     doc.text("Total Earnings (Rounded)", 20, 145);
-    doc.text(`${formData.totalPay}.00`, 80, 145);
+    const totalEarningsX = 95;
+    doc.text(`${new Intl.NumberFormat('en-IN').format(formData.totalPay)}.00`, totalEarningsX, 145, { align: "right" });
 
     // horizontal divider
     doc.line(15, 147, 210, 147);
 
     // Deductions
     doc.text("TDS", 115, 115);
-    doc.text(`${formData.tds ? formData.tds : 0}.00`, 187, 115, {
+    doc.text(`${new Intl.NumberFormat('en-IN').format(formData.tds ? formData.tds : 0)}.00`, 187, 115, {
       align: "right",
     });
     doc.text("Total Deductions", 115, 145);
-    doc.text(`${formData.tds ? formData.tds : 0}.00`, 187, 145, {
+    doc.text(`${new Intl.NumberFormat('en-IN').format(formData.tds ? formData.tds : 0)}.00`, 187, 145, {
       align: "right",
     });
 
     // Net Pay
     doc.text("Net Pay (Rounded)", 115, 152);
-    doc.text(`${formData.netPay}.00`, 187, 152, { align: "right" });
+    doc.text(`${new Intl.NumberFormat('en-IN').format(formData.netPay)}.00`, 187, 152, { align: "right" });
 
     // horizontal divider
     doc.line(15, 160, 210, 160);
@@ -183,39 +185,41 @@ const Payslip = () => {
   };
 
   return (
-    <div className="mx-auto bg-gray-50">
+    <div className="mx-auto">
       <DashboardPdf />
       <div className="max-w-7xl mx-auto">
-        <div className="mt-5">
-          <button
-            onClick={() => setShowForm(true)}
-            className="py-1 px-4 mx-24 rounded-md bg-pano-blue text-white shadow-lg font-sans hover:bg-blue-600 transition-colors"
-          >
-            Generate Payslip
-          </button>
-        </div>
+        <div className="flex md:px-7 lg:px-20 flex-col mt-3 rounded-2xl w-full h-screen sm:px-5">
+          <div className="mt-5">
+            <button
+              onClick={() => setShowForm(true)}
+              className="py-1 px-4 mx-24 rounded-md bg-pano-blue text-white shadow-lg font-sans hover:bg-blue-600 transition-colors"
+            >
+              Generate Payslip
+            </button>
+          </div>
 
-        {showForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-4 rounded-lg">
-              <PayslipForm
-                onSubmit={handleFormSubmit}
-                onClose={() => setShowForm(false)}
-              />
+          {showForm && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <div className="bg-white p-4 rounded-lg">
+                <PayslipForm
+                  onSubmit={handleFormSubmit}
+                  onClose={() => setShowForm(false)}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {formData && (
-          <div className="bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col mt-3 rounded-2xl w-full h-screen sm:px-5">
-            <iframe
-              src={pdfUrl}
-              style={{ width: "100%", height: "800px" }}
-              frameBorder="0"
-              title="PDF Preview"
-            ></iframe>
-          </div>
-        )}
+          {formData && (
+            <div className="bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col mt-3 rounded-2xl w-full h-screen sm:px-5">
+              <iframe
+                src={pdfUrl}
+                style={{ width: "100%", height: "800px" }}
+                frameBorder="0"
+                title="PDF Preview"
+              ></iframe>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

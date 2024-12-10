@@ -18,7 +18,7 @@ const DashboardPdf = () => {
             <NavLink to="/dashboard">
               <img
                 className="h-8 w-auto"
-                src="./images/panorama-light-logo.png"
+                src="../images/panorama-light-logo.png"
                 alt="Panorama Logo"
               />
             </NavLink>
@@ -27,8 +27,9 @@ const DashboardPdf = () => {
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
                 <NavItem to="/dashboard" label="Dashboard" />
-                <NavItem to="/genpayslip" label="Payslip" />
                 <NavItem to="/genpdf" label="Invoice" />
+                <NavItem to="/genpayslip" label="Payslip" />
+
                 <div className="relative">
                   <button
                     onClick={() => setIsLettersOpen(!isLettersOpen)}
@@ -38,10 +39,31 @@ const DashboardPdf = () => {
                   </button>
                   {isLettersOpen && (
                     <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                      <div className="py-1" role="menu" aria-orientation="vertical">
-                        <DropdownItem to="/letters/offer" label="Offer Letter" />
-                        <DropdownItem to="/letters/appointment" label="Appointment Letter" />
-                        <DropdownItem to="/letters/appraisal" label="Appraisal Letter" />
+                      <div
+                        className="py-1"
+                        role="menu"
+                        aria-orientation="vertical"
+                      >
+                        <DropdownItem
+                          to="/letters/offer"
+                          label="Offer Letter"
+                        />
+                        <DropdownItem
+                          to="/letters/appointment"
+                          label="Appointment Letter"
+                        />
+                        <DropdownItem
+                          to="/letters/appraisal"
+                          label="Appraisal Letter"
+                        />
+                        <DropdownItem
+                          to="/letters/training"
+                          label="Training Letter"
+                        />
+                        <DropdownItem
+                          to="/letters/experience"
+                          label="Experience Letter"
+                        />
                       </div>
                     </div>
                   )}

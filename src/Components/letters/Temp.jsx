@@ -302,7 +302,7 @@ export default function Offer() {
   };
 
   return (
-    <div className="mx-auto bg-gray-50">
+    <div className="mx-auto">
       <NavBarLetters />
       <div className="max-w-7xl mx-auto">
         <div className="mt-5">

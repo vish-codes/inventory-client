@@ -90,7 +90,9 @@ const Apperaisal = () => {
     // company name and address
     doc.setFontSize(12);
     doc.setFont("times", "bold");
-    const companyName = formData.includePvtLtd ? "PANORAMA SOFTWARE SOLUTIONS PVT LTD" : "PANORAMA SOFTWARE SOLUTIONS";
+    const companyName = formData.includePvtLtd
+      ? "PANORAMA SOFTWARE SOLUTIONS PVT LTD"
+      : "PANORAMA SOFTWARE SOLUTIONS";
     doc.text(companyName, 200, 15, {
       align: "right",
     });
@@ -117,7 +119,9 @@ const Apperaisal = () => {
 
     // Add salutation
     doc.setFontSize(11);
-    doc.text(`Dear ${data.name},`, 20, 60);
+    doc.setFont("Times", "Bold");
+    doc.text(`Dear `, 20, 60);
+    doc.text(`${data.name},`, 29.2, 60);
 
     // Add subject line
     doc.setFontSize(11);
@@ -126,7 +130,7 @@ const Apperaisal = () => {
 
     const textWidth = doc.getTextWidth(text);
     doc.setDrawColor(12, 112, 137);
-    doc.line(85.5, 76, 85.5 + textWidth, 76);
+    doc.line(86.7, 76, 87 + textWidth, 76);
     doc.setDrawColor(0);
 
     // Add body paragraphs
@@ -157,7 +161,7 @@ const Apperaisal = () => {
       5
     );
 
-    doc.setFont("helvetica", "normal");
+    doc.setFont("Times", "normal");
     yPos = addJustifiedText(
       "However, these terms and conditions will be superseded by rules, regulations, policies and processes as given in the latest version of Employee Handbook at any point of time.",
       yPos,
@@ -165,16 +169,22 @@ const Apperaisal = () => {
       5
     );
 
-    doc.setFont("helvetica", "bold");
+    doc.setFont("Times", "bold");
     doc.text("Keep up your good performance!", 20, (yPos += 10));
 
-    doc.setFont("helvetica", "normal");
+    doc.setFont("Times", "normal");
     doc.text("Sincerely,", 20, (yPos += 10));
 
     // Add signature area
-    doc.setFont("helvetica", "bold");
+    doc.setFont("Times", "bold");
     doc.text("HR Executive", 20, 225);
-    doc.text(formData.includePvtLtd ? "Panorama Software Solutions Pvt Ltd" : "Panorama Software Solutions", 20, 231);
+    doc.text(
+      formData.includePvtLtd
+        ? "Panorama Software Solutions Pvt Ltd"
+        : "Panorama Software Solutions",
+      20,
+      231
+    );
     doc.text("Noida, UP, India", 20, 237);
     doc.text("Employee", 180, 225, { align: "right" });
 
@@ -184,7 +194,7 @@ const Apperaisal = () => {
     // Add footer
     doc.setFontSize(9.5);
     doc.setTextColor(120, 120, 120);
-    doc.setFont("helvetica", "normal");
+    doc.setFont("Times", "normal");
     doc.text(
       "Unit no - 621-622, 6th Floor, Tower 1, Assotech Business Cresterra, Sector 135, Noida - 201304, Uttar Pradesh",
       105,
@@ -209,45 +219,47 @@ const Apperaisal = () => {
   const handleFormSubmit = (data) => {
     setFormData({
       ...data,
-      includePvtLtd: data.includePvtLtd
+      includePvtLtd: data.includePvtLtd,
     });
     setShowForm(false);
   };
 
   return (
-    <div className="mx-auto bg-gray-50">
+    <div className="mx-auto">
       <NavBarLetters />
       <div className="max-w-7xl mx-auto">
-        <div className="mt-5">
-          <button
-            onClick={() => setShowForm(true)}
-            className="py-1 px-4 mx-24 rounded-md bg-pano-blue text-white shadow-lg font-sans hover:bg-blue-600 transition-colors"
-          >
-            Generate Appraisal Letter
-          </button>
-        </div>
+        <div className="flex md:px-7 lg:px-20 flex-col mt-3 rounded-2xl w-full h-screen sm:px-5">
+          <div className="mt-5">
+            <button
+              onClick={() => setShowForm(true)}
+              className="py-1 px-4 mx-24 rounded-md bg-pano-blue text-white shadow-lg font-sans hover:bg-blue-600 transition-colors"
+            >
+              Generate Appraisal Letter
+            </button>
+          </div>
 
-        {showForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-4 rounded-lg">
-              <ApperaisalForm
-                onSubmit={handleFormSubmit}
-                onClose={() => setShowForm(false)}
-              />
+          {showForm && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <div className="bg-white p-4 rounded-lg">
+                <ApperaisalForm
+                  onSubmit={handleFormSubmit}
+                  onClose={() => setShowForm(false)}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {formData && (
-          <div className="bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col mt-3 rounded-2xl w-full h-screen sm:px-5">
-            <iframe
-              src={pdfUrl}
-              style={{ width: "100%", height: "800px" }}
-              frameBorder="0"
-              title="Appraisal Letter Preview"
-            ></iframe>
-          </div>
-        )}
+          {formData && (
+            <div className="bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col mt-3 rounded-2xl w-full h-screen sm:px-5">
+              <iframe
+                src={pdfUrl}
+                style={{ width: "100%", height: "800px" }}
+                frameBorder="0"
+                title="Appraisal Letter Preview"
+              ></iframe>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -555,51 +555,56 @@ const GeneratePDF = () => {
   }, [inputText, resourcesArr]);
 
   return (
-    <div>
+    <div className="mx-auto">
       <DashboardPdf />
-      <div
-        className={`bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col mt-3 rounded-2xl w-full h-screen sm:px-5`}
-      >
-        {errorMessage ? <ErrorComponent /> : null}
-        <button
-          onClick={generatePDFmain}
-          className="py-1 m-2 w-32 px-2 rounded-md bg-pano-blue text-white shadow-lg font-sans"
-        >
-          Generate PDF
-        </button>
-        <div className="border font-sans border-black w-auto p-2 m-2 rounded-md">
-          <label>Select file : </label>
-          <input
-            type="file"
-            onChange={handleFileUpload}
-            accept=".csv, .xlsx, .xls"
-          />
-        </div>
-        {isPdfPreviewVisible ? (
-          <>
-            <div className="relative h-10 w-full mb-5">
-              <p className="absolute top-0 right-28 w-22 mx-5 p-2 ">
-                can't see preview?{" "}
-              </p>
-              <button
-                onClick={handleFileSave}
-                className="absolute top-0 right-0 w-22 mx-5 border boder-black p-2 text-sm rounded-lg bg-slate-600 text-white "
-              >
-                Download PDF
-              </button>
-            </div>
-            <iframe
-              src={pdfUrl}
-              style={{ width: "100%", height: "800px" }}
-              frameBorder="0"
-              title="PDF Preview"
-            ></iframe>
-          </>
-        ) : (
-          <div className="mx-2">
-            Please upload and Generate PDF to see preview
+      <div className="max-w-7xl mx-auto">
+        <div className="flex md:px-7 lg:px-20 flex-col mt-3 rounded-2xl w-full h-screen sm:px-5">
+          <div className="mt-5">
+            <button
+              onClick={generatePDFmain}
+              className="py-1 px-4 mx-24 rounded-md bg-pano-blue text-white shadow-lg font-sans hover:bg-blue-600 transition-colors"
+            >
+              Generate PDF
+            </button>
           </div>
-        )}
+
+          <div className="border font-sans border-black mx-24 p-2 mt-3 rounded-md">
+            <label>Select file : </label>
+            <input
+              type="file"
+              onChange={handleFileUpload}
+              accept=".csv, .xlsx, .xls"
+            />
+          </div>
+
+          {errorMessage ? <ErrorComponent /> : null}
+
+          {isPdfPreviewVisible ? (
+            <div className="bg-gray-50 shadow-lg flex md:px-7 lg:px-20 flex-col mt-3 rounded-2xl w-full h-screen sm:px-5">
+              <div className="relative h-10 w-full mb-5">
+                <p className="absolute top-0 right-28 w-22 mx-5 p-2">
+                  can't see preview?{" "}
+                </p>
+                <button
+                  onClick={handleFileSave}
+                  className="absolute top-0 right-0 w-22 mx-5 border boder-black p-2 text-sm rounded-lg bg-slate-600 text-white"
+                >
+                  Download PDF
+                </button>
+              </div>
+              <iframe
+                src={pdfUrl}
+                style={{ width: "100%", height: "800px" }}
+                frameBorder="0"
+                title="PDF Preview"
+              />
+            </div>
+          ) : (
+            <div className="mx-24 mt-3">
+              Please upload and Generate PDF to see preview
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { format } from "date-fns"; // Make sure to import this
+import { format, startOfMonth } from "date-fns"; // Make sure to import this
 
 const PayslipForm = ({ onSubmit, onClose }) => {
   const [formData, setFormData] = useState({
     name: "",
     empId: "",
     bankName: "",
-    payDate: "",
+    payDate: new Date(),
     totalPay: "",
     basicPay: "",
     houseRentAllowance: "",
@@ -18,6 +18,7 @@ const PayslipForm = ({ onSubmit, onClose }) => {
     tds: "", // Add this new field
     netPay: "", // Add this field to store the net pay after TDS deduction
     includePvtLtd: true, // Add this new field
+    payPeriod: new Date(),
   });
 
   const [showPreview, setShowPreview] = useState(false);
@@ -31,7 +32,15 @@ const PayslipForm = ({ onSubmit, onClose }) => {
   };
 
   const handleDateChange = (date) => {
-    setFormData({ ...formData, payDate: date });
+    setFormData({
+      ...formData,
+      payDate: date,
+      payPeriod: startOfMonth(date),
+    });
+  };
+
+  const handlePayPeriodChange = (date) => {
+    setFormData({ ...formData, payPeriod: startOfMonth(date) });
   };
 
   /*
@@ -162,7 +171,7 @@ console.log(result);
     const formattedData = {
       ...formData,
       payDate: formatDate(formData.payDate),
-      payPeriod: formatPayPeriod(formData.payDate),
+      payPeriod: formatPayPeriod(formData.payPeriod),
     };
     onSubmit(formattedData);
     console.log(formattedData);
@@ -199,7 +208,7 @@ console.log(result);
           <strong>Pay Date:</strong> {formatDate(formData.payDate)}
         </p>
         <p>
-          <strong>Pay Period:</strong> {formatPayPeriod(formData.payDate)}
+          <strong>Pay Period:</strong> {formatPayPeriod(formData.payPeriod)}
         </p>
         <p>
           <strong>Total Pay:</strong> {formData.totalPay}
@@ -308,21 +317,39 @@ console.log(result);
             required
           />
         </div>
-        <div>
-          <label
-            htmlFor="payDate"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Pay Date
-          </label>
-          <DatePicker
-            selected={formData.payDate}
-            onChange={handleDateChange}
-            dateFormat="dd/MM/yyyy"
-            placeholderText="Click to select date"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-            required
-          />
+        <div className="grid grid-cols-2 gap-6">
+          <div>
+            <label
+              htmlFor="payPeriod"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Pay Period
+            </label>
+            <DatePicker
+              selected={formData.payPeriod}
+              onChange={handlePayPeriodChange}
+              dateFormat="MMMM yyyy"
+              showMonthYearPicker
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              required
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="payDate"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Pay Date
+            </label>
+            <DatePicker
+              selected={formData.payDate}
+              onChange={handleDateChange}
+              dateFormat="dd/MM/yyyy"
+              placeholderText="Click to select date"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              required
+            />
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-6">
