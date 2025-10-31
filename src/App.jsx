@@ -14,6 +14,10 @@ import Offer from "./Components/letters/Offer";
 import Appointment from "./Components/letters/Appointment";
 import Training from "./Components/letters/Training";
 import Experience from "./Components/letters/Experience";
+import EmployeeOnboarding from "./Pages/EmployeeOnboarding";
+import ClientOnboarding from "./Pages/ClientOnboarding";
+import ProjectOnboarding from "./Pages/ProjectOnboarding";
+import CreateInvoice from "./Pages/CreateInvoice";
 
 export const AppContext = createContext("");
 
@@ -187,10 +191,23 @@ function App() {
           <Route index element={<Landing />} />
           <Route path="/login" element={<Login />} />
           {/* <Route path="/appointment" element={<Appointment />} /> */}
-          <Route element={<PrivateRoutes />}>
+          <Route>
             {" "}
             <Route path="/dashboard" element={<DashBoard />} />
             <Route path="/genpdf" element={<GeneratePDF />} />
+            <Route
+              path="/genpdf/employee-onboarding"
+              element={<EmployeeOnboarding />}
+            />
+            <Route
+              path="/genpdf/client-onboarding"
+              element={<ClientOnboarding />}
+            />
+            <Route
+              path="/genpdf/project-onboarding"
+              element={<ProjectOnboarding />}
+            />
+            <Route path="/genpdf/create-invoice" element={<CreateInvoice />} />
             <Route path="/genpayslip" element={<Payslip />} />
             <Route path="/letters/appraisal" element={<Appraisal />} />
             <Route path="/letters/offer" element={<Offer />} />
