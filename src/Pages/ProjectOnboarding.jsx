@@ -1,18 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DashboardPdf from "../Components/DashboardPdf";
 
 const ProjectOnboarding = () => {
   const [formData, setFormData] = useState({
-    projectName: "",
-    projectManager: "",
-    client: "",
-    startDate: "",
+    name: "",
+    client_id: "",
+    emp_id: "",
+    billing_amt: "",
+    billing_method: "days",
+    overtime_amt: "",
+    active: true,
   });
+
+  const [clients, setClients] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
 
+  // ✅ Fetch clients and employees for dropdowns
+  useEffect(() => {
+    fetchClients();
+    fetchEmployees();
+  }, []);
+
+  const fetchClients = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/clients");
+      const data = await res.json();
+      if (res.ok) setClients(data);
+    } catch (error) {
+      console.error("❌ Failed to fetch clients:", error);
+    }
+  };
+
+  const fetchEmployees = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/employees");
+      const data = await res.json();
+      if (res.ok) setEmployees(data);
+    } catch (error) {
+      console.error("❌ Failed to fetch employees:", error);
+    }
+  };
+
+  // ✅ Input change handler
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
   const handleOpenForm = () => setShowForm(true);
@@ -28,15 +66,40 @@ const ProjectOnboarding = () => {
     setShowForm(true);
   };
 
-  const handleFinalSubmit = () => {
-    setShowPreview(false);
-    setShowForm(false);
-    setFormData({
-      projectName: "",
-      projectManager: "",
-      client: "",
-      startDate: "",
-    });
+  // ✅ Submit to backend
+  const handleFinalSubmit = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:5000/api/projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert("✅ Project created successfully!");
+        console.log("Created Project:", data.project);
+        setFormData({
+          name: "",
+          client_id: "",
+          emp_id: "",
+          billing_amt: "",
+          billing_method: "days",
+          overtime_amt: "",
+          active: true,
+        });
+      } else {
+        alert(`❌ ${data.message || "Failed to create project"}`);
+      }
+    } catch (error) {
+      console.error("❌ Error creating project:", error);
+      alert("❌ Network or server error while creating project.");
+    } finally {
+      setLoading(false);
+      setShowPreview(false);
+      setShowForm(false);
+    }
   };
 
   return (
@@ -46,6 +109,7 @@ const ProjectOnboarding = () => {
         <h1 className="text-2xl font-bold mb-6 text-center text-blue-800">
           Project Onboarding
         </h1>
+
         {!showForm && !showPreview && (
           <div className="flex justify-end">
             <button
@@ -56,58 +120,118 @@ const ProjectOnboarding = () => {
             </button>
           </div>
         )}
+
+        {/* ✅ Project Form */}
         {showForm && (
           <form onSubmit={handleFormSubmit} className="space-y-4">
+            {/* Name */}
             <div>
-              <label className="block font-medium text-gray-700">
-                Project Name
-              </label>
+              <label className="block font-medium text-gray-700">Project Name</label>
               <input
                 type="text"
-                name="projectName"
-                value={formData.projectName}
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 required
               />
             </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  {/* Client */}
+  <div>
+    <label className="block font-medium text-gray-700">Client</label>
+    <select
+      name="client_id"
+      value={formData.client_id}
+      onChange={handleChange}
+      className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+      required
+    >
+      <option value="">Select Client</option>
+      {clients.map((client) => (
+        <option key={client.id} value={client.id}>
+          {client.name}
+        </option>
+      ))}
+    </select>
+  </div>
+
+  {/* Employee */}
+  <div>
+    <label className="block font-medium text-gray-700">Employee</label>
+    <select
+      name="emp_id"
+      value={formData.emp_id}
+      onChange={handleChange}
+      className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+      required
+    >
+      <option value="">Select Employee</option>
+      {employees.map((emp) => (
+        <option key={emp.id} value={emp.id}>
+          {emp.name}
+        </option>
+      ))}
+    </select>
+  </div>
+</div>
+
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  {/* Base Amount */}
+  <div>
+    <label className="block font-medium text-gray-700">Base Amount</label>
+    <input
+      type="number"
+      name="billing_amt"
+      value={formData.billing_amt}
+      onChange={handleChange}
+      className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+      required
+    />
+  </div>
+
+  {/* Overtime Amount */}
+  <div>
+    <label className="block font-medium text-gray-700">Overtime Amount</label>
+    <input
+      type="number"
+      name="overtime_amt"
+      value={formData.overtime_amt}
+      onChange={handleChange}
+      className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+    />
+  </div>
+</div>
+
+            {/* Billing Method */}
             <div>
-              <label className="block font-medium text-gray-700">
-                Project Manager
-              </label>
-              <input
-                type="text"
-                name="projectManager"
-                value={formData.projectManager}
+              <label className="block font-medium text-gray-700">Billing Method</label>
+              <select
+                name="billing_method"
+                value={formData.billing_method}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                required
-              />
+              >
+                <option value="days">Days</option>
+                <option value="hours">Hours</option>
+                <option value="month">Month</option>
+              </select>
             </div>
-            <div>
-              <label className="block font-medium text-gray-700">Client</label>
+
+            {/* Active */}
+            <div className="flex items-center gap-2">
               <input
-                type="text"
-                name="client"
-                value={formData.client}
+                type="checkbox"
+                name="active"
+                checked={formData.active}
                 onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                required
+                className="h-4 w-4 text-blue-600"
               />
+              <label className="font-medium text-gray-700">Active</label>
             </div>
-            <div>
-              <label className="block font-medium text-gray-700">
-                Start Date
-              </label>
-              <input
-                type="date"
-                name="startDate"
-                value={formData.startDate}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                required
-              />
-            </div>
+
             <div className="pt-2 flex justify-end gap-2">
               <button
                 type="submit"
@@ -125,19 +249,38 @@ const ProjectOnboarding = () => {
             </div>
           </form>
         )}
+
+        {/* ✅ Preview Section */}
         {showPreview && (
           <div className="bg-gray-50 border p-4 rounded">
             <h2 className="font-bold text-lg mb-3 text-blue-700">Preview</h2>
             <dl className="mb-4">
               <dt className="font-semibold">Project Name:</dt>
-              <dd className="mb-2">{formData.projectName}</dd>
-              <dt className="font-semibold">Project Manager:</dt>
-              <dd className="mb-2">{formData.projectManager}</dd>
+              <dd className="mb-2">{formData.name}</dd>
+
               <dt className="font-semibold">Client:</dt>
-              <dd className="mb-2">{formData.client}</dd>
-              <dt className="font-semibold">Start Date:</dt>
-              <dd>{formData.startDate}</dd>
+              <dd className="mb-2">
+                {clients.find((c) => c.id === Number(formData.client_id))?.name || ""}
+              </dd>
+
+              <dt className="font-semibold">Employee:</dt>
+              <dd className="mb-2">
+                {employees.find((e) => e.id === Number(formData.emp_id))?.name || ""}
+              </dd>
+
+              <dt className="font-semibold">Base Amount:</dt>
+              <dd className="mb-2">{formData.billing_amt}</dd>
+
+              <dt className="font-semibold">Overtime Amount:</dt>
+              <dd className="mb-2">{formData.overtime_amt}</dd>
+
+              <dt className="font-semibold">Billing Method:</dt>
+              <dd className="mb-2">{formData.billing_method}</dd>
+
+              <dt className="font-semibold">Active:</dt>
+              <dd>{formData.active ? "Yes" : "No"}</dd>
             </dl>
+
             <div className="flex justify-end gap-2">
               <button
                 onClick={handleEdit}
@@ -147,9 +290,14 @@ const ProjectOnboarding = () => {
               </button>
               <button
                 onClick={handleFinalSubmit}
-                className="px-4 py-2 bg-green-700 hover:bg-green-900 text-white font-semibold rounded-md shadow"
+                disabled={loading}
+                className={`px-4 py-2 ${
+                  loading
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-green-700 hover:bg-green-900"
+                } text-white font-semibold rounded-md shadow`}
               >
-                Submit
+                {loading ? "Submitting..." : "Submit"}
               </button>
             </div>
           </div>
