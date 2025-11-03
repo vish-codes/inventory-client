@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import DashboardPdf from "../Components/DashboardPdf";
 
-const API_URL = "http://localhost:3000/api/employees";
+const API_URL = "http://localhost:3000/api/employee";
 
 const emptyForm = {
   name: "",
@@ -131,17 +131,19 @@ const EmployeeOnboarding = () => {
         {error && <div className="text-red-600 mb-3">{error}</div>}
         {loading && <div className="text-blue-600 mb-3">Loading...</div>}
 
+        {/* Add Button */}
         {!showForm && !showPreview && (
           <div className="flex justify-end mb-6">
             <button
               onClick={handleOpenForm}
               className="px-4 py-2 bg-blue-700 hover:bg-blue-900 text-white font-semibold rounded-md shadow"
             >
-              Add Employee
+              + Add Employee
             </button>
           </div>
         )}
 
+        {/* Employee Table */}
         {!showForm && !showPreview && (
           <div className="overflow-x-auto pb-8">
             <table className="min-w-full border text-center">
@@ -167,9 +169,9 @@ const EmployeeOnboarding = () => {
                     <tr key={emp.id}>
                       <td className="border p-1">{emp.id}</td>
                       <td className="border p-1">{emp.name}</td>
-                      <td className="border p-1">{emp.position}</td>
-                      <td className="border p-1">{emp.working_on}</td>
-                      <td className="border p-1">{emp.emp_code}</td>
+                      <td className="border p-1">{emp.position || "-"}</td>
+                      <td className="border p-1">{emp.working_on || "-"}</td>
+                      <td className="border p-1">{emp.emp_code || "-"}</td>
                       <td className="border p-1">
                         <button
                           className="mr-2 px-2 py-1 text-blue-700 hover:underline"
@@ -192,6 +194,7 @@ const EmployeeOnboarding = () => {
           </div>
         )}
 
+        {/* Delete Confirmation */}
         {deleteId && (
           <div className="mb-6 bg-yellow-50 p-4 rounded flex flex-col gap-2 border border-yellow-200">
             <span>Are you sure you want to delete employee ID {deleteId}?</span>
@@ -212,19 +215,22 @@ const EmployeeOnboarding = () => {
           </div>
         )}
 
+        {/* Form */}
         {showForm && (
           <form onSubmit={handleFormSubmit} className="space-y-4">
             <div>
-              <label className="block font-medium text-gray-700">Name</label>
+              <label className="block font-medium text-gray-700">Name *</label>
               <input
                 type="text"
                 name="name"
+                placeholder="Enter employee name"
                 value={formData.name}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 required
               />
             </div>
+
             <div>
               <label className="block font-medium text-gray-700">
                 Position
@@ -232,11 +238,13 @@ const EmployeeOnboarding = () => {
               <input
                 type="text"
                 name="position"
+                placeholder="Enter position"
                 value={formData.position}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
               />
             </div>
+
             <div>
               <label className="block font-medium text-gray-700">
                 Working On
@@ -244,11 +252,13 @@ const EmployeeOnboarding = () => {
               <input
                 type="text"
                 name="working_on"
+                placeholder="Project/Department"
                 value={formData.working_on}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
               />
             </div>
+
             <div>
               <label className="block font-medium text-gray-700">
                 Employee Code
@@ -256,12 +266,13 @@ const EmployeeOnboarding = () => {
               <input
                 type="text"
                 name="emp_code"
+                placeholder="Enter employee code"
                 value={formData.emp_code}
                 onChange={handleChange}
                 className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                required
               />
             </div>
+
             <div className="pt-2 flex justify-end gap-2">
               <button
                 type="submit"
@@ -284,6 +295,7 @@ const EmployeeOnboarding = () => {
           </form>
         )}
 
+        {/* Preview */}
         {showPreview && (
           <div className="bg-gray-50 border p-4 rounded">
             <h2 className="font-bold text-lg mb-3 text-blue-700">Preview</h2>
@@ -295,7 +307,7 @@ const EmployeeOnboarding = () => {
               <dt className="font-semibold">Working On:</dt>
               <dd>{formData.working_on || "-"}</dd>
               <dt className="font-semibold">Employee Code:</dt>
-              <dd>{formData.emp_code}</dd>
+              <dd>{formData.emp_code || "-"}</dd>
             </dl>
             <div className="flex justify-end gap-2">
               <button

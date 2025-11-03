@@ -12,7 +12,6 @@ const emptyForm = {
 };
 
 const ClientOnboarding = () => {
-  // UI and loading
   const [clients, setClients] = useState([]);
   const [formData, setFormData] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
@@ -20,12 +19,13 @@ const ClientOnboarding = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [deleteId, setDeleteId] = useState(null); // For delete confirmation
+  const [deleteId, setDeleteId] = useState(null);
 
   useEffect(() => {
     fetchClients();
   }, []);
 
+  // 🔹 FETCH ALL CLIENTS
   async function fetchClients() {
     setLoading(true);
     setError("");
@@ -41,59 +41,67 @@ const ClientOnboarding = () => {
     }
   }
 
-  // Handle open form for add
+  // 🔹 HANDLE OPEN ADD FORM
   const handleOpenForm = () => {
     setFormData(emptyForm);
     setEditingId(null);
     setShowForm(true);
     setShowPreview(false);
   };
-  // Handle open form for edit
+
+  // 🔹 HANDLE EDIT CLIENT
   const handleEditClient = (client) => {
-    setFormData({ ...client });
+    setFormData({
+      name: client.name || "",
+      address: client.address || "",
+      state: client.state || "",
+      gst_number: client.gst_number || "",
+      company_id: client.company_id || "",
+    });
     setEditingId(client.id);
     setShowForm(true);
     setShowPreview(false);
   };
 
-  // Form changes
-  const handleChange = (e) =>
+  // 🔹 HANDLE FORM INPUT CHANGE
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-  // Preview logic
+  // 🔹 PREVIEW BEFORE SUBMIT
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    if (!formData.company_id) {
+      alert("Company ID is required!");
+      return;
+    }
     setShowPreview(true);
     setShowForm(false);
   };
+
+  // 🔹 EDIT PREVIEW
   const handleEditPreview = () => {
     setShowPreview(false);
     setShowForm(true);
   };
 
-  // Final submit (Add or Edit)
+  // 🔹 FINAL SUBMIT (POST or PUT)
   const handleFinalSubmit = async () => {
     setLoading(true);
     setError("");
     try {
-      let res, added;
-      if (editingId) {
-        res = await fetch(`${API_URL}/${editingId}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        });
-      } else {
-        res = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        });
-      }
-      if (!res.ok) throw new Error("Operation failed");
-      added = await res.json();
+      const method = editingId ? "PUT" : "POST";
+      const url = editingId ? `${API_URL}/${editingId}` : API_URL;
+
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) throw new Error("Failed to save client");
+
       await fetchClients();
-      // Reset
       setShowPreview(false);
       setShowForm(false);
       setEditingId(null);
@@ -105,7 +113,7 @@ const ClientOnboarding = () => {
     }
   };
 
-  // Delete logic
+  // 🔹 DELETE CLIENT
   const handleDelete = (id) => setDeleteId(id);
   const confirmDelete = async () => {
     if (!deleteId) return;
@@ -113,7 +121,7 @@ const ClientOnboarding = () => {
     setError("");
     try {
       const res = await fetch(`${API_URL}/${deleteId}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Delete failed");
+      if (!res.ok) throw new Error("Failed to delete client");
       await fetchClients();
       setDeleteId(null);
     } catch (err) {
@@ -130,9 +138,11 @@ const ClientOnboarding = () => {
         <h1 className="text-2xl font-bold mb-6 text-center text-blue-800">
           Client Onboarding
         </h1>
+
         {error && <div className="text-red-600 mb-3">{error}</div>}
         {loading && <div className="text-blue-600 mb-3">Loading...</div>}
-        {/* Add New Button */}
+
+        {/* Add Button */}
         {!showForm && !showPreview && (
           <div className="flex justify-end mb-6">
             <button
@@ -143,7 +153,8 @@ const ClientOnboarding = () => {
             </button>
           </div>
         )}
-        {/* CRUD Table */}
+
+        {/* TABLE VIEW */}
         {!showForm && !showPreview && (
           <div className="overflow-x-auto pb-8">
             <table className="min-w-full border text-center">
@@ -153,7 +164,7 @@ const ClientOnboarding = () => {
                   <th className="p-2 border">Name</th>
                   <th className="p-2 border">Address</th>
                   <th className="p-2 border">State</th>
-                  <th className="p-2 border">GST</th>
+                  <th className="p-2 border">GST No.</th>
                   <th className="p-2 border">Company ID</th>
                   <th className="p-2 border">Actions</th>
                 </tr>
@@ -195,7 +206,8 @@ const ClientOnboarding = () => {
             </table>
           </div>
         )}
-        {/* CONFIRM DELETE */}
+
+        {/* DELETE CONFIRMATION */}
         {deleteId && (
           <div className="mb-6 bg-yellow-50 p-4 rounded flex flex-col gap-2 border border-yellow-200">
             <span>Are you sure you want to delete client ID {deleteId}?</span>
@@ -215,6 +227,7 @@ const ClientOnboarding = () => {
             </div>
           </div>
         )}
+
         {/* ADD/EDIT FORM */}
         {showForm && (
           <form onSubmit={handleFormSubmit} className="space-y-4">
@@ -297,7 +310,8 @@ const ClientOnboarding = () => {
             </div>
           </form>
         )}
-        {/* PREVIEW FORM */}
+
+        {/* PREVIEW SECTION */}
         {showPreview && (
           <div className="bg-gray-50 border p-4 rounded">
             <h2 className="font-bold text-lg mb-3 text-blue-700">Preview</h2>
@@ -309,7 +323,7 @@ const ClientOnboarding = () => {
               <dt className="font-semibold">State:</dt>
               <dd>{formData.state}</dd>
               <dt className="font-semibold">GST:</dt>
-              <dd>{formData.gst_number}</dd>
+              <dd>{formData.gst_number || "N/A"}</dd>
               <dt className="font-semibold">Company ID:</dt>
               <dd>{formData.company_id}</dd>
             </dl>
