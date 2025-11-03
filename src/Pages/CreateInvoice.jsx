@@ -1,22 +1,21 @@
 import { useState, useEffect } from "react";
 import DashboardPdf from "../Components/DashboardPdf";
 
-const API_URL = "http://localhost:3000/api/projects";
-
-const BILLING_METHODS = ["days", "hours", "month"];
+const API_URL = "http://localhost:3000/api/invoices";
 
 const emptyForm = {
-  name: "",
-  client_id: "",
-  emp_id: "",
-  billing_amt: "",
-  active: true,
-  billing_method: "days",
-  overtime_amt: "",
+  invoice_no: "",
+  project_id: "",
+  issue_date: "",
+  total_amount: "",
+  days: "",
+  paid_leaves: "",
+  unpaid_leaves: "",
+  over_time: "",
 };
 
 const CreateInvoice = () => {
-  const [projects, setProjects] = useState([]);
+  const [invoices, setInvoices] = useState([]);
   const [formData, setFormData] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -26,23 +25,19 @@ const CreateInvoice = () => {
   const [deleteId, setDeleteId] = useState(null);
 
   useEffect(() => {
-    fetchProjects();
+    fetchInvoices();
   }, []);
 
-  async function fetchProjects() {
+  // 🔹 Fetch All Invoices
+  async function fetchInvoices() {
     setLoading(true);
     setError("");
     try {
       const res = await fetch(API_URL);
-      if (!res.ok) throw new Error("Failed to fetch projects");
+      if (!res.ok) throw new Error("Failed to fetch invoices");
       const data = await res.json();
-      // API might return {message, projects: []}; handle both cases
-      const rows = Array.isArray(data)
-        ? data
-        : Array.isArray(data.projects)
-        ? data.projects
-        : [];
-      setProjects(rows);
+      const rows = Array.isArray(data) ? data : [];
+      setInvoices(rows);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -50,6 +45,7 @@ const CreateInvoice = () => {
     }
   }
 
+  // 🔹 Form Handlers
   const handleOpenForm = () => {
     setFormData(emptyForm);
     setEditingId(null);
@@ -57,30 +53,25 @@ const CreateInvoice = () => {
     setShowPreview(false);
   };
 
-  const handleEdit = (p) => {
+  const handleEdit = (invoice) => {
     setFormData({
-      name: p.name || "",
-      client_id: p.client_id?.toString?.() || "",
-      emp_id: p.emp_id?.toString?.() || "",
-      billing_amt: p.billing_amt?.toString?.() || "",
-      active: typeof p.active === "boolean" ? p.active : true,
-      billing_method: BILLING_METHODS.includes(p.billing_method)
-        ? p.billing_method
-        : "days",
-      overtime_amt: p.overtime_amt?.toString?.() || "",
+      invoice_no: invoice.invoice_no || "",
+      project_id: invoice.project_id?.toString?.() || "",
+      issue_date: invoice.issue_date ? invoice.issue_date.slice(0, 10) : "",
+      total_amount: invoice.total_amount?.toString?.() || "",
+      days: invoice.days?.toString?.() || "",
+      paid_leaves: invoice.paid_leaves?.toString?.() || "",
+      unpaid_leaves: invoice.unpaid_leaves?.toString?.() || "",
+      over_time: invoice.over_time?.toString?.() || "",
     });
-    setEditingId(p.id);
+    setEditingId(invoice.id);
     setShowForm(true);
     setShowPreview(false);
   };
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (name === "active" && type === "checkbox") {
-      setFormData((prev) => ({ ...prev, active: checked }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFormSubmit = (e) => {
@@ -94,23 +85,22 @@ const CreateInvoice = () => {
     setShowForm(true);
   };
 
+  // 🔹 Final Submit (POST / PUT)
   const handleFinalSubmit = async () => {
     setLoading(true);
     setError("");
     try {
       const payload = {
-        name: formData.name,
-        client_id: Number(formData.client_id),
-        emp_id: Number(formData.emp_id),
-        billing_amt:
-          formData.billing_amt === "" ? 0 : Number(formData.billing_amt),
-        active: !!formData.active,
-        billing_method: BILLING_METHODS.includes(formData.billing_method)
-          ? formData.billing_method
-          : "days",
-        overtime_amt:
-          formData.overtime_amt === "" ? 0 : Number(formData.overtime_amt),
+        invoice_no: formData.invoice_no,
+        project_id: Number(formData.project_id),
+        issue_date: formData.issue_date || new Date(),
+        total_amount: Number(formData.total_amount || 0),
+        days: Number(formData.days || 0),
+        paid_leaves: Number(formData.paid_leaves || 0),
+        unpaid_leaves: Number(formData.unpaid_leaves || 0),
+        over_time: Number(formData.over_time || 0),
       };
+
       let res;
       if (editingId) {
         res = await fetch(`${API_URL}/${editingId}`, {
@@ -125,11 +115,13 @@ const CreateInvoice = () => {
           body: JSON.stringify(payload),
         });
       }
+
       if (!res.ok) {
         const text = await res.text();
         throw new Error(text || "Operation failed");
       }
-      await fetchProjects();
+
+      await fetchInvoices();
       setShowPreview(false);
       setShowForm(false);
       setEditingId(null);
@@ -141,6 +133,7 @@ const CreateInvoice = () => {
     }
   };
 
+  // 🔹 Delete Invoice
   const handleDelete = (id) => setDeleteId(id);
 
   const confirmDelete = async () => {
@@ -153,7 +146,7 @@ const CreateInvoice = () => {
         const text = await res.text();
         throw new Error(text || "Delete failed");
       }
-      await fetchProjects();
+      await fetchInvoices();
       setDeleteId(null);
     } catch (err) {
       setError(err.message);
@@ -162,13 +155,15 @@ const CreateInvoice = () => {
     }
   };
 
+  // 🔹 UI
   return (
     <div className="mx-auto">
       <DashboardPdf />
-      <div className="max-w-4xl mx-auto mt-8 bg-white rounded-lg shadow-lg p-6">
+      <div className="max-w-5xl mx-auto mt-8 bg-white rounded-lg shadow-lg p-6">
         <h1 className="text-2xl font-bold mb-6 text-center text-blue-800">
-          Project Management
+          Invoice Management
         </h1>
+
         {error && (
           <div className="text-red-600 mb-3 whitespace-pre-wrap">{error}</div>
         )}
@@ -180,7 +175,7 @@ const CreateInvoice = () => {
               onClick={handleOpenForm}
               className="px-4 py-2 bg-blue-700 hover:bg-blue-900 text-white font-semibold rounded-md shadow"
             >
-              Add Project
+              Add Invoice
             </button>
           </div>
         )}
@@ -191,46 +186,48 @@ const CreateInvoice = () => {
               <thead>
                 <tr className="bg-blue-100">
                   <th className="p-2 border">ID</th>
-                  <th className="p-2 border">Name</th>
-                  <th className="p-2 border">Client</th>
-                  <th className="p-2 border">Employee</th>
-                  <th className="p-2 border">Billing Amt</th>
-                  <th className="p-2 border">Active</th>
-                  <th className="p-2 border">Method</th>
-                  <th className="p-2 border">Overtime Amt</th>
+                  <th className="p-2 border">Invoice No</th>
+                  <th className="p-2 border">Project ID</th>
+                  <th className="p-2 border">Issue Date</th>
+                  <th className="p-2 border">Total Amount</th>
+                  <th className="p-2 border">Days</th>
+                  <th className="p-2 border">Paid Leaves</th>
+                  <th className="p-2 border">Unpaid Leaves</th>
+                  <th className="p-2 border">Overtime</th>
                   <th className="p-2 border">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {projects.length === 0 ? (
+                {invoices.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="p-3">
-                      No projects found.
+                    <td colSpan={10} className="p-3">
+                      No invoices found.
                     </td>
                   </tr>
                 ) : (
-                  projects.map((p) => (
-                    <tr key={p.id}>
-                      <td className="border p-1">{p.id}</td>
-                      <td className="border p-1">{p.name}</td>
+                  invoices.map((inv) => (
+                    <tr key={inv.id}>
+                      <td className="border p-1">{inv.id}</td>
+                      <td className="border p-1">{inv.invoice_no}</td>
+                      <td className="border p-1">{inv.project_id}</td>
                       <td className="border p-1">
-                        {p.client_name || p.client_id}
+                        {inv.issue_date?.slice(0, 10)}
                       </td>
-                      <td className="border p-1">{p.emp_id}</td>
-                      <td className="border p-1">{p.billing_amt}</td>
-                      <td className="border p-1">{String(p.active)}</td>
-                      <td className="border p-1">{p.billing_method}</td>
-                      <td className="border p-1">{p.overtime_amt}</td>
+                      <td className="border p-1">{inv.total_amount}</td>
+                      <td className="border p-1">{inv.days}</td>
+                      <td className="border p-1">{inv.paid_leaves}</td>
+                      <td className="border p-1">{inv.unpaid_leaves}</td>
+                      <td className="border p-1">{inv.over_time}</td>
                       <td className="border p-1">
                         <button
                           className="mr-2 px-2 py-1 text-blue-700 hover:underline"
-                          onClick={() => handleEdit(p)}
+                          onClick={() => handleEdit(inv)}
                         >
                           Edit
                         </button>
                         <button
                           className="px-2 py-1 text-red-600 hover:underline"
-                          onClick={() => handleDelete(p.id)}
+                          onClick={() => handleDelete(inv.id)}
                         >
                           Delete
                         </button>
@@ -245,7 +242,7 @@ const CreateInvoice = () => {
 
         {deleteId && (
           <div className="mb-6 bg-yellow-50 p-4 rounded flex flex-col gap-2 border border-yellow-200">
-            <span>Are you sure you want to delete project ID {deleteId}?</span>
+            <span>Are you sure you want to delete invoice ID {deleteId}?</span>
             <div className="flex gap-2 justify-end">
               <button
                 className="px-3 py-1 bg-gray-500 text-white rounded"
@@ -267,102 +264,115 @@ const CreateInvoice = () => {
           <form onSubmit={handleFormSubmit} className="space-y-4">
             <div>
               <label className="block font-medium text-gray-700">
-                Project Name
+                Invoice No
               </label>
               <input
                 type="text"
-                name="name"
-                value={formData.name}
+                name="invoice_no"
+                value={formData.invoice_no}
                 onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 required
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
               />
             </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block font-medium text-gray-700">
-                  Client ID
+                  Project ID
                 </label>
                 <input
                   type="number"
-                  name="client_id"
-                  value={formData.client_id}
+                  name="project_id"
+                  value={formData.project_id}
                   onChange={handleChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                   required
+                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 />
               </div>
+
               <div>
                 <label className="block font-medium text-gray-700">
-                  Employee ID
+                  Issue Date
                 </label>
                 <input
-                  type="number"
-                  name="emp_id"
-                  value={formData.emp_id}
+                  type="date"
+                  name="issue_date"
+                  value={formData.issue_date}
                   onChange={handleChange}
                   className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                  required
                 />
               </div>
             </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block font-medium text-gray-700">
-                  Billing Amount
+                  Total Amount
                 </label>
                 <input
                   type="number"
                   step="0.01"
-                  name="billing_amt"
-                  value={formData.billing_amt}
+                  name="total_amount"
+                  value={formData.total_amount}
                   onChange={handleChange}
                   className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 />
               </div>
+
+              <div>
+                <label className="block font-medium text-gray-700">Days</label>
+                <input
+                  type="number"
+                  name="days"
+                  value={formData.days}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block font-medium text-gray-700">
-                  Overtime Amount
+                  Paid Leaves
                 </label>
                 <input
                   type="number"
-                  step="0.01"
-                  name="overtime_amt"
-                  value={formData.overtime_amt}
+                  name="paid_leaves"
+                  value={formData.paid_leaves}
                   onChange={handleChange}
                   className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 />
               </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+
               <div>
                 <label className="block font-medium text-gray-700">
-                  Billing Method
+                  Unpaid Leaves
                 </label>
-                <select
-                  name="billing_method"
-                  value={formData.billing_method}
+                <input
+                  type="number"
+                  name="unpaid_leaves"
+                  value={formData.unpaid_leaves}
                   onChange={handleChange}
                   className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                >
-                  {BILLING_METHODS.map((m) => (
-                    <option key={m} value={m}>
-                      {m}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <label className="inline-flex items-center mt-6">
-                <input
-                  type="checkbox"
-                  name="active"
-                  checked={!!formData.active}
-                  onChange={handleChange}
-                  className="form-checkbox h-5 w-5"
                 />
-                <span className="ml-2">Active</span>
-              </label>
+              </div>
+
+              <div>
+                <label className="block font-medium text-gray-700">
+                  Overtime
+                </label>
+                <input
+                  type="number"
+                  name="over_time"
+                  value={formData.over_time}
+                  onChange={handleChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                />
+              </div>
             </div>
+
             <div className="pt-2 flex justify-end gap-2">
               <button
                 type="submit"
@@ -389,20 +399,14 @@ const CreateInvoice = () => {
           <div className="bg-gray-50 border p-4 rounded">
             <h2 className="font-bold text-lg mb-3 text-blue-700">Preview</h2>
             <dl className="mb-4 grid grid-cols-2 gap-y-2">
-              <dt className="font-semibold">Project Name:</dt>
-              <dd>{formData.name}</dd>
-              <dt className="font-semibold">Client ID:</dt>
-              <dd>{formData.client_id}</dd>
-              <dt className="font-semibold">Employee ID:</dt>
-              <dd>{formData.emp_id}</dd>
-              <dt className="font-semibold">Billing Amount:</dt>
-              <dd>{formData.billing_amt || 0}</dd>
-              <dt className="font-semibold">Overtime Amount:</dt>
-              <dd>{formData.overtime_amt || 0}</dd>
-              <dt className="font-semibold">Billing Method:</dt>
-              <dd>{formData.billing_method}</dd>
-              <dt className="font-semibold">Active:</dt>
-              <dd>{String(!!formData.active)}</dd>
+              {Object.entries(formData).map(([key, val]) => (
+                <div key={key} className="contents">
+                  <dt className="font-semibold capitalize">
+                    {key.replace("_", " ")}:
+                  </dt>
+                  <dd>{val || "—"}</dd>
+                </div>
+              ))}
             </dl>
             <div className="flex justify-end gap-2">
               <button

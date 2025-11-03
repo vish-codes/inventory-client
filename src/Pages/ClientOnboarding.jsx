@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import DashboardPdf from "../Components/DashboardPdf";
 
 const API_URL = "http://localhost:3000/api/clients";
