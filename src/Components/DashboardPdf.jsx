@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 const DashboardPdf = () => {
   const [isLettersOpen, setIsLettersOpen] = useState(false);
+  const [isGenPdfOpen, setIsGenPdfOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -27,7 +28,41 @@ const DashboardPdf = () => {
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
                 <NavItem to="/dashboard" label="Dashboard" />
-                <NavItem to="/genpdf" label="Invoice" />
+                {/* <NavItem to="/genpdf" label="Invoice" /> */}
+                <div className="relative">
+                  <button
+                    onClick={() => setIsGenPdfOpen(!isGenPdfOpen)}
+                    className="text-gray-300 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    Invoice ▼
+                  </button>
+                  {isGenPdfOpen && (
+                    <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-20">
+                      <div
+                        className="py-1"
+                        role="menu"
+                        aria-orientation="vertical"
+                      >
+                        <DropdownItem
+                          to="/genpdf/employee-onboarding"
+                          label="Employee Onboarding"
+                        />
+                        <DropdownItem
+                          to="/genpdf/client-onboarding"
+                          label="Client Onboarding"
+                        />
+                        <DropdownItem
+                          to="/genpdf/project-onboarding"
+                          label="Project Onboarding"
+                        />
+                        <DropdownItem
+                          to="/genpdf/create-invoice"
+                          label="Create Invoice"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <NavItem to="/genpayslip" label="Payslip" />
 
                 <div className="relative">
